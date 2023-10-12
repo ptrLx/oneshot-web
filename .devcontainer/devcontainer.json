@@ -43,7 +43,8 @@
 				"esbenp.prettier-vscode",
 				"ionic.ionic",
 				"aaron-bond.better-comments",
-				"ionic-preview.ionic-preview"
+				"ionic-preview.ionic-preview",
+				"vivaxy.vscode-conventional-commits"
 			]
 		}
 	}
