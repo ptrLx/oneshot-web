@@ -8,8 +8,7 @@
 
 ### Backend
 
-1. `cd backend`
-1. `pipenv install`
+1. `cd backend/api`
 1. `pipenv shell`
 1. `python src/main.py`
 

@@ -23,13 +23,13 @@
 			"omzPlugins": "https://github.com/zsh-users/zsh-autosuggestions",
 			"username": "root"
 		}
-	}
+	},
 	// Features to add to the dev container. More info: https://containers.dev/features.
 	// "features": {},
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
 	// "forwardPorts": [],
 	// Use 'postCreateCommand' to run commands after the container is created.
-	// "postCreateCommand": "yarn install",
+	"postCreateCommand": "./.devcontainer/setup.sh",
 	// Configure tool-specific properties.
 	"customizations": {
 		"vscode": {
@@ -42,7 +42,8 @@
 				"dbaeumer.vscode-eslint",
 				"esbenp.prettier-vscode",
 				"ionic.ionic",
-				"aaron-bond.better-comments"
+				"aaron-bond.better-comments",
+				"ionic-preview.ionic-preview"
 			]
 		}
 	}
