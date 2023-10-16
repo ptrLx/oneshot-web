@@ -17,7 +17,7 @@ response:
 }
 ```
 
-### /user
+### /user/me
 
 > GET
 
@@ -29,14 +29,14 @@ response:
 
 ```json
 {
-    "profilepic": "url",
+    "profileimg": "url",
     "username": "username",
     "full-name": "name",
-    // "role": "role"
+    "role": "role"
 }
 ```
 
-### /user/profilepic
+### /user/profileimg
 
 > POST
 

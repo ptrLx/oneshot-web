@@ -20,3 +20,8 @@ Format: YYYY-MM-YY (2023-10-16)
 ## month
 
 Format: YYYY-MM
+
+## role
+
+* admin
+* user

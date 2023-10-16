@@ -9,6 +9,9 @@
 			"devcontainer",
 			"oneshot",
 			"pipenv"
+		],
+		"conventionalCommits.scopes": [
+			"doc"
 		]
 	}
 }
