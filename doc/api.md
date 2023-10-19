@@ -49,12 +49,10 @@ attribute:
 response:
 
 ```json
-{
-    "ok"
-}
+"ok"
 ```
 
-### /user/password
+### /user/chpw
 
 > POST
 
@@ -70,25 +68,7 @@ parameter:
 response:
 
 ```json
-{
-    "ok"
-}
-```
-
-### /user/logout
-
-> POST
-
-attribute:
-
-* token
-
-response:
-
-```json
-{
-    "ok"
-}
+"ok"
 ```
 
 ### /user/preferences
@@ -117,9 +97,7 @@ parameter:
 response:
 
 ```json
-{
-    "ok"
-}
+"ok"
 ```
 
 ### /image/update
@@ -139,9 +117,7 @@ parameter:
 response:
 
 ```json
-{
-    "ok"
-}
+"ok"
 ```
 
 ### /image/delete
@@ -159,9 +135,7 @@ parameter:
 response:
 
 ```json
-{
-    "ok"
-}
+"ok"
 ```
 
 ### /image/preview

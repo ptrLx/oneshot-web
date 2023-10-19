@@ -1,18 +1,15 @@
 # oneshot-web
 
-## Setup
+## Development Setup
 
 1. get docker ready
 1. install recommended extension
 1. reopen in devcontainer
 
-### Backend
+### Start the backend
 
-1. `cd backend/api`
-1. `pipenv shell`
-1. `python src/main.py`
+1. `make start-api`
 
-### Frontend
+### Start the frontend
 
-1. `cd frontend`
-1. `ionic serve`
+1. `make start-frontend`
