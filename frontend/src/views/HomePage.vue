@@ -10,11 +10,6 @@
     </ion-header>
 
     <ion-content :fullscreen="true">
-      <ion-header collapse="condense">
-        <ion-toolbar>
-          <ion-title size="large">Blank</ion-title>
-        </ion-toolbar>
-      </ion-header>
 
       <row-component style="height: 70%;"></row-component>
       <row-component style="height: 20%;"></row-component>
@@ -27,9 +22,9 @@
 </template>
 
 <script setup lang="ts">
-  import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar } from '@ionic/vue';
-  import RowComponent from '@/components/RowComponent.vue';
-  import ProfileComponent from '@/components/ProfileComponent.vue';
+import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar } from '@ionic/vue';
+import RowComponent from '@/components/RowComponent.vue';
+import ProfileComponent from '@/components/ProfileComponent.vue';
 </script>
 
 <style scoped>
