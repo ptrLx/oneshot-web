@@ -18,15 +18,15 @@
           <ion-card-subtitle>Card Subtitle</ion-card-subtitle>
         </ion-card-header>
       </ion-card>
-
     </swiper-slide>
-    
+
   </swiper>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
 import { Swiper, SwiperSlide } from 'swiper/vue';
+import { IonCard, IonCardHeader, IonCardSubtitle, IonCardTitle } from '@ionic/vue';
 
 import 'swiper/css';
 import '@ionic/vue/css/ionic-swiper.css';
@@ -35,6 +35,10 @@ export default defineComponent({
   components: {
     Swiper,
     SwiperSlide,
+    IonCard,
+    IonCardHeader,
+    IonCardSubtitle,
+    IonCardTitle,
   },
 });
 </script>
@@ -55,7 +59,7 @@ export default defineComponent({
   transition: 400ms all ease-in-out;
 }
 
-.swiper{
-  padding-top:2%;
+.swiper {
+  padding-top: 2%;
 }
 </style>
