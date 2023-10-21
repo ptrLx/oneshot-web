@@ -39,7 +39,7 @@
             </ion-row>
             <ion-row>
                 <ion-col size="12">
-                    <ion-button shape="round">Log out</ion-button>
+                    <ion-button @click="handleLogout" shape="round">Log out</ion-button>
                 </ion-col>
             </ion-row>
             <ion-row>
@@ -59,7 +59,7 @@
 </template>
   
 <script lang="ts">
-import { IonAvatar, IonButton, IonGrid, IonRow, IonCol, IonIcon } from '@ionic/vue';
+import { IonAvatar, IonButton, IonGrid, IonRow, IonCol, IonIcon, useIonRouter } from '@ionic/vue';
 import { cameraOutline } from 'ionicons/icons';
 import { defineComponent } from 'vue';
 
@@ -70,12 +70,26 @@ export default defineComponent({
         IonGrid,
         IonRow,
         IonCol,
-        IonIcon
+        IonIcon,
     },
     setup() {
-        return { cameraOutline };
+
+        const router = useIonRouter();
+
+        const handleLogout = () => {
+
+            // TODO: Implement logout functionality
+
+            router.push('/login');
+        };
+
+        return {
+            cameraOutline,
+            handleLogout
+        };
     },
 });
+
 </script>
 
 <style scoped>

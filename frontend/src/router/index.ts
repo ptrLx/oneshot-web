@@ -16,6 +16,11 @@ const routes: Array<RouteRecordRaw> = [
     path: '/profile',
     name: 'Profile',
     component: () => import('../views/ProfilePage.vue') // Lazy load component
+  },
+  {
+    path: '/login',
+    name: 'Login',
+    component: () => import('../views/LoginPage.vue') // Lazy load component
   }
 ]
 
