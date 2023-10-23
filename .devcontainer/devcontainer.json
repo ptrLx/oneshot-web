@@ -24,7 +24,7 @@
 			"username": "root"
 		}
 	},
-	"appPort": ["8100:8100" ], // Finn: Add this line to make pwa port available to local network for testing on mobile
+	//"appPort": ["8100:8100" ], // Finn: Add this line to make pwa port available to local network for testing on mobile
 	// Features to add to the dev container. More info: https://containers.dev/features.
 	// "features": {},
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
