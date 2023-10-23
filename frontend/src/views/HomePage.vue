@@ -64,34 +64,7 @@ import { SwiperSlide } from 'swiper/vue';
 import RowComponent from '@/components/RowComponent.vue';
 import ProfileComponent from '@/components/ProfileComponent.vue';
 import Card from '@/components/Card.vue';
-import { ImageService, LoginService, UserService, Token, OpenAPI } from '@/_generated/api-client';
 
-
-// if (process.env === 'development') {
-OpenAPI.BASE = 'http://localhost:8200';
-// }
-// if (process.env === 'production') {
-//     OpenAPI.BASE = '/api';
-// }
-
-// var token: undefined | Token = undefined;
-LoginService.loginForAccessTokenLoginPost(
-  {
-    username: 'john',
-    password: 'password'
-  }
-).then((t) => {
-  // token = t;
-  OpenAPI.TOKEN = t.access_token;
-  requestUserInfo()
-  console.log(t.access_token)
-});
-
-function requestUserInfo() {
-  UserService.getUserMeUserMeGet().then((user) => {
-    console.log(user.username)
-  })
-}
 
 </script>
 

@@ -1,5 +1,5 @@
 <template>
-    <base-layout page-title="Login" hide-back-button="true">
+    <base-layout page-title="Login" :hide-back-button=true>
 
         <div class="logo">
             <ion-avatar>
@@ -10,31 +10,34 @@
         <ion-grid class="ion-text-center">
             <ion-row>
                 <ion-col size="12">
-                    <ion-input label="Username" label-placement="floating" fill="outline" shape="round"
-                        placeholder="Enter Username"></ion-input>
+                    <ion-input type="text" label="Username" label-placement="floating" fill="outline" shape="round"
+                        v-model="username" placeholder="Enter Username">
+                    </ion-input>
                 </ion-col>
             </ion-row>
             <ion-row>
                 <ion-col size="12">
-                    <ion-input label="Password" label-placement="floating" fill="outline" shape="round"
-                        placeholder="Enter Password"></ion-input>
+                    <ion-input type="password" label="Password" label-placement="floating" fill="outline" shape="round"
+                        v-model="password" placeholder="Enter Password">
+                    </ion-input>
                 </ion-col>
             </ion-row>
             <ion-row>
                 <ion-col size="12">
-                    <ion-button shape="round">Login</ion-button>
+                    <ion-button @click="handleLogin" shape="round">Login</ion-button>
                 </ion-col>
             </ion-row>
         </ion-grid>
-
-
     </base-layout>
 </template>
   
 <script lang="ts">
-import { IonAvatar, IonButton, IonGrid, IonRow, IonCol, IonIcon, IonInput } from '@ionic/vue';
+import { IonAvatar, IonButton, IonGrid, IonRow, IonCol, IonIcon, IonInput, useIonRouter, IonToast, toastController } from '@ionic/vue';
 import { cameraOutline } from 'ionicons/icons';
-import { defineComponent } from 'vue';
+import { defineComponent, ref } from 'vue';
+import { ImageService, LoginService, UserService, Token, OpenAPI, ApiError } from '@/_generated/api-client';
+import { useCookies } from 'vue3-cookies'
+import { routerKey } from 'vue-router';
 
 export default defineComponent({
     components: {
@@ -46,10 +49,77 @@ export default defineComponent({
         IonIcon,
         IonInput
     },
+    methods: {
+        handleLogin() {
+
+            // if (process.env === 'development') {
+            OpenAPI.BASE = 'http://localhost:8200';
+            // }
+            // if (process.env === 'production') {
+            //     OpenAPI.BASE = '/api';
+            // }
+
+            // var token: undefined | Token = undefined;
+
+            LoginService.loginForAccessTokenLoginPost(
+                {
+                    username: this.username,
+                    password: this.password
+                }
+            ).then((t) => {
+                this.cookies.set("token", t.access_token);
+                OpenAPI.TOKEN = t.access_token;
+                this.requestUserInfo() // TODO: remove, for debugging
+                console.log(t.access_token) // TODO: remove, for debugging
+
+                this.router.push('/home');
+            }).catch((e: ApiError) => {
+
+                switch (e.status) {
+                    case 401:
+                        console.log("Unauthorized")
+
+                        //TODO: change user/passwd field to red and play access denied animation
+                        this.showToast()
+                        break;
+                    default:
+                        console.log("Unknown error")
+                        break;
+                }
+            })
+        },
+        requestUserInfo() {
+            UserService.getUserMeUserMeGet().then((user) => {
+                console.log(user.username)
+            })
+        },
+        showToast() {
+            toastController.create({
+                message: 'Unknown username or password',
+                duration: 2000,
+                color: 'danger'
+            }).then((toast) => {
+                toast.present();
+            });
+        }
+
+    },
     setup() {
-        return { cameraOutline };
+        const { cookies } = useCookies();
+        const username = ref<string>("");
+        const password = ref<string>("");
+        const router = useIonRouter();
+
+        return {
+            cameraOutline,
+            cookies,
+            username,
+            password,
+            router
+        };
     },
 });
+
 </script>
 
 <style scoped>

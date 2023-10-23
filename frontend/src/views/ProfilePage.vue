@@ -62,6 +62,7 @@
 import { IonAvatar, IonButton, IonGrid, IonRow, IonCol, IonIcon, IonTitle, useIonRouter } from '@ionic/vue';
 import { cameraOutline } from 'ionicons/icons';
 import { defineComponent } from 'vue';
+import { useCookies } from 'vue3-cookies'
 
 export default defineComponent({
     components: {
@@ -73,20 +74,21 @@ export default defineComponent({
         IonIcon,
         IonTitle
     },
+    methods: {
+        handleLogout() {
+            this.cookies.remove("token");
+            this.router.push('/login');
+        }
+    },
     setup() {
 
         const router = useIonRouter();
-
-        const handleLogout = () => {
-
-            // TODO: Implement logout functionality
-
-            router.push('/login');
-        };
+        const { cookies } = useCookies();
 
         return {
             cameraOutline,
-            handleLogout
+            router,
+            cookies
         };
     },
 });

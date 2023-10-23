@@ -22,11 +22,19 @@ import '@ionic/vue/css/display.css';
 
 /* Theme variables */
 import './theme/variables.css';
+
+/* Other imports */
 import BaseLayout from './components/base/BaseLayout.vue';
+import { globalCookiesConfig } from 'vue3-cookies'; 
+
+globalCookiesConfig({
+  expireTimes:"15MIN", // define token expiration time
+  //secure: true // true: only https works
+});
 
 const app = createApp(App)
   .use(IonicVue)
-  .use(router);
+  .use(router)
 
 app.component('base-layout', BaseLayout);
   
