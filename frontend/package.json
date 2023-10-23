@@ -10,7 +10,7 @@
     "test:e2e": "cypress run",
     "test:unit": "vitest",
     "lint": "eslint",
-    "gen-api-client": "openapi -i http://localhost:8181/openapi.json -o src/_generated/api-client -c axios"
+    "gen-api-client": "openapi -i http://localhost:8200/openapi.json -o src/_generated/api-client -c axios"
   },
   "dependencies": {
     "@capacitor/app": "5.0.6",

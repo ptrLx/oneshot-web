@@ -67,6 +67,13 @@ import Card from '@/components/Card.vue';
 import { ImageService, LoginService, UserService, Token, OpenAPI } from '@/_generated/api-client';
 
 
+// if (process.env === 'development') {
+OpenAPI.BASE = 'http://localhost:8200';
+// }
+// if (process.env === 'production') {
+//     OpenAPI.BASE = '/api';
+// }
+
 // var token: undefined | Token = undefined;
 LoginService.loginForAccessTokenLoginPost(
   {
@@ -76,7 +83,7 @@ LoginService.loginForAccessTokenLoginPost(
 ).then((t) => {
   // token = t;
   OpenAPI.TOKEN = t.access_token;
-  // requestUserInfo()
+  requestUserInfo()
   console.log(t.access_token)
 });
 
