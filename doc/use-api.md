@@ -3,7 +3,7 @@
 ## Start the api
 
 * `make start-api`
-* visit <http://localhost:8181/docs>
+* visit <http://localhost:8200/docs>
 
 ## Request access token
 
@@ -11,7 +11,7 @@
 
 ```bash
 curl -X 'POST' \
-  'http://localhost:8181/login/' \
+  'http://localhost:8200/login/' \
   -H 'accept: application/json' \
   -H 'Content-Type: application/x-www-form-urlencoded' \
   -d 'grant_type=&username=john&password=password&scope=&client_id=&client_secret='
@@ -29,7 +29,7 @@ response:
 
 ```bash
 curl -X 'GET' \
-  'http://localhost:8181/user/me' \
+  'http://localhost:8200/user/me' \
   -H 'accept: application/json' \
   -H 'Authorization: Bearer ey...'
 ```

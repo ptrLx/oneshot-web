@@ -11,7 +11,7 @@ setup: setup-api setup-frontend ## Setup the project
 
 .PHONY: setup-api
 setup-api:  ## Setup the api
-	cd backend/api && pipenv install
+	cd backend/api && pipenv install --dev
 
 .PHONY: start-api
 start-api:  ## Start the api
@@ -19,7 +19,7 @@ start-api:  ## Start the api
 
 .PHONY: setup-frontend
 setup-frontend:  ## Setup the frontend
-	# todo npm install
+	cd frontend && npm install --dev
 
 .PHONY: start-frontend
 start-frontend:  ## Start the frontend

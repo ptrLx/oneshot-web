@@ -4,20 +4,4 @@
 			"path": "."
 		}
 	],
-	"settings": {
-		"cSpell.words": [
-			"aiofiles",
-			"devcontainer",
-			"fastapi",
-			"oneshot",
-			"pipenv"
-		],
-		"conventionalCommits.scopes": [
-			"doc",
-			"api"
-		],
-		"[python]": {
-			"editor.defaultFormatter": "ms-python.black-formatter"
-		},
-	}
 }

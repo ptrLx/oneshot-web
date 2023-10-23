@@ -1,5 +1,25 @@
 {
     "conventionalCommits.scopes": [
-        "frontend"
-    ]
+        "frontend",
+        "doc",
+        "api"
+    ],
+    "cSpell.words": [
+        "aiofiles",
+        "devcontainer",
+        "fastapi",
+        "oneshot",
+        "pipenv"
+    ],
+    "[python]": {
+        "editor.defaultFormatter": "ms-python.black-formatter",
+        "editor.formatOnSave": true,
+        "editor.codeActionsOnSave": {
+            "source.organizeImports": true
+        },
+    },
+    "isort.args": [
+        "--profile",
+        "black"
+    ],
 }
