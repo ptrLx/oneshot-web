@@ -12,10 +12,7 @@
     <ion-content :fullscreen="true">
 
       <row-component style="height: 70%;">
-        <swiper-slide>
-          <card card-title="card1" card-subtitle="card1sub">
-          </card>
-        </swiper-slide>
+
         <swiper-slide>
           <card card-title="card2" card-subtitle="card2sub">
           </card>
@@ -67,7 +64,27 @@ import { SwiperSlide } from 'swiper/vue';
 import RowComponent from '@/components/RowComponent.vue';
 import ProfileComponent from '@/components/ProfileComponent.vue';
 import Card from '@/components/Card.vue';
+import { ImageService, LoginService, UserService, Token, OpenAPI } from '@/_generated/api-client';
 
+
+// var token: undefined | Token = undefined;
+LoginService.loginForAccessTokenLoginPost(
+  {
+    username: 'john',
+    password: 'password'
+  }
+).then((t) => {
+  // token = t;
+  OpenAPI.TOKEN = t.access_token;
+  // requestUserInfo()
+  console.log(t.access_token)
+});
+
+function requestUserInfo() {
+  UserService.getUserMeUserMeGet().then((user) => {
+    console.log(user.username)
+  })
+}
 
 </script>
 
