@@ -11,10 +11,50 @@
 
     <ion-content :fullscreen="true">
 
-      <row-component style="height: 70%;"></row-component>
-      <row-component style="height: 20%;"></row-component>
-      <row-component style="height: 50%;"></row-component>
-      <row-component style="height: 70%;"></row-component>
+      <row-component style="height: 70%;">
+        <swiper-slide>
+          <card card-title="card1" card-subtitle="card1sub">
+          </card>
+        </swiper-slide>
+        <swiper-slide>
+          <card card-title="card2" card-subtitle="card2sub">
+          </card>
+        </swiper-slide>
+      </row-component>
+      <row-component style="height: 20%;">
+        <swiper-slide>
+          <card card-title="card1" card-subtitle="card1sub">
+          </card>
+        </swiper-slide>
+        <swiper-slide>
+          <card card-title="card2" card-subtitle="card2sub">
+          </card>
+        </swiper-slide>
+      </row-component>
+      <row-component style="height: 50%;">
+        <swiper-slide>
+          <card card-title="card1" card-subtitle="card1sub">
+          </card>
+        </swiper-slide>
+        <swiper-slide>
+          <card card-title="card2" card-subtitle="card2sub">
+          </card>
+        </swiper-slide>
+      </row-component>
+      <row-component style="height: 70%;">
+        <swiper-slide>
+          <card card-title="card1" card-subtitle="card1sub">
+          </card>
+        </swiper-slide>
+        <swiper-slide>
+          <card card-title="card2" card-subtitle="card2sub">
+          </card>
+        </swiper-slide>
+        <swiper-slide>
+          <card card-title="card3" card-subtitle="card3sub">
+          </card>
+        </swiper-slide>
+      </row-component>
 
 
     </ion-content>
@@ -23,8 +63,12 @@
 
 <script setup lang="ts">
 import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar } from '@ionic/vue';
+import { SwiperSlide } from 'swiper/vue';
 import RowComponent from '@/components/RowComponent.vue';
 import ProfileComponent from '@/components/ProfileComponent.vue';
+import Card from '@/components/Card.vue';
+
+
 </script>
 
 <style scoped>

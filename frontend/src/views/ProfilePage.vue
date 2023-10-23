@@ -59,7 +59,7 @@
 </template>
   
 <script lang="ts">
-import { IonAvatar, IonButton, IonGrid, IonRow, IonCol, IonIcon, useIonRouter } from '@ionic/vue';
+import { IonAvatar, IonButton, IonGrid, IonRow, IonCol, IonIcon, IonTitle, useIonRouter } from '@ionic/vue';
 import { cameraOutline } from 'ionicons/icons';
 import { defineComponent } from 'vue';
 
@@ -71,6 +71,7 @@ export default defineComponent({
         IonRow,
         IonCol,
         IonIcon,
+        IonTitle
     },
     setup() {
 
