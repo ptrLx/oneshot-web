@@ -1,14 +1,12 @@
 <template>
     <base-layout page-title="Profile" default-back-link="/home">
 
-        <div class="profile-avatar">
-            <ion-avatar>
-                <img alt="Silhouette of a person's head" src="https://ionicframework.com/docs/img/demos/avatar.svg" />
-                <div>
-                    <ion-button class="change-profile-pic-button" shape="round">
-                        <ion-icon slot="icon-only" :icon="cameraOutline"></ion-icon>
-                    </ion-button>
-                </div>
+        <div class="flex-container">
+            <ion-avatar class="profile-avatar">
+                <ion-img src="https://ionicframework.com/docs/img/demos/avatar.svg"></ion-img>
+                <ion-button class="change-profile-pic-button" shape="round">
+                    <ion-icon slot="icon-only" :icon="cameraOutline"></ion-icon>
+                </ion-button>
             </ion-avatar>
         </div>
         <ion-title class="ion-text-center">
@@ -59,10 +57,12 @@
 </template>
   
 <script lang="ts">
-import { IonAvatar, IonButton, IonGrid, IonRow, IonCol, IonIcon, IonTitle, useIonRouter } from '@ionic/vue';
-import { cameraOutline } from 'ionicons/icons';
-import { defineComponent } from 'vue';
+import { IonAvatar, IonButton, IonGrid, IonRow, IonCol, IonIcon, IonTitle, useIonRouter, IonImg } from '@ionic/vue';
+import { ImageService, LoginService, UserService, Token, OpenAPI, ApiError } from '@/_generated/api-client';
+import { cameraOutline, constructOutline, image } from 'ionicons/icons';
+import { defineComponent, ref } from 'vue';
 import { useCookies } from 'vue3-cookies'
+import ProfileComponent from '@/components/ProfileComponent.vue';
 
 export default defineComponent({
     components: {
@@ -72,23 +72,28 @@ export default defineComponent({
         IonRow,
         IonCol,
         IonIcon,
-        IonTitle
+        IonTitle,
+        IonImg
     },
     methods: {
         handleLogout() {
             this.cookies.remove("token");
             this.router.push('/login');
-        }
+        },
     },
     setup() {
 
         const router = useIonRouter();
         const { cookies } = useCookies();
+        OpenAPI.TOKEN = cookies.get("token");
+
+        //TODO Get profile picture from UserService.getUserProfileImgUserProfileimgGet 
 
         return {
             cameraOutline,
             router,
-            cookies
+            cookies,
+
         };
     },
 });
@@ -96,18 +101,21 @@ export default defineComponent({
 </script>
 
 <style scoped>
-.profile-avatar {
+.flex-container {
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+.profile-avatar {
     margin: 60px;
     scale: 2.0;
 }
 
 .change-profile-pic-button {
     position: absolute;
-    top: 15px;
-    right: 840px;
+    top: 18px;
+    left: 18px;
     scale: 0.3;
     height: 70px;
     width: 70px;
