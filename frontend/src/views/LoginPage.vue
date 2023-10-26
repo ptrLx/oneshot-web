@@ -53,7 +53,7 @@ export default defineComponent({
         handleLogin() {
 
             // if (process.env === 'development') {
-            OpenAPI.BASE = 'http://localhost:8200';
+
             // }
             // if (process.env === 'production') {
             //     OpenAPI.BASE = '/api';

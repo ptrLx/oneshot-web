@@ -26,15 +26,21 @@ import './theme/variables.css';
 /* Other imports */
 import BaseLayout from './components/base/BaseLayout.vue';
 import { globalCookiesConfig } from 'vue3-cookies'; 
+import { OpenAPI } from '@/_generated/api-client';
 
 globalCookiesConfig({
   expireTimes:"15MIN", // define token expiration time
   //secure: true // true: only https works
 });
 
+// set base path for generated client
+OpenAPI.BASE = 'http://localhost:8200';
+
+
 const app = createApp(App)
   .use(IonicVue)
   .use(router)
+
 
 app.component('base-layout', BaseLayout);
   
