@@ -24,7 +24,7 @@
             </ion-row>
             <ion-row>
                 <ion-col size="12">
-                    <ion-button @click="handleLogin" shape="round">Login</ion-button>
+                    <ion-button @click="handleLogin()" shape="round">Login</ion-button>
                 </ion-col>
             </ion-row>
         </ion-grid>
@@ -49,9 +49,29 @@ export default defineComponent({
         IonIcon,
         IonInput
     },
-    methods: {
-        handleLogin() {
+    setup() {
+        const { cookies } = useCookies();
+        const username = ref<string>("");
+        const password = ref<string>("");
+        const router = useIonRouter();
 
+        const requestUserInfo = () => {
+            UserService.getUserMeUserMeGet().then((user) => {
+                console.log(user.username)
+            })
+        }
+
+        const showToast = () => {
+            toastController.create({
+                message: 'Unknown username or password',
+                duration: 2000,
+                color: 'danger'
+            }).then((toast) => {
+                toast.present();
+            });
+        }
+
+        const handleLogin = () => {
             // if (process.env === 'development') {
 
             // }
@@ -63,16 +83,16 @@ export default defineComponent({
 
             LoginService.loginForAccessTokenLoginPost(
                 {
-                    username: this.username,
-                    password: this.password
+                    username: username.value,
+                    password: password.value
                 }
             ).then((t) => {
-                this.cookies.set("token", t.access_token);
+                cookies.set("token", t.access_token);
                 OpenAPI.TOKEN = t.access_token;
-                this.requestUserInfo() // TODO: remove, for debugging
+                requestUserInfo() // TODO: remove, for debugging
                 console.log(t.access_token) // TODO: remove, for debugging
 
-                this.router.push('/home');
+                router.push('/home');
             }).catch((e: ApiError) => {
 
                 switch (e.status) {
@@ -80,42 +100,22 @@ export default defineComponent({
                         console.log("Unauthorized")
 
                         //TODO: change user/passwd field to red and play access denied animation
-                        this.showToast()
+                        showToast()
                         break;
                     default:
                         console.log("Unknown error")
                         break;
                 }
             })
-        },
-        requestUserInfo() {
-            UserService.getUserMeUserMeGet().then((user) => {
-                console.log(user.username)
-            })
-        },
-        showToast() {
-            toastController.create({
-                message: 'Unknown username or password',
-                duration: 2000,
-                color: 'danger'
-            }).then((toast) => {
-                toast.present();
-            });
         }
-
-    },
-    setup() {
-        const { cookies } = useCookies();
-        const username = ref<string>("");
-        const password = ref<string>("");
-        const router = useIonRouter();
 
         return {
             cameraOutline,
             cookies,
             username,
             password,
-            router
+            router,
+            handleLogin
         };
     },
 });
