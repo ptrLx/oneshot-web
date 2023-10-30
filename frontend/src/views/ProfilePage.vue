@@ -3,7 +3,7 @@
 
         <div class="flex-container">
             <ion-avatar class="profile-avatar">
-                <ion-img src="https://ionicframework.com/docs/img/demos/avatar.svg"></ion-img>
+                <ion-img v-if="blobUrl" :src="blobUrl" />
                 <ion-button class="change-profile-pic-button" shape="round">
                     <ion-icon slot="icon-only" :icon="cameraOutline"></ion-icon>
                 </ion-button>
@@ -60,9 +60,11 @@
 import { IonAvatar, IonButton, IonGrid, IonRow, IonCol, IonIcon, IonTitle, useIonRouter, IonImg } from '@ionic/vue';
 import { ImageService, LoginService, UserService, Token, OpenAPI, ApiError } from '@/_generated/api-client';
 import { cameraOutline, constructOutline, image } from 'ionicons/icons';
-import { defineComponent, ref } from 'vue';
+import { computed, defineComponent, onMounted, ref } from 'vue';
 import { useCookies } from 'vue3-cookies'
 import ProfileComponent from '@/components/ProfileComponent.vue';
+import axios, { AxiosRequestConfig } from 'axios';
+
 
 export default defineComponent({
     components: {
@@ -81,17 +83,34 @@ export default defineComponent({
         const { cookies } = useCookies();
         OpenAPI.TOKEN = cookies.get("token");
 
+        const profilePic = ref<string | null>(null);
+        const blobUrl = ref<string>("");
+
         const handleLogout = () => {
             cookies.remove("token");
             router.push('/login');
         }
 
-        //TODO Get profile picture from UserService.getUserProfileImgUserProfileimgGet 
+        const loadImg = async (src: string) => {
+            const config: AxiosRequestConfig<any> = { url: src, method: "get", responseType: "blob" }
+            const response = await axios.request(config)
+            return response.data // the blob    
+        }
+
+        onMounted(async () => {
+            const queryString = OpenAPI.BASE + "/user/profileimg";
+            loadImg(queryString).then(blob => {
+
+                blobUrl.value = URL.createObjectURL(blob);
+            })
+        });
 
         return {
             cameraOutline,
             router,
             cookies,
+            profilePic,
+            blobUrl,
             handleLogout
         };
     },
