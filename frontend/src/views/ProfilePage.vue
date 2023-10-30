@@ -75,17 +75,16 @@ export default defineComponent({
         IonTitle,
         IonImg
     },
-    methods: {
-        handleLogout() {
-            this.cookies.remove("token");
-            this.router.push('/login');
-        },
-    },
     setup() {
 
         const router = useIonRouter();
         const { cookies } = useCookies();
         OpenAPI.TOKEN = cookies.get("token");
+
+        const handleLogout = () => {
+            cookies.remove("token");
+            router.push('/login');
+        }
 
         //TODO Get profile picture from UserService.getUserProfileImgUserProfileimgGet 
 
@@ -93,7 +92,7 @@ export default defineComponent({
             cameraOutline,
             router,
             cookies,
-
+            handleLogout
         };
     },
 });
