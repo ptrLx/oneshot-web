@@ -1,5 +1,8 @@
+import os
 from typing import Annotated
 
+from core.config import app_config
+from core.exeption import NoProfileImg
 from fastapi import APIRouter, Depends
 from fastapi.responses import FileResponse
 from model.user import User
@@ -7,6 +10,7 @@ from service.user import UserService
 from service.validate import get_current_active_user
 
 router = APIRouter()
+
 
 user_service = UserService()
 
@@ -18,9 +22,14 @@ async def get_user_me(current_user: Annotated[User, Depends(get_current_active_u
 
 @router.get("/profileimg")
 async def get_user_profile_img(
-    _current_user: Annotated[User, Depends(get_current_active_user)]
+    current_user: Annotated[User, Depends(get_current_active_user)]
 ):
-    return FileResponse("../../_sample/test-profile-img.png")
+    profile_img_path = f"{app_config.WEBROOT_PATH}/img/{current_user}/profile.png"
+
+    if os.path.exists(profile_img_path) and os.path.isdir(profile_img_path):
+        return FileResponse(profile_img_path)
+    else:
+        raise NoProfileImg
 
 
 @router.post("/chpw")

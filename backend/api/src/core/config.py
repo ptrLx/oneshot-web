@@ -63,5 +63,6 @@ class AppConfig:
         return SECRET_KEY
 
 
+#todo use same config object in all files
 global app_config
 app_config = AppConfig()
