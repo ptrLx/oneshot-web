@@ -1,6 +1,5 @@
 from model.user import UserInDB
 
-
 __fake_users_db = {
     "john": {
         "username": "john",

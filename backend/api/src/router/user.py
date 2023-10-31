@@ -1,11 +1,9 @@
-from fastapi import Depends, APIRouter
+from typing import Annotated
+
+from fastapi import APIRouter, Depends
 from fastapi.responses import FileResponse
-from typing import Annotated
 from model.user import User
-from typing import Annotated
-
 from service.user import UserService
-
 from service.validate import get_current_active_user
 
 router = APIRouter()

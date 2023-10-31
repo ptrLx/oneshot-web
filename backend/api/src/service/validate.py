@@ -1,12 +1,12 @@
+from typing import Annotated
+
+import data.user_db as user_db
+from core.config import app_config
 from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
-import data.user_db as user_db
 from jose import JWTError, jwt
-from typing import Annotated
 from model.token import TokenData
 from model.user import User
-from core.config import app_config
-
 
 __oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login")
 

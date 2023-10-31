@@ -1,10 +1,8 @@
-from fastapi import Depends, APIRouter
 from typing import Annotated
-from fastapi import File, UploadFile
+
 import aiofiles
-
+from fastapi import APIRouter, Depends, File, UploadFile
 from model.user import User
-
 from service.validate import get_current_active_user
 
 router = APIRouter()

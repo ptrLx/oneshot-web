@@ -1,8 +1,8 @@
-from fastapi import Depends, APIRouter
-from fastapi.security import OAuth2PasswordRequestForm
 from typing import Annotated
-from model.token import Token
 
+from fastapi import APIRouter, Depends
+from fastapi.security import OAuth2PasswordRequestForm
+from model.token import Token
 from service.login import LoginService
 
 router = APIRouter()

@@ -1,13 +1,13 @@
-import os
-import sys
 import json
 import logging
+import os
+import sys
 
 from core.setup import (
-    filesystem_is_initialized,
+    bootstrap_db,
     bootstrap_filesystem,
     db_is_initialized,
-    bootstrap_db,
+    filesystem_is_initialized,
 )
 
 
