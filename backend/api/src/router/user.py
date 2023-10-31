@@ -25,7 +25,7 @@ async def get_user_profile_img(
     return FileResponse("../../_sample/test-profile-img.png")
 
 
-@router.post("chpw")
+@router.post("/chpw")
 async def change_user_password(
     old_password,
     new_password,

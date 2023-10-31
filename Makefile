@@ -13,6 +13,8 @@ setup: setup-api setup-frontend ## Setup the project
 setup-api:  ## Setup the api
 	cd backend/api && pipenv install --dev
 
+export WEBROOT_PATH = ../../_local_webroot
+export LOGGING_LEVEL = "DEBUG"
 .PHONY: start-api
 start-api:  ## Start the api
 	cd backend/api && pipenv run python src/main.py

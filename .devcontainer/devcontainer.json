@@ -46,7 +46,8 @@
 				"aaron-bond.better-comments",
 				"ionic-preview.ionic-preview",
 				"vivaxy.vscode-conventional-commits",
-				"ms-python.black-formatter"
+				"ms-python.black-formatter",
+				"ms-vscode.makefile-tools"
 			]
 		}
 	}

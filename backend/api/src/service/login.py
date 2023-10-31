@@ -5,7 +5,7 @@ from jose import jwt
 
 
 import data.user_db as user_db
-from core.config import SECRET_KEY, ALGORITHM, ACCESS_TOKEN_EXPIRE_MINUTES
+from core.config import app_config
 
 
 class LoginService:
@@ -30,7 +30,9 @@ class LoginService:
         else:
             expire = datetime.utcnow() + timedelta(minutes=15)
         to_encode.update({"exp": expire})
-        encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
+        encoded_jwt = jwt.encode(
+            to_encode, app_config.SECRET_KEY, algorithm=app_config.ALGORITHM
+        )
         return encoded_jwt
 
     # def get_password_hash(self, password):
@@ -44,7 +46,7 @@ class LoginService:
                 detail="Incorrect username or password",
                 headers={"WWW-Authenticate": "Bearer"},
             )
-        access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+        access_token_expires = timedelta(minutes=app_config.ACCESS_TOKEN_EXPIRE_MINUTES)
         access_token = self.__create_access_token(
             data={"sub": user.username}, expires_delta=access_token_expires
         )

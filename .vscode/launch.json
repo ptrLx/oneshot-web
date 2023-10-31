@@ -10,6 +10,10 @@
             "request": "launch",
             "program": "${workspaceFolder}/backend/api/src/main.py",
             "cwd": "${workspaceFolder}/backend/api",
+            "env": {
+                "WEBROOT_PATH": "../../_local_webroot",
+                "LOGGING_LEVEL": "DEBUG"
+            },
             "jinja": true,
             "justMyCode": true
         }

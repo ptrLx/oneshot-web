@@ -1,10 +1,12 @@
 import uvicorn
+import logging
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from router.user import router as user_router
 from router.login import router as login_router
 from router.image import router as image_router
+
 
 app = FastAPI()
 
@@ -23,4 +25,4 @@ app.include_router(login_router, prefix="/login", tags=["Login"])
 app.include_router(image_router, prefix="/image", tags=["Image"])
 
 if __name__ == "__main__":
-    uvicorn.run(app, host="0.0.0.0", port=8200)
+    uvicorn.run("main:app", host="0.0.0.0", port=8200, reload=True)
