@@ -29,7 +29,7 @@ import { globalCookiesConfig } from 'vue3-cookies';
 import { OpenAPI } from '@/_generated/api-client';
 
 globalCookiesConfig({
-  expireTimes:"15MIN", // define token expiration time
+  expireTimes:"180DAYS", // define token expiration time
   //secure: true // true: only https works
 });
 
