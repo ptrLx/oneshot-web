@@ -7,7 +7,7 @@
                 <ion-title class="title">{{ title }}</ion-title>
             </ion-col>
             <ion-col size="5" class="ion-text-end">
-                <ion-button class="button">
+                <ion-button class="button" aria-label="See all">
                     <ion-icon slot="icon-only" :icon="arrowForwardOutline"></ion-icon>
                 </ion-button>
             </ion-col>

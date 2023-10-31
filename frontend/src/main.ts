@@ -27,6 +27,9 @@ import './theme/variables.css';
 import BaseLayout from './components/base/BaseLayout.vue';
 import { globalCookiesConfig } from 'vue3-cookies'; 
 import { OpenAPI } from '@/_generated/api-client';
+import { isPlatform } from '@ionic/vue';
+import { createHead } from '@vueuse/head'
+
 
 globalCookiesConfig({
   expireTimes:"180DAYS", // define token expiration time
@@ -40,10 +43,25 @@ OpenAPI.BASE = 'http://localhost:8200';
 const app = createApp(App)
   .use(IonicVue)
   .use(router)
+  .use(createHead());
 
 
+// make base layout component known to all components
 app.component('base-layout', BaseLayout);
-  
+
+
 router.isReady().then(() => {
   app.mount('#app');
 });
+
+// --- Accessibility ---
+// Set viewport scalability dependiong on the platform
+if(isPlatform('desktop')){
+  const viewport = document.querySelector('meta[name=viewport]');
+
+  if (viewport){
+    viewport.setAttribute('content', 'minimum-scale=1, maximum-scale=5, initial-scale=1, user-scalable=yes, viewport-fit=cover, width=device-width');
+  }
+}
+
+

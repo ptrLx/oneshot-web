@@ -20,8 +20,8 @@
 
 1. `cd frontend`
 2. Make sure `devOptions { enabled: true}` is set in `vite.config.js`
-3. Run 'npm run build' to generate the service worker and manifest in the `dist` folder
-4. Run `npm run dev`, the pwa should now appear as installable in the browser
+3. Run 'npm run build' to generate the service worker and manifest in the `dist` folder (production build) and `dist-dev` (dev build)
+4. Run `npm run dev`\ `npm run preview`, the pwa should now appear as installable in the browser
 
 #### Checking PWA requirements, usability and performance
 1. Install Chrome
