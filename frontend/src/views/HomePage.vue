@@ -17,10 +17,9 @@
           </card>
         </swiper-slide>
       </row-component>
-      <row-component row-height="20%" sectionHeaderTitle="Capture Today">
+      <row-component row-height="20%" :enableSectionHeader=false>
         <swiper-slide>
-          <card card-title="card1" card-subtitle="card1sub">
-          </card>
+          <capture-today-slide></capture-today-slide>
         </swiper-slide>
         <swiper-slide>
           <card card-title="card2" card-subtitle="card2sub">
@@ -58,11 +57,12 @@
 </template>
 
 <script setup lang="ts">
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar } from '@ionic/vue';
+import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonButton } from '@ionic/vue';
 import { SwiperSlide } from 'swiper/vue';
 import RowComponent from '@/components/RowComponent.vue';
 import ProfileComponent from '@/components/ProfileComponent.vue';
 import Card from '@/components/Card.vue';
+import CaptureTodaySlide from '@/components/CaptureTodaySlide.vue';
 
 
 </script>
