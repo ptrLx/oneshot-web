@@ -1,7 +1,7 @@
 import os
 from typing import Annotated
 
-from core.config import app_config
+import core.config as config
 from core.exeption import NoProfileImg
 from fastapi import APIRouter, Depends
 from fastapi.responses import FileResponse
@@ -11,8 +11,9 @@ from service.validate import get_current_active_user
 
 router = APIRouter()
 
-
 user_service = UserService()
+
+app_config = config.get_config()
 
 
 @router.get("/me", response_model=User)

@@ -1,10 +1,12 @@
 from datetime import datetime, timedelta
 
+import core.config as config
 import data.user_db as user_db
-from core.config import app_config
 from fastapi import HTTPException, status
 from jose import jwt
 from passlib.context import CryptContext
+
+app_config = config.get_config()
 
 
 class LoginService:

@@ -1,7 +1,7 @@
 from typing import Annotated
 
+import core.config as config
 import data.user_db as user_db
-from core.config import app_config
 from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
 from jose import JWTError, jwt
@@ -9,6 +9,8 @@ from model.token import TokenData
 from model.user import User
 
 __oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login")
+
+app_config = config.get_config()
 
 
 async def __get_current_user(token: Annotated[str, Depends(__oauth2_scheme)]):
