@@ -32,7 +32,7 @@
             </ion-row>
             <ion-row>
                 <ion-col size="12">
-                    <ion-button shape="round">Change password</ion-button>
+                    <ion-button shape="round" @click="$router.push('/change-password')">Change password</ion-button>
                 </ion-col>
             </ion-row>
             <ion-row>
