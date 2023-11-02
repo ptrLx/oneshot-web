@@ -10,7 +10,7 @@
             </ion-avatar>
         </div>
         <ion-title class="ion-text-center">
-            <h1>Username</h1>
+            <h1>{{ username }}</h1>
         </ion-title>
 
         <!-- Buttons Section -->
@@ -59,7 +59,7 @@
 <script lang="ts">
 import { IonAvatar, IonButton, IonGrid, IonRow, IonCol, IonIcon, IonTitle, useIonRouter, IonImg } from '@ionic/vue';
 import { ImageService, LoginService, UserService, Token, OpenAPI, ApiError } from '@/_generated/api-client';
-import { cameraOutline, constructOutline, image } from 'ionicons/icons';
+import { cameraOutline, chatboxEllipsesOutline, constructOutline, image } from 'ionicons/icons';
 import { computed, defineComponent, onMounted, ref } from 'vue';
 import { useCookies } from 'vue3-cookies'
 import ProfileComponent from '@/components/ProfileComponent.vue';
@@ -82,9 +82,17 @@ export default defineComponent({
         const router = useIonRouter();
         const { cookies } = useCookies();
         OpenAPI.TOKEN = cookies.get("token");
-
+        const username = ref<string>("");
         const profilePic = ref<string | null>(null);
         const blobUrl = ref<string>("");
+
+
+        UserService.getUserMeUserMeGet().then((response) => {
+            username.value = response.username;
+        }).catch((error: ApiError) => {
+            console.log(error);
+        });
+
 
         const handleLogout = () => {
             cookies.remove("token");
@@ -111,7 +119,8 @@ export default defineComponent({
             cookies,
             profilePic,
             blobUrl,
-            handleLogout
+            handleLogout,
+            username
         };
     },
 });

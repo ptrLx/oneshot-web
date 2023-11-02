@@ -21,18 +21,10 @@
         <swiper-slide>
           <capture-today-slide></capture-today-slide>
         </swiper-slide>
-        <swiper-slide>
-          <card card-title="card2" card-subtitle="card2sub">
-          </card>
-        </swiper-slide>
       </row-component>
       <row-component row-height="50%" sectionHeaderTitle="Calendar">
         <swiper-slide>
           <card card-title=" card1" card-subtitle="card1sub">
-          </card>
-        </swiper-slide>
-        <swiper-slide>
-          <card card-title="card2" card-subtitle="card2sub">
           </card>
         </swiper-slide>
       </row-component>
