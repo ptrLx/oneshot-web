@@ -4,7 +4,7 @@
         <div class="flex-container">
             <ion-avatar class="profile-avatar">
                 <ion-img v-if="blobUrl" :src="blobUrl" />
-                <ion-button class="change-profile-pic-button" shape="round">
+                <ion-button id="changeProfilePic" class="change-profile-pic-button" shape="round">
                     <ion-icon slot="icon-only" :icon="cameraOutline"></ion-icon>
                 </ion-button>
             </ion-avatar>
@@ -52,18 +52,20 @@
             </ion-row>
         </ion-grid>
 
-
+        <ion-action-sheet trigger="changeProfilePic" header="Change profile picture"
+            :buttons="actionSheetButtons"></ion-action-sheet>
     </base-layout>
 </template>
   
 <script lang="ts">
-import { IonAvatar, IonButton, IonGrid, IonRow, IonCol, IonIcon, IonTitle, useIonRouter, IonImg } from '@ionic/vue';
+import { IonAvatar, IonButton, IonGrid, IonRow, IonCol, IonIcon, IonTitle, useIonRouter, IonImg, IonActionSheet } from '@ionic/vue';
 import { ImageService, LoginService, UserService, Token, OpenAPI, ApiError } from '@/_generated/api-client';
 import { cameraOutline, chatboxEllipsesOutline, constructOutline, image } from 'ionicons/icons';
 import { computed, defineComponent, onMounted, ref } from 'vue';
 import { useCookies } from 'vue3-cookies'
 import ProfileComponent from '@/components/ProfileComponent.vue';
 import axios, { AxiosRequestConfig } from 'axios';
+import { useCameraService, UserPhoto } from '@/composables/cameraService';
 
 
 export default defineComponent({
@@ -75,7 +77,8 @@ export default defineComponent({
         IonCol,
         IonIcon,
         IonTitle,
-        IonImg
+        IonImg,
+        IonActionSheet
     },
     setup() {
 
@@ -85,6 +88,38 @@ export default defineComponent({
         const username = ref<string>("");
         const profilePic = ref<string | null>(null);
         const blobUrl = ref<string>("");
+        const { takePhoto, pickPhoto, photos } = useCameraService();
+
+        const actionSheetButtons = [
+            {
+                text: 'Camera',
+                role: 'destructive',
+                handler: () => {
+                    takePhoto().then(() => {
+                        blobUrl.value = photos.value[0]?.webviewPath || '';
+                        // TODO: upload profile pic to server
+                    });
+                }
+            },
+            {
+                text: 'Gallery',
+                role: 'destructive',
+                handler: () => {
+                    pickPhoto().then(() => {
+                        blobUrl.value = photos.value[0]?.webviewPath || '';
+                        // TODO: upload profile pic to server
+                    });
+                    console.log('Gallery clicked');
+                }
+            },
+            {
+                text: 'Cancel',
+                role: 'cancel',
+                handler: () => {
+                    console.log('Cancel clicked');
+                }
+            }
+        ]
 
 
         UserService.getUserMeUserMeGet().then((response) => {
@@ -105,6 +140,7 @@ export default defineComponent({
             return response.data // the blob    
         }
 
+
         onMounted(async () => {
             const queryString = OpenAPI.BASE + "/user/profileimg";
             loadImg(queryString).then(blob => {
@@ -120,7 +156,8 @@ export default defineComponent({
             profilePic,
             blobUrl,
             handleLogout,
-            username
+            username,
+            actionSheetButtons,
         };
     },
 });

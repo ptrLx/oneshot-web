@@ -54,7 +54,7 @@ export default defineComponent({
         const options = {
             responsive: true,
             maintainAspectRatio: false,
-            cutout: 140,
+            cutout: 90,
             borderColor: 'transparent',
             color: primaryContrast,
             spacing: 5,
