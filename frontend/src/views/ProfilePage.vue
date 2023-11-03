@@ -65,7 +65,7 @@ import { computed, defineComponent, onMounted, ref } from 'vue';
 import { useCookies } from 'vue3-cookies'
 import ProfileComponent from '@/components/ProfileComponent.vue';
 import axios, { AxiosRequestConfig } from 'axios';
-import { useCameraService, UserPhoto } from '@/composables/cameraService';
+import { useCameraService } from '@/composables/cameraService';
 
 
 export default defineComponent({
@@ -109,7 +109,6 @@ export default defineComponent({
                         blobUrl.value = photos.value[0]?.webviewPath || '';
                         // TODO: upload profile pic to server
                     });
-                    console.log('Gallery clicked');
                 }
             },
             {
