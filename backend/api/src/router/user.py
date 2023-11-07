@@ -25,9 +25,11 @@ async def get_user_me(current_user: Annotated[User, Depends(get_current_active_u
 async def get_user_profile_img(
     current_user: Annotated[User, Depends(get_current_active_user)]
 ):
-    profile_img_path = f"{app_config.WEBROOT_PATH}/img/{current_user}/profile.png"
+    profile_img_path = (
+        f"{app_config.WEBROOT_PATH}/img/{current_user.username}/profile.png"
+    )
 
-    if os.path.exists(profile_img_path) and os.path.isdir(profile_img_path):
+    if os.path.exists(profile_img_path) and os.path.isfile(profile_img_path):
         return FileResponse(profile_img_path)
     else:
         raise NoProfileImg
