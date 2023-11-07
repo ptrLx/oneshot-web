@@ -1,26 +1,79 @@
 <template>
   <router-link to="/profile">
     <ion-avatar class="avatar-icon">
-      <img alt="Silhouette of a person's head" src="https://ionicframework.com/docs/img/demos/avatar.svg" />
+      <ion-img v-if="blobUrl" :src="blobUrl" />
+      <div class="avatar-overlay"></div>
     </ion-avatar>
   </router-link>
 </template>
 
 <script lang="ts">
-import { IonAvatar } from '@ionic/vue';
-import { defineComponent } from 'vue';
+import { IonAvatar, IonImg } from '@ionic/vue';
+import { defineComponent, ref, onMounted } from 'vue';
+import axios, { AxiosRequestConfig } from 'axios';
+import { OpenAPI } from '@/_generated/api-client'
 
 export default defineComponent({
   components: {
-    IonAvatar
+    IonAvatar,
+    IonImg
   },
+  setup() {
+
+    const blobUrl = ref<string>("");
+
+    const loadImg = async (src: string) => {
+      const config: AxiosRequestConfig<any> = {
+        url: src,
+        method: "get",
+        responseType: "blob",
+        headers: {
+          "Authorization": `Bearer ${OpenAPI.TOKEN}`
+        }
+      }
+      const response = await axios.request(config)
+      return response.data // the blob    
+    }
+
+    onMounted(async () => {
+      const queryString = OpenAPI.BASE + "/user/profileimg";
+      loadImg(queryString).then(blob => {
+
+        blobUrl.value = URL.createObjectURL(blob);
+      })
+    });
+
+    return { blobUrl };
+  }
 });
+
 </script>
 
 <style scoped>
 .avatar-icon {
   padding: 1%;
   transform: scale(0.8);
-  border: none;
+  border: 3px solid var(--ion-color-primary);
+  position: relative;
+  cursor: pointer;
+}
+
+.avatar-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.3);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  transition: background 0.2s, display 0.2s;
+}
+
+.avatar-icon:hover .avatar-overlay {
+  display: flex;
 }
 </style>
+

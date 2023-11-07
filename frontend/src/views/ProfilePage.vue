@@ -60,7 +60,6 @@ import { ImageService, LoginService, UserService, Token, OpenAPI, ApiError } fro
 import { cameraOutline, chatboxEllipsesOutline, constructOutline, image } from 'ionicons/icons';
 import { computed, defineComponent, onMounted, ref } from 'vue';
 import { useCookies } from 'vue3-cookies'
-import ProfileComponent from '@/components/ProfileComponent.vue';
 import axios, { AxiosRequestConfig } from 'axios';
 import { useCameraService } from '@/composables/cameraService';
 
@@ -174,6 +173,7 @@ export default defineComponent({
 .profile-avatar {
     margin: 60px;
     scale: 2.0;
+    border: 1px solid var(--ion-color-primary);
 }
 
 .change-profile-pic-button {
