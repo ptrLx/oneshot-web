@@ -19,6 +19,12 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+
+@app.get("/")
+def get_status():
+    return "ok"
+
+
 app.include_router(user_router, prefix="/user", tags=["User"])
 app.include_router(login_router, prefix="/login", tags=["Login"])
 app.include_router(image_router, prefix="/image", tags=["Image"])

@@ -52,6 +52,16 @@ response:
 "ok"
 ```
 
+> GET
+
+attribute:
+
+* token
+
+response:
+
+<!-- image file -->
+
 ### /user/chpw
 
 > POST
@@ -89,10 +99,7 @@ attribute:
 
 parameter:
 
-* date
-* time
-* happiness?
-* text?
+* oneshot-update (see api-types.md)
 
 response:
 
@@ -110,9 +117,7 @@ attribute:
 
 parameter:
 
-* date
-* happiness?
-* text?
+* oneshot (see api-types.md)
 
 response:
 

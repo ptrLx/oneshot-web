@@ -1,5 +1,18 @@
 # API types
 
+## oneshot-update
+
+* date
+* happiness?
+* text?
+
+## oneshot
+
+* date
+* time
+* happiness?
+* text?
+
 ## happiness
 
 * NOT_SPECIFIED

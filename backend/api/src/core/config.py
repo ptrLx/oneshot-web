@@ -28,6 +28,16 @@ class AppConfig:
             "ACCESS_TOKEN_EXPIRE_MINUTES", 259200
         )  # defaults to 180 days
         self.ALGORITHM = os.getenv("ALGORITHM", "HS256")
+        self.ONESHOT_ALLOWED_FILE_EXTENSIONS = (
+            os.getenv("ONESHOT_ALLOWED_FILE_EXTENSIONS", "jpg, png, jpeg")
+            .lower()
+            .replace(" ", "")
+            .split(",")
+        )
+
+        self.MAX_FILE_UPLOAD_CHUNK_SIZE_B = os.getenv(
+            "MAX_FILE_UPLOAD_CHUNK_SIZE_B", 1024 * 1024
+        )  # Default is 1MB
 
     def __config_logging_level(self):
         level = os.getenv("LOGGING_LEVEL", "INFO").upper()

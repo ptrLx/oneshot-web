@@ -1,9 +1,10 @@
 import os
 from typing import Annotated
 
+import aiofiles
 import core.config as config
-from core.exeption import NoProfileImg
-from fastapi import APIRouter, Depends
+from core.exeption import ImgFileExtensionException, ImgUploadException, NoProfileImg
+from fastapi import APIRouter, Depends, File, UploadFile
 from fastapi.responses import FileResponse
 from model.user import User
 from service.user import UserService
@@ -33,6 +34,31 @@ async def get_user_profile_img(
         return FileResponse(profile_img_path)
     else:
         raise NoProfileImg
+
+
+@router.post("/profileimg")
+async def upload_user_profile_img(
+    current_user: Annotated[User, Depends(get_current_active_user)],
+    file: UploadFile = File(...),
+):
+    file_extension = (
+        file.filename[file.filename.rfind(".") + 1 :] if "." in file.filename else None
+    )
+    if file_extension != "png":
+        raise ImgFileExtensionException
+
+    path = f"{app_config.WEBROOT_PATH}/img/{current_user.username}/profile.png"
+    try:
+        async with aiofiles.open(path, "wb") as f:
+            # todo ensure file size is small
+            while contents := await file.read(app_config.MAX_FILE_UPLOAD_CHUNK_SIZE_B):
+                await f.write(contents)
+    except Exception:
+        raise ImgUploadException
+    finally:
+        await file.close()
+
+    return "ok"
 
 
 @router.post("/chpw")
