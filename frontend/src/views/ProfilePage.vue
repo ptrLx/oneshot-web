@@ -41,9 +41,6 @@
                 </ion-col>
             </ion-row>
             <ion-row>
-                <ion-col size="12">
-                    <ion-button shape="round">Feedback</ion-button>
-                </ion-col>
             </ion-row>
             <ion-row>
                 <ion-col size="12">
@@ -120,13 +117,11 @@ export default defineComponent({
             }
         ]
 
-
         UserService.getUserMeUserMeGet().then((response) => {
             username.value = response.username;
         }).catch((error: ApiError) => {
             console.log(error);
         });
-
 
         const handleLogout = () => {
             cookies.remove("token");
@@ -134,11 +129,17 @@ export default defineComponent({
         }
 
         const loadImg = async (src: string) => {
-            const config: AxiosRequestConfig<any> = { url: src, method: "get", responseType: "blob" }
+            const config: AxiosRequestConfig<any> = {
+                url: src,
+                method: "get",
+                responseType: "blob",
+                headers: {
+                    "Authorization": `Bearer ${OpenAPI.TOKEN}`
+                }
+            }
             const response = await axios.request(config)
             return response.data // the blob    
         }
-
 
         onMounted(async () => {
             const queryString = OpenAPI.BASE + "/user/profileimg";
