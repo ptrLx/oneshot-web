@@ -32,6 +32,12 @@ const routes: Array<RouteRecordRaw> = [
     name: 'ChangePassword',
     component: () => import('../views/ChangePwPage.vue'), // Lazy load component
     meta: { requiresAuth: true}
+  },
+  {
+    path: '/upload-image',
+    name: 'UploadImage',
+    component: () => import('../views/UploadImagePage.vue'), // Lazy load component
+    meta: { requiresAuth: true}
   }
 ]
 

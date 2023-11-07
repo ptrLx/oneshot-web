@@ -13,7 +13,7 @@
             </ion-row>
             <ion-row>
                 <ion-col size="12">
-                    <!-- TODO: add hapiness selection-->
+                    <happiness-selector class="selector"></happiness-selector>
                 </ion-col>
             </ion-row>
             <ion-row>
@@ -39,6 +39,7 @@ import { defineComponent, ref } from 'vue';
 import { ImageService, LoginService, UserService, Token, OpenAPI, ApiError } from '@/_generated/api-client';
 import { routerKey, useRoute } from 'vue-router';
 import { useCameraService } from '@/composables/cameraService';
+import HappinessSelector from '@/components/HappinessSelector.vue';
 
 export default defineComponent({
     components: {
@@ -50,7 +51,8 @@ export default defineComponent({
         IonIcon,
         IonTextarea,
         IonTitle,
-        IonImg
+        IonImg,
+        HappinessSelector
     },
     setup() {
         const uploadedImage = ref<string>("");
@@ -118,6 +120,15 @@ ion-img {
 
 ion-img::part(image) {
     border-radius: 50px;
+}
+
+.selector {
+    width: 80%;
+    height: 40px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    margin-left: 10%;
+    margin-right: 10%;
 }
 </style>
 
