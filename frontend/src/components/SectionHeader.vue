@@ -51,8 +51,8 @@ export default defineComponent({
 <style scoped>
 .section-header {
 
-    margin-top: 0px;
-    margin-bottom: 20px;
+    margin-top: 10px;
+    margin-bottom: 5px;
     padding: 0px;
     height: 30px;
 }

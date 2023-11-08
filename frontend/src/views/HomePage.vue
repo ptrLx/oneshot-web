@@ -24,7 +24,8 @@
       </row-component>
       <row-component row-height="50%" sectionHeaderTitle="Calendar">
         <swiper-slide>
-          <card card-title=" card1" card-subtitle="card1sub">
+          <card>
+            <calendar-component></calendar-component>
           </card>
         </swiper-slide>
       </row-component>
@@ -57,6 +58,7 @@ import ProfileComponent from '@/components/ProfileComponent.vue';
 import Card from '@/components/Card.vue';
 import CaptureTodaySlide from '@/components/CaptureTodaySlide.vue';
 import DonutChart from '@/components/DonutChart.vue';
+import CalendarComponent from '@/components/CalendarComponent.vue';
 
 
 </script>
