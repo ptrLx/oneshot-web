@@ -2,7 +2,8 @@
     "conventionalCommits.scopes": [
         "frontend",
         "doc",
-        "api"
+        "api",
+        "deploy"
     ],
     "cSpell.words": [
         "aiofiles",

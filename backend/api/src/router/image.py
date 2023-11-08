@@ -28,7 +28,7 @@ async def upload_image(
 
     file_name = f"{oneshot.get_file_name()}.{file_extension}"
 
-    path = f"{app_config.WEBROOT_PATH}/img/{current_user.username}/{file_name}"
+    path = f"{app_config.WEBROOT_PATH}/img/{current_user.username}/{file_name}"  # todo use os to concat folders
     try:
         async with aiofiles.open(path, "wb") as f:
             # todo use max file size

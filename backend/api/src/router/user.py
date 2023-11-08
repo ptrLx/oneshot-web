@@ -26,9 +26,7 @@ async def get_user_me(current_user: Annotated[User, Depends(get_current_active_u
 async def get_user_profile_img(
     current_user: Annotated[User, Depends(get_current_active_user)]
 ):
-    profile_img_path = (
-        f"{app_config.WEBROOT_PATH}/img/{current_user.username}/profile.png"
-    )
+    profile_img_path = f"{app_config.WEBROOT_PATH}/img/{current_user.username}/profile.png"  # todo use os to concat folders
 
     if os.path.exists(profile_img_path) and os.path.isfile(profile_img_path):
         return FileResponse(profile_img_path)
@@ -47,7 +45,7 @@ async def upload_user_profile_img(
     if file_extension != "png":
         raise ImgFileExtensionException
 
-    path = f"{app_config.WEBROOT_PATH}/img/{current_user.username}/profile.png"
+    path = f"{app_config.WEBROOT_PATH}/img/{current_user.username}/profile.png"  # todo use os to concat folders
     try:
         async with aiofiles.open(path, "wb") as f:
             # todo ensure file size is small

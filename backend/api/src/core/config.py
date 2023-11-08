@@ -15,7 +15,7 @@ class AppConfig:
     def __init__(self) -> None:
         self.__config_logging_level()
 
-        self.WEBROOT_PATH = os.getenv("WEBROOT_PATH", "/srv/oneshot/")
+        self.WEBROOT_PATH = os.getenv("WEBROOT_PATH", "/srv/oneshot")
 
         if not filesystem_is_initialized(self.WEBROOT_PATH):
             bootstrap_filesystem(self.WEBROOT_PATH)
@@ -34,6 +34,12 @@ class AppConfig:
             .replace(" ", "")
             .split(",")
         )
+
+        # for CORS:
+        # Defaults to the default local frontend port.
+        # In production both api and frontend are behind the same nginx and thus behind the same host url.
+        # Use "*" to disable CORS.
+        self.HOST_URL = os.getenv("HOST_URL", "http://localhost:8100")
 
         self.MAX_FILE_UPLOAD_CHUNK_SIZE_B = os.getenv(
             "MAX_FILE_UPLOAD_CHUNK_SIZE_B", 1024 * 1024
@@ -61,13 +67,17 @@ class AppConfig:
         self.logger = logging.getLogger(__name__)
 
     def __read_config(self):
-        with open(f"{self.WEBROOT_PATH}/conf.json", "r") as file:
+        with open(
+            f"{self.WEBROOT_PATH}/conf.json", "r"
+        ) as file:  # todo use os to concat folders
             data = json.load(file)
 
         try:
             SECRET_KEY = data["SECRET_KEY"]
         except KeyError:
-            self.logger.error(f"No secret key found in {self.WEBROOT_PATH}/conf.json.")
+            self.logger.error(
+                f"No secret key found in {self.WEBROOT_PATH}/conf.json."
+            )  # todo use os to concat folders
             sys.exit(1)
 
         return SECRET_KEY

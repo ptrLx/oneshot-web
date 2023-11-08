@@ -26,3 +26,32 @@ setup-frontend:  ## Setup the frontend
 .PHONY: start-frontend
 start-frontend:  ## Start the frontend
 	cd frontend && ionic serve
+
+.PHONY: compile-frontend
+compile-frontend:  ## Compile the frontend
+	cd frontend && npm run build
+
+.PHONY: build-docker-image-no-compile
+build-docker-image-no-compile: ## Build the docker image with nginx, python api server and the compiled frontend in it. Skip compilation of the frontend (build outside of the devcontainer).
+	docker build -t oneshot-web .
+
+.PHONY: build-docker-image
+build-docker-image: compile-frontend build-docker-image-no-compile ## Build the docker image with nginx, python api server and the compiled frontend in it
+	echo "Done."
+
+
+.PHONY: ci-release-docker-image
+ci-release-docker-image:  ## Setup build-docker-image
+	#todo release to docker hub
+
+
+.PHONY: start-docker-image
+start-docker-image: build-docker-image-no-compile  ## Start the docker image without a db. Make sure that the frontend was compiled before.
+	mkdir -p local_volume/api
+	docker run --rm -it --name os-web --volume=./local_volume/api/:/srv/oneshot -p 80:8080 oneshot-web /bin/bash
+
+.PHONY: start-compose-stack
+start-compose-stack: build-docker-image-no-compile  ## Start the application with docker compose. Make sure that the frontend was compiled before.
+	mkdir -p local_volume/api
+	mkdir -p local_volume/api
+	docker compose up -d

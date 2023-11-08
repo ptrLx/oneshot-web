@@ -1,5 +1,21 @@
 # oneshot-web
 
+## Host oneshot-web
+
+Use following `docker-compose.yml`-template to host oneshot-web:
+
+```yml
+# todo use docker hub image
+# todo use host port 8080
+```
+
+`.env`-example:
+
+```conf
+WEBROOT_PATH=/srv/oneshot/
+HOST_URL=http://localhost:8080
+```
+
 ## Development Setup
 
 1. clone the repository
@@ -15,7 +31,6 @@
 
 1. `make start-frontend`
 
-
 ### PWA Dev Setup
 
 1. `cd frontend`
@@ -24,8 +39,8 @@
 4. Run `npm run dev`\ `npm run preview`, the pwa should now appear as installable in the browser
 
 #### Checking PWA requirements, usability and performance
+
 1. Install Chrome
 2. Install Google Lighthouse extension
 3. Open dev tools (F12) and go to the Lighthouse tab
 4. Run the audit
-
