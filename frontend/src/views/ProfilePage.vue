@@ -86,7 +86,7 @@ export default defineComponent({
         const profilePic = ref<string | null>(null);
         const blobUrl = ref<string>("");
         const { takePhoto, pickPhoto, photos } = useCameraService();
-        const { loadImg, uploadImg } = useImageService();
+        const { loadImg, uploadProfileImg } = useImageService();
 
         const actionSheetButtons = [
             {
@@ -95,7 +95,7 @@ export default defineComponent({
                 handler: () => {
                     takePhoto().then(() => {
                         blobUrl.value = photos.value[0]?.webviewPath || '';
-                        uploadImg(blobUrl.value);
+                        uploadProfileImg(blobUrl.value);
                     });
                 }
             },
@@ -105,7 +105,7 @@ export default defineComponent({
                 handler: () => {
                     pickPhoto().then(() => {
                         blobUrl.value = photos.value[0]?.webviewPath || '';
-                        uploadImg(blobUrl.value);
+                        uploadProfileImg(blobUrl.value);
                     });
                 }
             },

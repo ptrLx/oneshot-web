@@ -12,6 +12,8 @@ import { IonAvatar, IonImg } from '@ionic/vue';
 import { defineComponent, ref, onMounted } from 'vue';
 import axios, { AxiosRequestConfig } from 'axios';
 import { OpenAPI } from '@/_generated/api-client'
+import { useImageService } from '@/composables/imageService';
+
 
 export default defineComponent({
   components: {
@@ -21,19 +23,7 @@ export default defineComponent({
   setup() {
 
     const blobUrl = ref<string>("");
-
-    const loadImg = async (src: string) => {
-      const config: AxiosRequestConfig<any> = {
-        url: src,
-        method: "get",
-        responseType: "blob",
-        headers: {
-          "Authorization": `Bearer ${OpenAPI.TOKEN}`
-        }
-      }
-      const response = await axios.request(config)
-      return response.data // the blob    
-    }
+    const { loadImg } = useImageService();
 
     onMounted(async () => {
       const queryString = OpenAPI.BASE + "/user/profileimg";

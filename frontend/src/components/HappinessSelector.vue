@@ -2,11 +2,13 @@
     <div>
         <ion-radio-group v-model="selectedHappiness">
             <ion-row>
-                <ion-col v-for="happiness in happinessOptions" :key="happiness" size="2">
-                    <ion-radio :value="happiness" label-placement="stacked">
-                        <ion-label :class="{ 'selected-emoji': selectedHappiness === happiness }"
-                            :style="{ fontSize: selectedHappiness === happiness ? '36px' : '30px', border: selectedHappiness === happiness ? '2px solid var(--ion-color-primary)' : '2px solid transparent' }">
-                            {{ happiness }}
+                <ion-col v-for="happiness in happinessOptions" :key="happiness.emoji" size="2">
+                    <ion-radio :value="happiness.value" label-placement="stacked">
+                        <ion-label :class="{ 'selected-emoji': isSelected(happiness) }" :style="{
+                            fontSize: isSelected(happiness) ? '36px' : '30px',
+                            border: isSelected(happiness) ? '2px solid var(--ion-color-primary)' : '2px solid transparent'
+                        }">
+                            {{ happiness.emoji }}
                         </ion-label>
                     </ion-radio>
                 </ion-col>
@@ -16,8 +18,10 @@
 </template>
   
 <script lang="ts">
-import { defineComponent, ref } from 'vue';
+import { defineComponent, ref, watch } from 'vue';
 import { IonRadio, IonRadioGroup, IonRow, IonCol, IonLabel } from '@ionic/vue';
+import { Happiness } from '@/types/Happiness';
+import { computed } from '@vue/reactivity';
 
 export default defineComponent({
     components: {
@@ -27,13 +31,28 @@ export default defineComponent({
         IonCol,
         IonLabel,
     },
-    setup() {
-        const selectedHappiness = ref<string | null>(null);
-        const happinessOptions = ['😄', '😃', '😐', '😞', '😢'];
+    setup(props, { emit }) {
+        const selectedHappiness = ref<Happiness>(Happiness.NOT_SPECIFIED);
+        const happinessOptions = [
+            { emoji: '😄', value: Happiness.VERY_HAPPY },
+            { emoji: '😃', value: Happiness.HAPPY },
+            { emoji: '😐', value: Happiness.NEUTRAL },
+            { emoji: '😞', value: Happiness.SAD },
+            { emoji: '😢', value: Happiness.VERY_SAD },
+        ];
+
+        watch(selectedHappiness, (newValue) => {
+            console.log('selectedHappiness changed to', newValue);
+            emit('update:selectedHappiness', newValue)
+        });
+
+        const isSelected = (happiness: { value: Happiness; }) =>
+            selectedHappiness.value === happiness.value;
 
         return {
             selectedHappiness,
             happinessOptions,
+            isSelected
         };
     },
 });

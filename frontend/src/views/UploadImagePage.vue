@@ -13,19 +13,20 @@
             </ion-row>
             <ion-row>
                 <ion-col size="12">
-                    <happiness-selector class="selector"></happiness-selector>
+                    <happiness-selector class="selector" @update:selectedHappiness="handleNewHappiness">
+                    </happiness-selector>
                 </ion-col>
             </ion-row>
             <ion-row>
                 <ion-col size="12">
                     <ion-textarea type="text" fill="outline" shape="round" placeholder="Describe your image here"
-                        :maxlength=600 :spellcheck=true :counter=true>
+                        :maxlength=600 :spellcheck=true :counter=true v-model="description">
                     </ion-textarea>
                 </ion-col>
             </ion-row>
             <ion-row>
                 <ion-col size="12">
-                    <ion-button shape="round">Upload</ion-button>
+                    <ion-button shape="round" @click="handleUpload">Upload</ion-button>
                 </ion-col>
             </ion-row>
         </ion-grid>
@@ -39,7 +40,10 @@ import { defineComponent, ref } from 'vue';
 import { ImageService, LoginService, UserService, Token, OpenAPI, ApiError } from '@/_generated/api-client';
 import { routerKey, useRoute } from 'vue-router';
 import { useCameraService } from '@/composables/cameraService';
+import { useImageService } from '@/composables/imageService';
 import HappinessSelector from '@/components/HappinessSelector.vue';
+import { Happiness } from '@/types/Happiness';
+import { OneShotUpdate } from '@/types/OneShotUpdate';
 
 export default defineComponent({
     components: {
@@ -55,24 +59,29 @@ export default defineComponent({
         HappinessSelector
     },
     setup() {
-        const uploadedImage = ref<string>("");
+
         const route = useRoute();
         const router = useIonRouter();
-        const imgDate = ref<string>("");
         const { takePhoto, pickPhoto, photos } = useCameraService();
+        const { uploadGalleryImg } = useImageService();
 
+        const imgDate = ref<string>("");
+        const uploadedImage = ref<string>("");
+        const description = ref<string>("");
+
+        let selectedHappiness = Happiness.NOT_SPECIFIED; // Default value
 
         switch (route.query.action) {
             case 'capture':
                 takePhoto().then(() => {
                     uploadedImage.value = photos.value[0]?.webviewPath || '';
-                    imgDate.value = new Date().toLocaleDateString('en-GB'); //TODO: make date format configurable
+                    imgDate.value = new Date().toISOString().slice(0, 10);
                 })
                 break;
             case 'pick':
                 pickPhoto().then(() => {
                     uploadedImage.value = photos.value[0]?.webviewPath || '';
-                    imgDate.value = new Date().toLocaleDateString('en-GB');
+                    imgDate.value = new Date().toISOString().slice(0, 10);
                 })
                 break;
             default:
@@ -80,10 +89,33 @@ export default defineComponent({
                 break;
         }
 
+        const handleNewHappiness = (newHappiness: Happiness) => {
+            selectedHappiness = newHappiness;
+        }
+
+        const handleUpload = () => {
+
+            const oneShotUpdate: OneShotUpdate = {
+                date: imgDate.value,
+                time: Date.now() / 1000, //TODO: read from image exif data instead
+                happiness: selectedHappiness,
+                text: description.value,
+            };
+
+            uploadGalleryImg(uploadedImage.value, oneShotUpdate).then((respose) => {
+                router.push('/home');
+            }).catch((error) => {
+                console.log(error);
+                //TODO: show error message to user
+            });
+        }
 
         return {
             uploadedImage,
-            imgDate
+            imgDate,
+            description,
+            handleNewHappiness,
+            handleUpload
         };
     },
 });
