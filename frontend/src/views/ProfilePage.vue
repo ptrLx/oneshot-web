@@ -60,8 +60,9 @@ import { ImageService, LoginService, UserService, Token, OpenAPI, ApiError } fro
 import { cameraOutline, chatboxEllipsesOutline, constructOutline, image } from 'ionicons/icons';
 import { computed, defineComponent, onMounted, ref } from 'vue';
 import { useCookies } from 'vue3-cookies'
-import axios, { AxiosRequestConfig } from 'axios';
 import { useCameraService } from '@/composables/cameraService';
+import { useImageService } from '@/composables/imageService';
+
 
 
 export default defineComponent({
@@ -85,6 +86,7 @@ export default defineComponent({
         const profilePic = ref<string | null>(null);
         const blobUrl = ref<string>("");
         const { takePhoto, pickPhoto, photos } = useCameraService();
+        const { loadImg, uploadImg } = useImageService();
 
         const actionSheetButtons = [
             {
@@ -93,7 +95,7 @@ export default defineComponent({
                 handler: () => {
                     takePhoto().then(() => {
                         blobUrl.value = photos.value[0]?.webviewPath || '';
-                        // TODO: upload profile pic to server
+                        uploadImg(blobUrl.value);
                     });
                 }
             },
@@ -103,7 +105,7 @@ export default defineComponent({
                 handler: () => {
                     pickPhoto().then(() => {
                         blobUrl.value = photos.value[0]?.webviewPath || '';
-                        // TODO: upload profile pic to server
+                        uploadImg(blobUrl.value);
                     });
                 }
             },
@@ -116,29 +118,17 @@ export default defineComponent({
             }
         ]
 
+        const handleLogout = () => {
+            cookies.remove("token");
+            router.push('/login');
+        }
+
         UserService.getUserMeUserMeGet().then((response) => {
             username.value = response.username;
         }).catch((error: ApiError) => {
             console.log(error);
         });
 
-        const handleLogout = () => {
-            cookies.remove("token");
-            router.push('/login');
-        }
-
-        const loadImg = async (src: string) => {
-            const config: AxiosRequestConfig<any> = {
-                url: src,
-                method: "get",
-                responseType: "blob",
-                headers: {
-                    "Authorization": `Bearer ${OpenAPI.TOKEN}`
-                }
-            }
-            const response = await axios.request(config)
-            return response.data // the blob    
-        }
 
         onMounted(async () => {
             const queryString = OpenAPI.BASE + "/user/profileimg";
