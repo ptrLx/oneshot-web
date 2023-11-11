@@ -15,13 +15,14 @@ setup-api:  ## Setup the api
 
 export WEBROOT_PATH = ../../_local_webroot
 export LOGGING_LEVEL = "DEBUG"
+export STAGE = "dev"
 .PHONY: start-api
 start-api:  ## Start the api
 	cd backend/api && pipenv run python src/main.py
 
 .PHONY: setup-frontend
 setup-frontend:  ## Setup the frontend
-	cd frontend && npm install --dev
+	cd frontend && npm install --include=dev
 
 .PHONY: start-frontend
 start-frontend:  ## Start the frontend
@@ -36,22 +37,32 @@ build-docker-image-no-compile: ## Build the docker image with nginx, python api 
 	docker build -t oneshot-web .
 
 .PHONY: build-docker-image
-build-docker-image: compile-frontend build-docker-image-no-compile ## Build the docker image with nginx, python api server and the compiled frontend in it
+build-docker-image: compile-frontend build-docker-image-no-compile ## Build the docker image with nginx, the python api server and the compiled frontend in it.
 	echo "Done."
 
 
-.PHONY: ci-release-docker-image
-ci-release-docker-image:  ## Setup build-docker-image
-	#todo release to docker hub
-
+.PHONY: start-docker-image-bash
+start-docker-image-bash: build-docker-image-no-compile  ## Start the docker but run bash instead. Inside the container, run the api with `pipenv run python src/main.py`, nginx with `nginx -g 'daemon off;'` or both with `/usr/bin/supervisor`. Make sure that the frontend was compiled before.
+	mkdir -p local_volume/api
+	docker run --rm -it --name os-web -e TZ="Europe/Berlin" -e HOST_URL="localhost:8080" -e STAGE="qa" --volume=./local_volume/api/:/srv/oneshot -p 8080:80 oneshot-web /bin/bash
 
 .PHONY: start-docker-image
-start-docker-image: build-docker-image-no-compile  ## Start the docker image without a db. Make sure that the frontend was compiled before.
+start-docker-image: build-docker-image-no-compile  ## Start the docker image. Make sure that the frontend was compiled before.
 	mkdir -p local_volume/api
-	docker run --rm -it --name os-web --volume=./local_volume/api/:/srv/oneshot -p 80:8080 oneshot-web /bin/bash
+	docker run --rm --name os-web -e TZ="Europe/Berlin" -e HOST_URL="localhost:8080" -e STAGE="qa" --volume=./local_volume/api/:/srv/oneshot -p 8080:80 oneshot-web
+
+.PHONY: container-attach-bash
+container-attach-bash:  ## Attach a shell to the docker container.
+	docker exec -it os-web /bin/bash
+
 
 .PHONY: start-compose-stack
 start-compose-stack: build-docker-image-no-compile  ## Start the application with docker compose. Make sure that the frontend was compiled before.
 	mkdir -p local_volume/api
 	mkdir -p local_volume/api
 	docker compose up -d
+
+
+.PHONY: ci-release-docker-image
+ci-release-docker-image:  ## Setup build-docker-image
+	#todo release to docker hub

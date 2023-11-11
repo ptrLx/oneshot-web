@@ -8,7 +8,7 @@ from jose import JWTError, jwt
 from model.token import TokenData
 from model.user import User
 
-__oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login")
+__oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login/")
 
 app_config = config.get_config()
 

@@ -9,6 +9,7 @@
         "aiofiles",
         "devcontainer",
         "fastapi",
+        "nginx",
         "oneshot",
         "pipenv"
     ],

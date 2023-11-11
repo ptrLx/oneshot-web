@@ -1,26 +1,27 @@
-# --- nginx --- #
+FROM python:3.11-bullseye
 
-FROM nginx:latest AS builder
+# --- general --- #
 
-COPY deploy/nginx.conf /etc/nginx/nginx.conf
-
-# --- supervisor --- #
-
-RUN apt-get update && apt-get install -y supervisor
-
-COPY deploy/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+RUN apt-get update && apt-get install -y supervisor nginx && rm -rf /var/lib/apt/lists/*
+RUN pip install pipenv
 
 # --- api --- #
 
-FROM python:3.11
-
-RUN pip install pipenv
-
-COPY backend/api /api
-
 WORKDIR /api
 
+# Install dependencies first to save build time on rebuilds.
+COPY backend/api/Pipfile* /api
 RUN pipenv install --deploy
+
+COPY backend/api/src /api/src
+
+# --- nginx --- #
+
+COPY container-assets/nginx.conf /etc/nginx/nginx.conf
+
+# --- supervisor --- #
+
+COPY container-assets/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
 # --- frontend --- #
 
@@ -29,4 +30,4 @@ COPY frontend/dist /var/www/html
 # --- start --- #
 
 EXPOSE 80
-CMD ["/usr/bin/supervisord"]
+CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]

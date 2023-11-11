@@ -7,13 +7,14 @@ logger = logging.getLogger(__name__)
 
 
 def filesystem_is_initialized(webroot_path: str) -> bool:
+    conf_path = os.path.join(webroot_path, "conf.json")
     return (
         os.path.exists(webroot_path)
         and os.path.isdir(webroot_path)
-        and os.path.exists(f"{webroot_path}/conf.json")
-        and os.path.isfile(f"{webroot_path}/conf.json")
-    )  # todo use os to concat folders
-    # todo also check if img folder and conf.json is valid
+        and os.path.exists(conf_path)
+        and os.path.isfile(conf_path)
+    )
+    # todo also check if img folder exists and conf.json is valid
 
 
 def bootstrap_filesystem(webroot_path: str) -> None:
@@ -29,7 +30,7 @@ def bootstrap_filesystem(webroot_path: str) -> None:
 
     logger.info(f"Bootstrapping folder {webroot_path}")
 
-    os.makedirs(f"{webroot_path}/img", exist_ok=True)  # todo use os to concat folders
+    os.makedirs(os.path.join(webroot_path, "img"), exist_ok=True)
 
     logger.info(f"Generating secret key")
 
@@ -39,7 +40,7 @@ def bootstrap_filesystem(webroot_path: str) -> None:
 
     logger.info(f"Writing config file")
 
-    with open(f"{webroot_path}/conf.json", "w") as f:  # todo use os to concat folders
+    with open(os.path.join(webroot_path, "conf.json"), "w") as f:
         json.dump(config_data, f, indent=4)
 
 

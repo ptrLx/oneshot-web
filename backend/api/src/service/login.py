@@ -4,6 +4,7 @@ import core.config as config
 import data.user_db as user_db
 from fastapi import HTTPException, status
 from jose import jwt
+from model.token import Token
 from passlib.context import CryptContext
 
 app_config = config.get_config()
@@ -13,7 +14,7 @@ class LoginService:
     def __init__(self) -> None:
         self.__pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
-    def __verify_password(self, plain_password, hashed_password):
+    def __verify_password(self, plain_password, hashed_password) -> bool:
         return self.__pwd_context.verify(plain_password, hashed_password)
 
     def __authenticate_user(self, username: str, password: str):
@@ -24,7 +25,9 @@ class LoginService:
             return False
         return user
 
-    def __create_access_token(self, data: dict, expires_delta: timedelta | None = None):
+    def __create_access_token(
+        self, data: dict, expires_delta: timedelta | None = None
+    ) -> str:
         to_encode = data.copy()
         if expires_delta:
             expire = datetime.utcnow() + expires_delta
@@ -39,7 +42,7 @@ class LoginService:
     # def get_password_hash(self, password):
     #     return self.__pwd_context.hash(password)
 
-    def login_user(self, username: str, password: str):
+    def login_user(self, username: str, password: str) -> Token:
         user = self.__authenticate_user(username, password)
         if not user:
             raise HTTPException(

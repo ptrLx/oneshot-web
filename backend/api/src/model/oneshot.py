@@ -26,7 +26,7 @@ class OneShot(BaseModel):
         return value
 
     def get_file_name(self):
-        dt_object = datetime.utcfromtimestamp(self.time)
+        dt_object = datetime.fromtimestamp(self.time)
 
         # Format the datetime object as YYYYMMDDHHMMSS
         file_naming_number = dt_object.strftime("%Y%m%d%H%M%S")

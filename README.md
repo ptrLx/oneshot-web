@@ -14,6 +14,7 @@ Use following `docker-compose.yml`-template to host oneshot-web:
 ```conf
 WEBROOT_PATH=/srv/oneshot/
 HOST_URL=http://localhost:8080
+TZ=Europe/Berlin
 ```
 
 ## Development Setup

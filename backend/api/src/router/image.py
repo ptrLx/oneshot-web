@@ -1,3 +1,4 @@
+import os
 from typing import Annotated
 
 import aiofiles
@@ -19,16 +20,20 @@ async def upload_image(
     current_user: Annotated[User, Depends(get_current_active_user)],
     oneshot: OneShot = Depends(),
     file: UploadFile = File(...),
-):
+) -> str:
     file_extension = (
-        file.filename[file.filename.rfind(".") + 1 :] if "." in file.filename else None
+        file.filename[file.filename.rfind(".") + 1 :].lower()
+        if "." in file.filename
+        else None
     )
     if file_extension not in app_config.ONESHOT_ALLOWED_FILE_EXTENSIONS:
         raise ImgFileExtensionException
 
     file_name = f"{oneshot.get_file_name()}.{file_extension}"
 
-    path = f"{app_config.WEBROOT_PATH}/img/{current_user.username}/{file_name}"  # todo use os to concat folders
+    path = os.path.join(
+        app_config.WEBROOT_PATH, "img", current_user.username, file_name
+    )
     try:
         async with aiofiles.open(path, "wb") as f:
             # todo use max file size
@@ -43,4 +48,4 @@ async def upload_image(
     # todo create preview
     # todo store in db
 
-    return "ok"
+    return file_name

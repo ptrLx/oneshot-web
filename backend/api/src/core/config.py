@@ -35,11 +35,19 @@ class AppConfig:
             .split(",")
         )
 
+        self.STAGE = os.getenv("STAGE", "prod")
+
         # for CORS:
         # Defaults to the default local frontend port.
         # In production both api and frontend are behind the same nginx and thus behind the same host url.
         # Use "*" to disable CORS.
-        self.HOST_URL = os.getenv("HOST_URL", "http://localhost:8100")
+        self.HOST_URL = os.getenv("HOST_URL")
+        if self.HOST_URL is None:
+            if self.STAGE == "dev":
+                self.HOST_URL = "http://localhost:8100"  # Needed for CORS. The actual HOST_URL would be http://localhost:8200
+            else:
+                self.logger.error(f"HOST_URL environment variable is not set.")
+                sys.exit(1)
 
         self.MAX_FILE_UPLOAD_CHUNK_SIZE_B = os.getenv(
             "MAX_FILE_UPLOAD_CHUNK_SIZE_B", 1024 * 1024
@@ -67,23 +75,20 @@ class AppConfig:
         self.logger = logging.getLogger(__name__)
 
     def __read_config(self):
-        with open(
-            f"{self.WEBROOT_PATH}/conf.json", "r"
-        ) as file:  # todo use os to concat folders
+        conf_path = os.path.join(self.WEBROOT_PATH, "conf.json")
+        with open(conf_path, "r") as file:
             data = json.load(file)
 
         try:
             SECRET_KEY = data["SECRET_KEY"]
         except KeyError:
-            self.logger.error(
-                f"No secret key found in {self.WEBROOT_PATH}/conf.json."
-            )  # todo use os to concat folders
+            self.logger.error(f"No secret key found in {conf_path}.")
             sys.exit(1)
 
         return SECRET_KEY
 
 
-def get_config():
+def get_config() -> AppConfig:
     if not hasattr(get_config, "app_config"):
         setattr(get_config, "app_config", AppConfig())
     return get_config.app_config
