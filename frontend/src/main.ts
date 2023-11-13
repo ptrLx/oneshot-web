@@ -36,9 +36,18 @@ globalCookiesConfig({
   //secure: true // true: only https works
 });
 
-// set base path for generated client
-OpenAPI.BASE = 'http://localhost:8200';
-
+// Set base URL for backend API calls
+const nodeEnv = process.env.NODE_ENV;
+if (nodeEnv === 'development'){
+  // development
+  OpenAPI.BASE = 'http://localhost:8200';
+  console.log('Running oneshot-web in development mode');
+}
+else{
+  // production
+  OpenAPI.BASE = 'http://localhost:8080/api';
+  console.log('Running oneshot-web in production mode');
+}
 
 const app = createApp(App)
   .use(IonicVue)
