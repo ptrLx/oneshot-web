@@ -1,7 +1,7 @@
 <template>
     <ion-card class="full-width-card">
         <slot></slot>
-        <ion-card-header>
+        <ion-card-header v-if="cardTitle || cardSubtitle">
             <ion-card-title> {{ cardTitle }} </ion-card-title>
             <ion-card-subtitle> {{ cardSubtitle }}</ion-card-subtitle>
         </ion-card-header>
