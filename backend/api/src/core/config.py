@@ -15,7 +15,14 @@ class AppConfig:
     def __init__(self) -> None:
         self.__config_logging_level()
 
-        self.WEBROOT_PATH = os.getenv("WEBROOT_PATH", "/srv/oneshot")
+        self.STAGE = os.getenv("STAGE", "prod")
+
+        self.WEBROOT_PATH = os.getenv("WEBROOT_PATH")
+        if self.WEBROOT_PATH is None:
+            if self.STAGE == "dev":
+                self.WEBROOT_PATH = "../../_local_webroot"
+            else:
+                self.WEBROOT_PATH = "/srv/oneshot"
 
         if not filesystem_is_initialized(self.WEBROOT_PATH):
             bootstrap_filesystem(self.WEBROOT_PATH)
@@ -35,16 +42,14 @@ class AppConfig:
             .split(",")
         )
 
-        self.STAGE = os.getenv("STAGE", "prod")
-
-        # for CORS:
-        # Defaults to the default local frontend port.
+        # For CORS:
+        # Defaults to the default local frontend port in dev.
         # In production both api and frontend are behind the same nginx and thus behind the same host url.
         # Use "*" to disable CORS.
         self.HOST_URL = os.getenv("HOST_URL")
         if self.HOST_URL is None:
             if self.STAGE == "dev":
-                self.HOST_URL = "http://localhost:8100"  # Needed for CORS. The actual HOST_URL would be http://localhost:8200
+                self.HOST_URL = "http://localhost:8100"  # Local frontend
             else:
                 self.logger.error(f"HOST_URL environment variable is not set.")
                 sys.exit(1)

@@ -13,9 +13,8 @@ setup: setup-api setup-frontend ## Setup the project
 setup-api:  ## Setup the api
 	cd backend/api && pipenv install --dev
 
-export WEBROOT_PATH = ../../_local_webroot
-export LOGGING_LEVEL = "DEBUG"
-export STAGE = "dev"
+export LOGGING_LEVEL = DEBUG
+export STAGE = dev
 .PHONY: start-api
 start-api:  ## Start the api
 	cd backend/api && pipenv run python src/main.py
@@ -61,8 +60,3 @@ start-compose-stack: build-docker-image-no-compile  ## Start the application wit
 	mkdir -p local_volume/api
 	mkdir -p local_volume/api
 	docker compose up -d
-
-
-.PHONY: ci-release-docker-image
-ci-release-docker-image:  ## Setup build-docker-image
-	#todo release to docker hub
