@@ -13,11 +13,9 @@ setup: setup-api setup-frontend ## Setup the project
 setup-api:  ## Setup the api
 	cd backend/api && pipenv install --dev
 
-export LOGGING_LEVEL = DEBUG
-export STAGE = dev
 .PHONY: start-api
 start-api:  ## Start the api
-	cd backend/api && pipenv run python src/main.py
+	cd backend/api && LOGGING_LEVEL=DEBUG STAGE=dev pipenv run python src/main.py
 
 .PHONY: setup-frontend
 setup-frontend:  ## Setup the frontend
