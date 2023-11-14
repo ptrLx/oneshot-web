@@ -7,7 +7,7 @@
                 <ion-title class="title">{{ title }}</ion-title>
             </ion-col>
             <ion-col size="5" class="ion-text-end">
-                <ion-button class="button" aria-label="See all">
+                <ion-button class="button" aria-label="See all" @click="handleButtonClick">
                     <ion-icon slot="icon-only" :icon="arrowForwardOutline"></ion-icon>
                 </ion-button>
             </ion-col>
@@ -37,11 +37,20 @@ export default defineComponent({
             type: String,
             default: 'Title'
         },
+        buttonFunc: {
+            type: Function,
+            default: () => { }
+        }
     },
-    setup() {
-        return {
-            arrowForwardOutline
+    setup(props) {
 
+        const handleButtonClick = () => {
+            props.buttonFunc();
+        }
+
+        return {
+            arrowForwardOutline,
+            handleButtonClick
         }
     }
 });

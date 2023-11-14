@@ -1,5 +1,5 @@
 <template>
-  <section-header v-if="enableSectionHeader" :title="sectionHeaderTitle"></section-header>
+  <section-header v-if="enableSectionHeader" :title="sectionHeaderTitle" :buttonFunc="handleButtonClick"></section-header>
   <swiper :slidesPerView="1.2" :centeredSlides="true" :spaceBetween="5" :style="{ height: rowHeight }">
     <slot></slot>
 
@@ -31,6 +31,20 @@ export default defineComponent({
     sectionHeaderTitle: {
       type: String,
       default: 'Title'
+    },
+    buttonFunc: {
+      type: Function,
+      default: () => { }
+    }
+  },
+  setup(props) {
+
+    const handleButtonClick = () => {
+      props.buttonFunc();
+    }
+
+    return {
+      handleButtonClick
     }
   }
 });

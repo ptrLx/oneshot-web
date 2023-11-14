@@ -11,7 +11,7 @@
 
     <ion-content :fullscreen="true">
 
-      <row-component row-height="70%" sectionHeaderTitle="Gallery">
+      <row-component row-height="70%" sectionHeaderTitle="Gallery" :button-func="() => router.push('/gallery')">
         <swiper-slide>
           <card card-title="card2" card-subtitle="card2sub">
           </card>
@@ -59,7 +59,10 @@ import Card from '@/components/Card.vue';
 import CaptureTodaySlide from '@/components/CaptureTodaySlide.vue';
 import DonutChart from '@/components/DonutChart.vue';
 import CalendarComponent from '@/components/CalendarComponent.vue';
+import { useRouter } from 'vue-router';
 
+
+const router = useRouter();
 
 </script>
 
