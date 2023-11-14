@@ -1,21 +1,8 @@
 # oneshot-web
 
-## Host oneshot-web
+## Deployment of oneshot-web
 
-Use following `docker-compose.yml`-template to host oneshot-web:
-
-```yml
-# todo use docker hub image
-# todo use host port 8080
-```
-
-`.env`-example:
-
-```conf
-WEBROOT_PATH=/srv/oneshot/
-HOST_URL=http://localhost:8080
-TZ=Europe/Berlin
-```
+Please check out the [deployment instructions](DEPLOY.md) if you want to self-host oneshot-web.
 
 ## Development Setup
 
@@ -23,6 +10,7 @@ TZ=Europe/Berlin
 2. open folder in vscode
 3. install recommended extensions
 4. reopen in container
+5. type `make` to see what you can do (e. g. how to build the docker image from source)
 
 ### Start the backend
 
@@ -35,7 +23,7 @@ TZ=Europe/Berlin
 ### PWA Dev Setup
 
 1. `cd frontend`
-2. Make sure `devOptions { enabled: true}` is set in `vite.config.js`
+2. Make sure `devOptions { enabled: true }` is set in `vite.config.js`
 3. Run 'npm run build' to generate the service worker and manifest in the `dist` folder (production build) and `dist-dev` (dev build)
 4. Run `npm run dev`\ `npm run preview`, the pwa should now appear as installable in the browser
 

@@ -3,7 +3,7 @@ version: '3.9'
 ###
 # This compose file uses the Dockerfile to build the app from source.
 # Therefore a build of the frontend is required before (`make compile-frontend`).
-# To use the prebuilt Docker image from docker hub, follow the instructions in the Readme.
+# To use the prebuilt Docker image from docker hub, follow the instructions in the DEPLOY.md.
 ###
 
 services:
