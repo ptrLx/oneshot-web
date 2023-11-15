@@ -4,7 +4,7 @@
             <ion-grid>
                 <ion-row v-for="(row, rowIndex) in galleryRows" :key="rowIndex">
                     <ion-col v-for="(image, colIndex) in row" :key="colIndex" size="6">
-                        <gallery-image :imgsrc="image.url" :emoji="image.happiness">
+                        <gallery-image :id="(image.id).toString()" :imgsrc="image.url" :emoji="image.happiness">
 
                         </gallery-image>
                     </ion-col>
@@ -24,7 +24,7 @@ import { IonAvatar, IonButton, IonGrid, IonRow, IonCol, IonIcon, IonTextarea, us
 import { defineComponent, ref } from 'vue';
 import { ImageService, LoginService, UserService, Token, OpenAPI, ApiError } from '@/_generated/api-client';
 import GalleryImage from '@/components/GalleryImage.vue';
-import { image } from 'ionicons/icons';
+
 
 export default defineComponent({
     components: {
@@ -35,12 +35,12 @@ export default defineComponent({
         IonIcon,
         IonTitle,
         IonImg,
-        IonInfiniteScroll,
+        IonInfiniteScroll, // TODO: Loading Spinner and Waiting text not showing/working
         IonInfiniteScrollContent,
         GalleryImage
     },
     setup() {
-        const galleryRows = ref<{ url: string, happiness: string }[][]>([]);
+        const galleryRows = ref<{ id: number, url: string, happiness: string }[][]>([]);
         const url_base = ref<string>('https://placekitten.com/200/300?image=');
 
         let index = 0;
@@ -48,10 +48,10 @@ export default defineComponent({
         // Simulated data
         const happinessOptions = ['😄', '😃', '😐', '😞', '😢'];
         const initialImages = Array.from({ length: 10 }, () => ({
+            id: index,
             url: url_base.value + index++,
             happiness: happinessOptions[Math.floor(Math.random() * happinessOptions.length)],
         }));
-
 
 
         // Initialize gallery with the initial images
@@ -61,6 +61,7 @@ export default defineComponent({
             console.log('Loading more images called..');
             // Simulated asynchronous data fetching
             const newImages = Array.from({ length: 2 }, () => ({
+                id: index,
                 url: url_base.value + index++,
                 happiness: happinessOptions[Math.floor(Math.random() * happinessOptions.length)]
             }));

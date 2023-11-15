@@ -1,6 +1,8 @@
 <template>
     <card class="image-card">
-        <ion-img :src="imgsrc" alt="Image" class="gallery-image"></ion-img>
+        <router-link :to="`/image/${id}`">
+            <ion-img :src="imgsrc" alt="Image" class="gallery-image"></ion-img>
+        </router-link>
         <div class="title-container">
             <p class="image-title">{{ imagetitle || 'Your Title' }}</p>
         </div>
@@ -14,9 +16,15 @@
 import { defineComponent } from 'vue';
 import { IonImg } from '@ionic/vue';
 import Card from '@/components/Card.vue';
+import { RouterLink } from 'vue-router';
+
 
 export default defineComponent({
     props: {
+        id: {
+            type: String,
+            required: true,
+        },
         imgsrc: {
             type: String,
             required: true,
@@ -33,6 +41,7 @@ export default defineComponent({
     components: {
         Card,
         IonImg,
+        RouterLink
     },
 });
 </script>

@@ -44,6 +44,12 @@ const routes: Array<RouteRecordRaw> = [
     name: 'Gallery',
     component: () => import('../views/GalleryPage.vue'), // Lazy load component
     meta: { requiresAuth: true}
+  },
+  {
+    path: '/image/:id',
+    name: 'Image',
+    component: () => import('../views/ImagePage.vue'), // Lazy load component
+    meta: { requiresAuth: true}
   }
 ]
 
