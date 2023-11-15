@@ -17,6 +17,10 @@ setup-api:  ## Setup the api
 start-api:  ## Start the api
 	cd backend/api && LOGGING_LEVEL=DEBUG STAGE=dev pipenv run python src/main.py
 
+.PHONY: start-admintools
+start-admintools:  ## Start the admintools
+	cd backend/api && pipenv run python admintools/main.py
+
 .PHONY: setup-frontend
 setup-frontend:  ## Setup the frontend
 	cd frontend && npm install --include=dev
@@ -47,6 +51,12 @@ start-docker-image-bash: build-docker-image-no-compile  ## Start the docker but 
 start-docker-image: build-docker-image-no-compile  ## Start the docker image. Make sure that the frontend was compiled before.
 	mkdir -p local_volume/api
 	docker run --rm --name os-web -e TZ="Europe/Berlin" -e HOST_URL="localhost:8080" -e STAGE="qa" --volume=./local_volume/api/:/srv/oneshot -p 8080:80 oneshot-web
+
+.PHONY: pull-and-start-docker-image
+pull-and-start-docker-image:  ## Start the docker image from Docker Hub.
+	# mkdir -p local_volume/api
+	docker run --rm -e TZ="Europe/Berlin" -e HOST_URL="localhost:8080" -e STAGE="prod" -p 8080:80 ptrlx/oneshot-web # --volume=./local_volume/api/:/srv/oneshot 
+
 
 .PHONY: container-attach-bash
 container-attach-bash:  ## Attach a shell to the docker container.
