@@ -6,6 +6,7 @@
         "deploy"
     ],
     "cSpell.words": [
+        "admintools",
         "aiofiles",
         "devcontainer",
         "fastapi",

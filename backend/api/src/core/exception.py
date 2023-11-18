@@ -9,6 +9,14 @@ class NoProfileImg(HTTPException):
         )
 
 
+class NoOneShotImgFound(HTTPException):
+    def __init__(self):
+        super().__init__(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="OneShot image file not found.",
+        )
+
+
 class ImgUploadException(HTTPException):
     def __init__(self):
         super().__init__(
@@ -22,4 +30,12 @@ class ImgFileExtensionException(HTTPException):
         super().__init__(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="File extension not allowed.",
+        )
+
+
+class ImgFileNameException(HTTPException):
+    def __init__(self):
+        super().__init__(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="File name not allowed.",
         )

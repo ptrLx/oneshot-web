@@ -11,7 +11,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: os-web
+    container_name: os-web-compose
     ports:
       - 80:8080
     env_file:
@@ -19,9 +19,10 @@ services:
     networks:
       - os-web-db
     volumes:
-      - ./_volume/app/:/srv/oneshot
+      - ./_compose_volume/app/:/srv/oneshot
+    restart: unless-stopped
   database:
-    container_name: os-web-db
+    container_name: os-web-compose-db
     image: 'postgres:latest'
     ports:
       - 15432:5432
@@ -30,9 +31,10 @@ services:
     networks:
       - os-web-db
     volumes:
-      - ./_volume/db/:/var/lib/postgresql/data/
-      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./_compose_volume/db/:/var/lib/postgresql/data/:Z
+      # - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    restart: unless-stopped
 
-networks: 
+networks:
   os-web-db:
     driver: bridge

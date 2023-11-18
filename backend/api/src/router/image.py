@@ -1,18 +1,18 @@
 import os
 from typing import Annotated
 
-import aiofiles
-from core import config
-from core.exeption import ImgFileExtensionException, ImgUploadException
-from fastapi import APIRouter, Depends, File, UploadFile
-from model.oneshot import OneShot
+from fastapi import APIRouter, Depends, File, HTTPException, UploadFile
+from fastapi.responses import FileResponse
+from model.date import Date
+from model.oneshot import OneShot, OneShotFileName
 from model.user import User
+from service.image import ImageService
 from service.validate import get_current_active_user
+from starlette import status
 
 router = APIRouter()
 
-
-app_config = config.get_config()
+image_service = ImageService()
 
 
 @router.post("/upload")
@@ -21,31 +21,35 @@ async def upload_image(
     oneshot: OneShot = Depends(),
     file: UploadFile = File(...),
 ) -> str:
-    file_extension = (
-        file.filename[file.filename.rfind(".") + 1 :].lower()
-        if "." in file.filename
-        else None
-    )
-    if file_extension not in app_config.ONESHOT_ALLOWED_FILE_EXTENSIONS:
-        raise ImgFileExtensionException
+    return await image_service.store_image(current_user, oneshot, file)
 
-    file_name = f"{oneshot.get_file_name()}.{file_extension}"
 
-    path = os.path.join(
-        app_config.WEBROOT_PATH, "img", current_user.username, file_name
-    )
-    try:
-        async with aiofiles.open(path, "wb") as f:
-            # todo use max file size
-            while contents := await file.read(app_config.MAX_FILE_UPLOAD_CHUNK_SIZE_B):
-                await f.write(contents)
+@router.get("/download")
+async def download_image(
+    current_user: Annotated[User, Depends(get_current_active_user)],
+    file_name: str | None = None,
+    date: str | None = None,
+) -> FileResponse:
+    if date is None:
+        if file_name is None:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Either a date or a file name is required.",
+            )
+        else:
+            name, extension = os.path.splitext(file_name)
+            # Remove the leading dot from the extension
+            extension = extension[1:]
 
-    except Exception:
-        raise ImgUploadException
-    finally:
-        await file.close()
+            file_name = OneShotFileName(file_name=name, file_extension=extension)
 
-    # todo create preview
-    # todo store in db
-
-    return file_name
+            return await image_service.download_image_by_file_name(
+                current_user, file_name
+            )
+    elif file_name is None:
+        return await image_service.download_image_by_date(current_user, Date(date=date))
+    else:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Either a date or a file name is required but both where provided.",
+        )
