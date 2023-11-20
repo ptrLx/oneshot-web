@@ -1,5 +1,5 @@
 from core import config
-from model.user import UserInDB
+from data.model.db_user import DBUser
 
 app_config = config.get_config()
 
@@ -16,8 +16,12 @@ class UserDB:
             }
         }
 
-    async def get_user(self, username: str):
-        prisma = await app_config.get_prisma()
-        if username in self.__fake_users_db:
+    async def user_exists(self, username: str) -> bool:
+        prisma = await app_config.get_prisma_conn()
+        return username in self.__fake_users_db
+
+    async def get_user(self, username: str) -> DBUser:
+        prisma = await app_config.get_prisma_conn()
+        if await self.user_exists(username):
             user_dict = self.__fake_users_db[username]
-            return UserInDB(**user_dict)
+            return DBUser(**user_dict)

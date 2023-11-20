@@ -18,7 +18,7 @@ services:
       - os-web-compose-db
     volumes:
       - ./_compose_volume/db/:/var/lib/postgresql/data/:Z
-      # - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./container-assets/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
     restart: unless-stopped
   
   app:

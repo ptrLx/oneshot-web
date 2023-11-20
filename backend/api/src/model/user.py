@@ -14,7 +14,3 @@ class User(BaseModel):
     disabled: bool
     full_name: str | None = None
     profileimg: str | None = None
-
-
-class UserInDB(User):
-    hashed_password: str

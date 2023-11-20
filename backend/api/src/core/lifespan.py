@@ -11,7 +11,7 @@ logger = logging.getLogger(__name__)
 
 async def __graceful_exit() -> None:
     if app_config.prisma_connected:
-        await app_config.get_prisma_no_connect().disconnect()
+        await app_config.get_prisma_no_conn().disconnect()
         logger.info("Database connection closed.")
 
 

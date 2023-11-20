@@ -14,6 +14,7 @@
         "nginx",
         "oneshot",
         "pipenv",
+        "postgres",
         "prisma"
     ],
     "[python]": {

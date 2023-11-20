@@ -18,7 +18,7 @@ generate-prisma-client:  ## Generate the prisma client for the connection betwee
 
 .PHONY: start-api
 start-api:  ## Start the api
-	cd backend/api && LOGGING_LEVEL=DEBUG STAGE=dev DATABASE_URL="postgresql://postgres:password@os-web-db:5432/mydb?schema=public" pipenv run python src/main.py
+	cd backend/api && LOGGING_LEVEL=DEBUG STAGE=dev DATABASE_URL="postgresql://postgres:password@os-web-db:5432/osweb?schema=public" pipenv run python src/main.py
 
 .PHONY: start-admintools
 start-admintools:  ## Start the admintools
@@ -60,13 +60,15 @@ start-docker-image: build-docker-image-no-compile  ## Start the docker image. Ma
 container-attach-bash:  ## Attach a shell to the docker container.
 	docker exec -it os-web /bin/bash
 
+
 .PHONY: start-docker-postgres
 start-docker-postgres:  ## Start the docker image from Docker Hub.
-	docker run --rm --name os-web-db -e POSTGRES_PASSWORD="password" --volume=./_local_volume/db/:/var/lib/postgresql/data/ -p 5432:15432 --network=os-web-db postgres:latest
+	docker run --rm --name os-web-db -e POSTGRES_PASSWORD="password" --volume=./_local_volume/db/:/var/lib/postgresql/data/ --volume=./container-assets/init.sql:/docker-entrypoint-initdb.d/init.sql -p 5432:15432 --network=os-web-db postgres:latest
 
 .PHONY: ping-postgres
 ping-postgres:  ## Ping the postgres-container from within the devcontainer.
-	ping os-web-db
+	ping os-web-db--volume=
+
 
 .PHONY: start-docker-compose-stack
 start-docker-compose-stack: build-docker-image-no-compile  ## Start the docker image and database with docker compose. Make sure that the frontend was compiled before.

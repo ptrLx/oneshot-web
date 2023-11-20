@@ -62,7 +62,7 @@ class AppConfig:
         self.__prisma = Prisma()
         self.prisma_connected = False
 
-    async def get_prisma(self) -> Prisma:
+    async def get_prisma_conn(self) -> Prisma:
         """
         Return prisma object and connect to the database if this function is called for the first time.
         """
@@ -74,7 +74,7 @@ class AppConfig:
 
         return self.__prisma
 
-    def get_prisma_no_connect(self) -> Prisma:
+    def get_prisma_no_conn(self) -> Prisma:
         """
         Return prisma object without connecting.
         """
