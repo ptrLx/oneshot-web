@@ -61,6 +61,9 @@ container-attach-bash:  ## Attach a shell to the docker container.
 start-docker-postgres:  ## Start the docker image from Docker Hub.
 	docker run --rm --name os-web-db -e POSTGRES_PASSWORD="password" --volume=./_local_volume/db/:/var/lib/postgresql/data/ -p 5432:15432 --network=os-web-db postgres:latest
 
+.PHONY: ping-postgres
+ping-postgres:  ## Ping the postgres-container from the devcontainer.
+	ping os-web-db
 
 .PHONY: start-docker-compose-stack
 start-docker-compose-stack: build-docker-image-no-compile  ## Start the docker image and database with docker compose. Make sure that the frontend was compiled before.
