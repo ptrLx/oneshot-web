@@ -13,7 +13,8 @@
         "fastapi",
         "nginx",
         "oneshot",
-        "pipenv"
+        "pipenv",
+        "prisma"
     ],
     "[python]": {
         "editor.defaultFormatter": "ms-python.black-formatter",

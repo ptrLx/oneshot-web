@@ -4,8 +4,8 @@ from pydantic import BaseModel
 
 
 class UserRole(str, Enum):
-    ADMIN = "admin"
-    USER = "user"
+    ADMIN = "ADMIN"
+    USER = "USER"
 
 
 class User(BaseModel):

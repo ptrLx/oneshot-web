@@ -1,7 +1,7 @@
 from typing import Annotated
 
 import core.config as config
-import data.user_db as user_db
+from data.user_db import UserDB
 from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
 from jose import JWTError, jwt
@@ -11,6 +11,7 @@ from model.user import User
 __oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login/")
 
 app_config = config.get_config()
+user_db = UserDB()
 
 
 async def __get_current_user(token: Annotated[str, Depends(__oauth2_scheme)]):
@@ -29,7 +30,7 @@ async def __get_current_user(token: Annotated[str, Depends(__oauth2_scheme)]):
         token_data = TokenData(username=username)
     except JWTError:
         raise credentials_exception
-    user = user_db.get_user(username=token_data.username)
+    user = await user_db.get_user(username=token_data.username)
     if user is None:
         raise credentials_exception
     return user

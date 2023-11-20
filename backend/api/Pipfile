@@ -12,6 +12,7 @@ passlib = {extras = ["bcrypt"], version = "*"}
 python-multipart = "*"
 aiofiles = "*"
 inquirerpy = "*"
+prisma = "*"
 
 [dev-packages]
 pylint = "*"

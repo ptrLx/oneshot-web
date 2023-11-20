@@ -5,7 +5,7 @@ help:  ## Display this help text
 	@awk 'BEGIN {FS = ":.*##"; printf "\nUsage:\n  make \033[36m<target>\033[0m\n"} /^[a-zA-Z0-9_-]+:.*?##/ { printf "  \033[36m%-15s\033[0m %s\n", $$1, $$2 } /^##@/ { printf "\n\033[1m%s\033[0m\n", substr($$0, 5) } ' $(MAKEFILE_LIST)
 
 .PHONY: setup
-setup: setup-api setup-frontend ## Setup the project
+setup: setup-api generate-prisma-client setup-frontend  ## Setup the project
 	echo "Setup finished."
 
 
@@ -13,9 +13,12 @@ setup: setup-api setup-frontend ## Setup the project
 setup-api:  ## Setup the api
 	cd backend/api && pipenv install --dev
 
+generate-prisma-client:  ## Generate the prisma client for the connection between api and database.
+	cd backend/api && pipenv run prisma generate
+
 .PHONY: start-api
 start-api:  ## Start the api
-	cd backend/api && LOGGING_LEVEL=DEBUG STAGE=dev pipenv run python src/main.py
+	cd backend/api && LOGGING_LEVEL=DEBUG STAGE=dev DATABASE_URL="postgresql://postgres:password@os-web-db:5432/mydb?schema=public" pipenv run python src/main.py
 
 .PHONY: start-admintools
 start-admintools:  ## Start the admintools
@@ -62,7 +65,7 @@ start-docker-postgres:  ## Start the docker image from Docker Hub.
 	docker run --rm --name os-web-db -e POSTGRES_PASSWORD="password" --volume=./_local_volume/db/:/var/lib/postgresql/data/ -p 5432:15432 --network=os-web-db postgres:latest
 
 .PHONY: ping-postgres
-ping-postgres:  ## Ping the postgres-container from the devcontainer.
+ping-postgres:  ## Ping the postgres-container from within the devcontainer.
 	ping os-web-db
 
 .PHONY: start-docker-compose-stack

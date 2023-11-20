@@ -7,6 +7,20 @@ version: '3.9'
 ###
 
 services:
+  database:
+    container_name: os-web-compose-db
+    image: 'postgres:latest'
+    ports:
+      - 15432:5432
+    env_file:
+      - .env
+    networks:
+      - os-web-compose-db
+    volumes:
+      - ./_compose_volume/db/:/var/lib/postgresql/data/:Z
+      # - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    restart: unless-stopped
+  
   app:
     build:
       context: .
@@ -20,19 +34,6 @@ services:
       - os-web-compose-db
     volumes:
       - ./_compose_volume/app/:/srv/oneshot
-    restart: unless-stopped
-  database:
-    container_name: os-web-compose-db
-    image: 'postgres:latest'
-    ports:
-      - 15432:5432
-    env_file:
-      - .env
-    networks:
-      - os-web-compose-db
-    volumes:
-      - ./_compose_volume/db/:/var/lib/postgresql/data/:Z
-      # - ./init.sql:/docker-entrypoint-initdb.d/init.sql
     restart: unless-stopped
 
 networks:

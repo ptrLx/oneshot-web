@@ -44,13 +44,13 @@ class OneShotFileName(BaseModel):
         return f"{self.file_name}.{self.file_extension}"
 
     @validator("file_extension")
-    def validate_value(cls, v):
+    def validate_file_extension(cls, v):
         if v not in config.get_config().ONESHOT_ALLOWED_FILE_EXTENSIONS:
             raise ImgFileExtensionException()
         return v
 
     @validator("file_name")
-    def validate_value(cls, v):
+    def validate_file_name(cls, v):
         import re
 
         if not re.match(r"^OneShot_\d{14}$", v):

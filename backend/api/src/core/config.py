@@ -9,6 +9,7 @@ from core.setup import (
     db_is_initialized,
     filesystem_is_initialized,
 )
+from prisma import Prisma
 
 
 class AppConfig:
@@ -57,6 +58,27 @@ class AppConfig:
         self.MAX_FILE_UPLOAD_CHUNK_SIZE_B = os.getenv(
             "MAX_FILE_UPLOAD_CHUNK_SIZE_B", 1024 * 1024
         )  # Default is 1MB
+
+        self.__prisma = Prisma()
+        self.prisma_connected = False
+
+    async def get_prisma(self) -> Prisma:
+        """
+        Return prisma object and connect to the database if this function is called for the first time.
+        """
+
+        if not self.prisma_connected:
+            logging.info("Opening connection to database.")
+            await self.__prisma.connect()
+            self.prisma_connected = True
+
+        return self.__prisma
+
+    def get_prisma_no_connect(self) -> Prisma:
+        """
+        Return prisma object without connecting.
+        """
+        return self.__prisma
 
     def __config_logging_level(self):
         level = os.getenv("LOGGING_LEVEL", "INFO").upper()

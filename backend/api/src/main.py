@@ -1,6 +1,7 @@
 import logging
 
 from core import config
+from core.lifespan import lifespan
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from router.image import router as image_router
@@ -9,6 +10,7 @@ from router.user import router as user_router
 
 app_config = config.get_config()
 logger = logging.getLogger(__name__)
+origins = [app_config.HOST_URL]
 
 
 app = FastAPI(
@@ -18,10 +20,9 @@ app = FastAPI(
     redoc_url=None
     if app_config.STAGE == "prod"
     else "/redoc",  # Disable redoc in production
+    lifespan=lifespan,
 )
 
-
-origins = [app_config.HOST_URL]
 
 app.add_middleware(
     CORSMiddleware,
@@ -41,7 +42,9 @@ app.include_router(user_router, prefix="/user", tags=["User"])
 app.include_router(login_router, prefix="/login", tags=["Login"])
 app.include_router(image_router, prefix="/image", tags=["Image"])
 
+
 logger.info(f"Running in stage {app_config.STAGE}.")
+
 
 if __name__ == "__main__":
     if app_config.STAGE == "dev":  # API runs on separate port

@@ -13,6 +13,11 @@ WORKDIR /api
 COPY backend/api/Pipfile* /api
 RUN pipenv install --deploy
 
+# Build prisma client from schema.prisma file
+COPY backend/api/prisma /api/prisma
+RUN pipenv run prisma generate
+
+# Copy source code of api
 COPY backend/api/src /api/src
 
 # --- nginx --- #

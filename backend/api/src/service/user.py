@@ -20,7 +20,7 @@ class UserService:
         # todo verify old pw, create new hash, update db
         return "ok"
 
-    async def get_user_profile_img(user: User) -> FileResponse:
+    def get_user_profile_img(self, user: User) -> FileResponse:
         profile_img_path = os.path.join(
             app_config.WEBROOT_PATH, "img", user.username, "profile.png"
         )
@@ -30,7 +30,7 @@ class UserService:
         else:
             raise NoProfileImg()
 
-    async def upload_user_profile_img(user: User, file: UploadFile) -> str:
+    async def upload_user_profile_img(self, user: User, file: UploadFile) -> str:
         profile_img_path = os.path.join(
             app_config.WEBROOT_PATH, "img", user.username, "profile.png"
         )
