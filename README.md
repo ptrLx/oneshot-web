@@ -9,8 +9,9 @@ Please check out the [deployment instructions](DEPLOY.md) if you want to self-ho
 1. clone the repository
 2. open folder in vscode
 3. install recommended extensions
-4. reopen in container
-5. type `make` to see what you can do (e. g. how to build the docker image from source)
+4. create the required docker network: `docker network create --driver bridge os-web-db`
+5. reopen in container
+6. type `make` to see what you can do (e. g. how to build the docker image from source)
 
 ### Start the backend
 

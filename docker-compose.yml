@@ -17,7 +17,7 @@ services:
     env_file:
       - .env
     networks:
-      - os-web-db
+      - os-web-compose-db
     volumes:
       - ./_compose_volume/app/:/srv/oneshot
     restart: unless-stopped
@@ -29,12 +29,12 @@ services:
     env_file:
       - .env
     networks:
-      - os-web-db
+      - os-web-compose-db
     volumes:
       - ./_compose_volume/db/:/var/lib/postgresql/data/:Z
       # - ./init.sql:/docker-entrypoint-initdb.d/init.sql
     restart: unless-stopped
 
 networks:
-  os-web-db:
+  os-web-compose-db:
     driver: bridge

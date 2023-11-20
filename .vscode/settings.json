@@ -3,7 +3,8 @@
         "frontend",
         "doc",
         "api",
-        "deploy"
+        "deploy",
+        "db"
     ],
     "cSpell.words": [
         "admintools",

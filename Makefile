@@ -46,12 +46,12 @@ build-docker-image: compile-frontend build-docker-image-no-compile ## Build the 
 .PHONY: start-docker-image-bash
 start-docker-image-bash: build-docker-image-no-compile  ## Start the docker but run bash instead. Inside the container, run the api with `pipenv run python src/main.py`, nginx with `nginx -g 'daemon off;'` or both with `/usr/bin/supervisor`. Make sure that the frontend was compiled before.
 	mkdir -p ./_local_volume/api
-	docker run --rm -it --name os-web -e TZ="Europe/Berlin" -e HOST_URL="localhost:8080" -e STAGE="qa" --volume=./_local_volume/api/:/srv/oneshot -p 8080:80 oneshot-web /bin/bash
+	docker run --rm -it --name os-web -e TZ="Europe/Berlin" -e HOST_URL="localhost:8080" -e STAGE="qa" --volume=./_local_volume/api/:/srv/oneshot -p 8080:80 --network=os-web-db oneshot-web /bin/bash
 
 .PHONY: start-docker-image
 start-docker-image: build-docker-image-no-compile  ## Start the docker image. Make sure that the frontend was compiled before.
 	mkdir -p ./_local_volume/api
-	docker run --rm --name os-web -e TZ="Europe/Berlin" -e HOST_URL="localhost:8080" -e STAGE="qa" --volume=./_local_volume/api/:/srv/oneshot -p 8080:80 oneshot-web
+	docker run --rm --name os-web -e TZ="Europe/Berlin" -e HOST_URL="localhost:8080" -e STAGE="qa" --volume=./_local_volume/api/:/srv/oneshot -p 8080:80 --network=os-web-db oneshot-web
 
 .PHONY: container-attach-bash
 container-attach-bash:  ## Attach a shell to the docker container.
@@ -59,7 +59,7 @@ container-attach-bash:  ## Attach a shell to the docker container.
 
 .PHONY: start-docker-postgres
 start-docker-postgres:  ## Start the docker image from Docker Hub.
-	docker run --rm --name os-web-db -e POSTGRES_PASSWORD="password" --volume=./_local_volume/db/:/var/lib/postgresql/data/ -p 5432:15432 postgres:latest #todo network
+	docker run --rm --name os-web-db -e POSTGRES_PASSWORD="password" --volume=./_local_volume/db/:/var/lib/postgresql/data/ -p 5432:15432 --network=os-web-db postgres:latest
 
 
 .PHONY: start-docker-compose-stack
