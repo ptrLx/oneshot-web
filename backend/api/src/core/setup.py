@@ -3,6 +3,9 @@ import logging
 import os
 import secrets
 
+from prisma import Prisma
+from prisma.cli import prisma as prisma_cli
+
 logger = logging.getLogger(__name__)
 
 
@@ -28,7 +31,7 @@ def bootstrap_filesystem(webroot_path: str) -> None:
         |-<OneShot_XXXXXXXXXXXXXX.jpg>
     """
 
-    logger.info(f"Bootstrapping folder {webroot_path}")
+    logger.info(f"Bootstrapping folder {webroot_path}.")
 
     os.makedirs(os.path.join(webroot_path, "img"), exist_ok=True)
 
@@ -44,9 +47,7 @@ def bootstrap_filesystem(webroot_path: str) -> None:
         json.dump(config_data, f, indent=4)
 
 
-def db_is_initialized() -> bool:  # todo
-    return True
+def bootstrap_db() -> None:
+    logger.info(f"Bootstrapping database.")
 
-
-def bootstrap_db() -> None:  # todo
-    logger.info(f"Bootstrapping database")
+    prisma_cli.run(["db", "push", "--skip-generate"])

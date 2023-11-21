@@ -13,8 +13,13 @@ setup: setup-api generate-prisma-client setup-frontend  ## Setup the project
 setup-api:  ## Setup the api
 	cd backend/api && pipenv install --dev
 
+.PHONY: generate-prisma-client
 generate-prisma-client:  ## Generate the prisma client for the connection between api and database.
 	cd backend/api && pipenv run prisma generate
+
+.PHONY: dev-database-prisma-setup
+dev-database-prisma-setup:  ## Migrate the database to the current schema.prisma.
+	cd backend/api && DATABASE_URL="postgresql://postgres:password@os-web-db:5432/osweb?schema=public" pipenv run prisma db push
 
 .PHONY: start-api
 start-api:  ## Start the api

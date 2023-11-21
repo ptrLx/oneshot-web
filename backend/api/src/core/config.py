@@ -3,12 +3,7 @@ import logging
 import os
 import sys
 
-from core.setup import (
-    bootstrap_db,
-    bootstrap_filesystem,
-    db_is_initialized,
-    filesystem_is_initialized,
-)
+from core.setup import bootstrap_db, bootstrap_filesystem, filesystem_is_initialized
 from prisma import Prisma
 
 
@@ -25,10 +20,10 @@ class AppConfig:
             else:
                 self.WEBROOT_PATH = "/srv/oneshot"
 
+        self.__prisma = Prisma()
+
         if not filesystem_is_initialized(self.WEBROOT_PATH):
             bootstrap_filesystem(self.WEBROOT_PATH)
-
-        if not db_is_initialized():
             bootstrap_db()
 
         self.SECRET_KEY = self.__read_config()
@@ -59,18 +54,14 @@ class AppConfig:
             "MAX_FILE_UPLOAD_CHUNK_SIZE_B", 1024 * 1024
         )  # Default is 1MB
 
-        self.__prisma = Prisma()
-        self.prisma_connected = False
-
     async def get_prisma_conn(self) -> Prisma:
         """
         Return prisma object and connect to the database if this function is called for the first time.
         """
 
-        if not self.prisma_connected:
+        if not self.__prisma.is_connected():
             logging.info("Opening connection to database.")
             await self.__prisma.connect()
-            self.prisma_connected = True
 
         return self.__prisma
 
@@ -78,6 +69,7 @@ class AppConfig:
         """
         Return prisma object without connecting.
         """
+
         return self.__prisma
 
     def __config_logging_level(self):

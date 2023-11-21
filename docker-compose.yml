@@ -20,7 +20,7 @@ services:
       - ./_compose_volume/db/:/var/lib/postgresql/data/:Z
       - ./container-assets/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
     restart: unless-stopped
-  
+
   app:
     build:
       context: .
@@ -32,6 +32,9 @@ services:
       - .env
     networks:
       - os-web-compose-db
+    depends_on:
+      db:
+        condition: service_started
     volumes:
       - ./_compose_volume/app/:/srv/oneshot
     restart: unless-stopped
