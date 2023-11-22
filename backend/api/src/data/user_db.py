@@ -1,3 +1,5 @@
+from typing import List
+
 from core import config
 from model.user import UserRole
 from prisma.models import User as DBUser
@@ -6,17 +8,6 @@ app_config = config.get_config()
 
 
 class UserDB:
-    def __init__(self) -> None:
-        self.__fake_users_db = {
-            "john": {
-                "username": "john",
-                "role": "ADMIN",
-                "disabled": False,
-                "full_name": "John Doe",
-                "hashed_password": "$2b$12$oXRsA3Kf1s3y8yx7dYGpl.hcAk.NFBYDuwyerL3pFO978vfuhW7d2",  # password
-            }
-        }
-
     async def create_user(
         self,
         username: str,
@@ -29,21 +20,33 @@ class UserDB:
         return await prisma.user.create(
             data={
                 "username": username,
-                "hashed_password": str(hashed_password),
+                "hashed_password": hashed_password,
                 "role": role,
                 "disabled": disabled,
                 "full_name": full_name,
             }
         )
 
-    async def user_exists(self, username: str) -> bool:
+    async def delete_user(self, username: str) -> None:
         prisma = await app_config.get_prisma_conn()
-        return username in self.__fake_users_db
+        await prisma.user.delete(
+            where={"username": username},
+        )
+        # todo delete other table entries?
 
     async def get_user(self, username: str) -> DBUser:
         prisma = await app_config.get_prisma_conn()
-        if await self.user_exists(username):
-            user_dict = self.__fake_users_db[username]
-            return DBUser(**user_dict)
+        return await prisma.user.find_first(
+            where={"username": username},
+        )
 
-        return None
+    async def get_users(self) -> List[DBUser]:
+        prisma = await app_config.get_prisma_conn()
+        return await prisma.user.find_many(take=9999)
+
+    async def change_password(self, username: str, new_hashed_password: str):
+        prisma = await app_config.get_prisma_conn()
+        return await prisma.user.update(
+            where={"username": username},
+            data={"hashed_password": new_hashed_password},
+        )

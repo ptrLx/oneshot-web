@@ -2,6 +2,20 @@ from fastapi import HTTPException
 from starlette import status
 
 
+class PasswordsEqual(HTTPException):
+    def __init__(self):
+        super().__init__(
+            status_code=status.HTTP_400_BAD_REQUEST, detail="Passwords are equal."
+        )
+
+
+class InvalidPassword(HTTPException):
+    def __init__(self):
+        super().__init__(
+            status_code=status.HTTP_401_UNAUTHORIZED, detail="Wrong password."
+        )
+
+
 class NoProfileImg(HTTPException):
     def __init__(self):
         super().__init__(

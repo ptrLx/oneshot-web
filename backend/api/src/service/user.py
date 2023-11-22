@@ -1,23 +1,44 @@
 import os
 
 import aiofiles
+import bcrypt
 import core.config as config
-from core.exception import ImgFileExtensionException, ImgUploadException, NoProfileImg
+from core.exception import (
+    ImgFileExtensionException,
+    ImgUploadException,
+    InvalidPassword,
+    NoProfileImg,
+    PasswordsEqual,
+)
+from data.user_db import DBUser, UserDB
 from fastapi import UploadFile
 from fastapi.responses import FileResponse
 from model.user import User
+from service.login import LoginService
 
 app_config = config.get_config()
+user_db = UserDB()
+login_service = LoginService()
 
 
 class UserService:
     def get_user_info(self, user: User):
         return user
 
-    def change_password(
-        self, user: User, old_password: str, new_password: str
+    async def change_password(
+        self, user: DBUser, old_password: str, new_password: str
     ) -> FileResponse:
-        # todo verify old pw, create new hash, update db
+        if not login_service.verify_password(old_password, user.hashed_password):
+            raise InvalidPassword()
+
+        if old_password == new_password:
+            raise PasswordsEqual()
+
+        new_hashed_password = bcrypt.hashpw(
+            new_password.encode(), bcrypt.gensalt()
+        ).decode()
+        await user_db.change_password(user.username, new_hashed_password)
+
         return "ok"
 
     def get_user_profile_img(self, user: User) -> FileResponse:

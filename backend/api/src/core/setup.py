@@ -35,13 +35,13 @@ def bootstrap_filesystem(webroot_path: str) -> None:
 
     os.makedirs(os.path.join(webroot_path, "img"), exist_ok=True)
 
-    logger.info(f"Generating secret key")
+    logger.info(f"Generating secret key.")
 
     SECRET_KEY = secrets.token_hex(32).upper()
 
     config_data = {"SECRET_KEY": SECRET_KEY}
 
-    logger.info(f"Writing config file")
+    logger.info(f"Writing config file.")
 
     with open(os.path.join(webroot_path, "conf.json"), "w") as f:
         json.dump(config_data, f, indent=4)

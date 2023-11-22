@@ -1,5 +1,6 @@
 from typing import Annotated
 
+from data.user_db import DBUser
 from fastapi import APIRouter, Depends, File, UploadFile
 from fastapi.responses import FileResponse
 from model.user import User
@@ -30,13 +31,13 @@ async def upload_user_profile_img(
     current_user: Annotated[User, Depends(get_current_active_user)],
     file: UploadFile = File(...),
 ) -> str:
-    return user_service.upload_user_profile_img(current_user, file)
+    return await user_service.upload_user_profile_img(current_user, file)
 
 
 @router.post("/chpw")
 async def change_user_password(
-    current_user: Annotated[User, Depends(get_current_active_user)],
+    current_user: Annotated[DBUser, Depends(get_current_active_user)],
     old_password,
     new_password,
 ) -> str:
-    return user_service.change_password(current_user, old_password, new_password)
+    return await user_service.change_password(current_user, old_password, new_password)

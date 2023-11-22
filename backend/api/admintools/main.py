@@ -1,3 +1,4 @@
+import asyncio
 import os
 import sys
 
@@ -13,4 +14,4 @@ if __name__ == "__main__":
     # todo evaluate args
 
     cli = CLI()
-    cli.start()
+    asyncio.run(cli.start())

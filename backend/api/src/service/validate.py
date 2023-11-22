@@ -1,7 +1,7 @@
 from typing import Annotated
 
 import core.config as config
-from data.user_db import UserDB
+from data.user_db import DBUser, UserDB
 from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
 from jose import JWTError, jwt
@@ -14,7 +14,7 @@ app_config = config.get_config()
 user_db = UserDB()
 
 
-async def __get_current_user(token: Annotated[str, Depends(__oauth2_scheme)]):
+async def __get_current_user(token: Annotated[str, Depends(__oauth2_scheme)]) -> DBUser:
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
         detail="Could not validate credentials",
@@ -38,7 +38,7 @@ async def __get_current_user(token: Annotated[str, Depends(__oauth2_scheme)]):
 
 async def get_current_active_user(
     current_user: Annotated[User, Depends(__get_current_user)]
-):
+) -> DBUser:
     if current_user.disabled:
         raise HTTPException(status_code=400, detail="Inactive user")
     return current_user

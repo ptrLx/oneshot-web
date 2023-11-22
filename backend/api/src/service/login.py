@@ -15,12 +15,12 @@ class LoginService:
     def __init__(self) -> None:
         self.__pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
-    def __verify_password(self, plain_password, hashed_password) -> bool:
+    def verify_password(self, plain_password, hashed_password) -> bool:
         return self.__pwd_context.verify(plain_password, hashed_password)
 
     async def __authenticate_user(self, username: str, password: str) -> DBUser:
         user = await user_db.get_user(username)
-        if user is None or not self.__verify_password(password, user.hashed_password):
+        if user is None or not self.verify_password(password, user.hashed_password):
             return None
 
         return user
