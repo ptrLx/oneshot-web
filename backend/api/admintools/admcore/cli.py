@@ -36,7 +36,11 @@ class CLI:
                 elif result == commands["CMD_EXPORT"]:
                     await self.__handle_export()
                 elif result == commands["CMD_LIST_USERS"]:
-                    await self.__list_users()
+                    await self.__handle_list_users()
+                elif result == commands["CMD_DISABLE_USER"]:
+                    await self.__handle_disable_user()
+                elif result == commands["CMD_ENABLE_USER"]:
+                    await self.__handle_enable_user()
                 else:  # CMD_EXIT
                     print("👋 Bye bye.")
                     break
@@ -47,7 +51,7 @@ class CLI:
             print("❌ Aborted.")
             sys.exit(0)
 
-    async def __handle_user_create(self):
+    async def __handle_user_create(self) -> None:
         username = await inquirer.text(message="username:").execute_async()
         password = await inquirer.secret(message="password:").execute_async()
         full_name = await inquirer.text(message="Full name").execute_async()
@@ -67,18 +71,21 @@ class CLI:
 
             print("\n🪄  User created.")
         except UniqueViolationError:
-            logging.error(f"User {username} already exists.")
+            print(f"❌ User {username} already exists.")
 
         # todo handle no connection to database
 
-    async def __handle_user_delete(self):
+    async def __handle_user_delete(self) -> None:
         username = await inquirer.text(message="username:").execute_async()
 
-        # todo get user name and check if exists
-        full_name = "John"
+        user = await user_db.get_user(username)
+
+        if user is None:
+            print("❌ User doesn't exist.")
+            return
 
         confirmation = await inquirer.confirm(
-            message=f"Do you really want to delete user {full_name} ({username})?",
+            message=f"Do you really want to delete user {user.full_name} ({username})?",
         ).execute_async()
 
         if confirmation:
@@ -89,13 +96,51 @@ class CLI:
         else:
             print("❌ Aborted.")
 
-    async def __handle_import(self):
+    async def __handle_import(self) -> None:
         logger.error("Not implemented yet.")
 
-    async def __handle_export(self):
+    async def __handle_export(self) -> None:
         logger.error("Not implemented yet.")
 
-    async def __list_users(self):
+    async def __handle_disable_user(self) -> None:
+        username = await inquirer.text(message="username:").execute_async()
+
+        user = await user_db.get_user(username)
+
+        if user is None:
+            print("❌ User doesn't exist.")
+            return
+
+        confirmation = await inquirer.confirm(
+            message=f"Do you really want to disable user {user.full_name} ({username})?",
+        ).execute_async()
+
+        if confirmation:
+            await user_db.disable_user(username)
+            print("\n🙅 User disabled.")
+        else:
+            print("❌ Aborted.")
+
+    async def __handle_enable_user(self) -> None:
+        username = await inquirer.text(message="username:").execute_async()
+
+        user = await user_db.get_user(username)
+
+        if user is None:
+            print("❌ User doesn't exist.")
+            return
+
+        confirmation = await inquirer.confirm(
+            message=f"Do you really want to enable user {user.full_name} ({username})?",
+        ).execute_async()
+
+        if confirmation:
+            await user_db.enable_user(username)
+            print("\n💁 User enabled.")
+        else:
+            print("❌ Aborted.")
+
+    async def __handle_list_users(self) -> None:
         users = await user_db.get_users()
         if len(users):
             [print(user) for user in users]

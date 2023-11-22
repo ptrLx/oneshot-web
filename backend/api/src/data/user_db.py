@@ -50,3 +50,17 @@ class UserDB:
             where={"username": username},
             data={"hashed_password": new_hashed_password},
         )
+
+    async def disable_user(self, username: str):
+        prisma = await app_config.get_prisma_conn()
+        return await prisma.user.update(
+            where={"username": username},
+            data={"disabled": True},
+        )
+
+    async def enable_user(self, username: str):
+        prisma = await app_config.get_prisma_conn()
+        return await prisma.user.update(
+            where={"username": username},
+            data={"disabled": False},
+        )

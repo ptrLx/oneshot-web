@@ -6,7 +6,9 @@ commands = {
     "CMD_LIST_USERS": "👥 List all users",
     "CMD_CREATE_USER": "🪄  Create a user",
     "CMD_DELETE_USER": "🗑  Delete a user",
+    "CMD_DISABLE_USER": "🙅 Disable a user",
+    "CMD_ENABLE_USER": "💁 Enable a user",
     "CMD_IMPORT": "⬆️  Import OneShots",
     "CMD_EXPORT": "⬇️  Export database",
-    "CMD_EXIT": "🚪  Exit the admin tool",
+    "CMD_EXIT": "🚪 Exit the admin tool",
 }
