@@ -13,4 +13,5 @@ class User(BaseModel):
     role: UserRole
     disabled: bool
     full_name: str | None = None
-    profileimg: str | None = None
+    # * profileimg is always profile.png
+    # // profileimg: str | None = None

@@ -1,5 +1,6 @@
 from core import config
-from data.model.db_user import DBUser
+from model.user import UserRole
+from prisma.models import User as DBUser
 
 app_config = config.get_config()
 
@@ -16,6 +17,25 @@ class UserDB:
             }
         }
 
+    async def create_user(
+        self,
+        username: str,
+        hashed_password: str,
+        role: UserRole = "USER",
+        disabled: bool = False,
+        full_name: str = None,
+    ) -> DBUser:
+        prisma = await app_config.get_prisma_conn()
+        return await prisma.user.create(
+            data={
+                "username": username,
+                "hashed_password": str(hashed_password),
+                "role": role,
+                "disabled": disabled,
+                "full_name": full_name,
+            }
+        )
+
     async def user_exists(self, username: str) -> bool:
         prisma = await app_config.get_prisma_conn()
         return username in self.__fake_users_db
@@ -25,3 +45,5 @@ class UserDB:
         if await self.user_exists(username):
             user_dict = self.__fake_users_db[username]
             return DBUser(**user_dict)
+
+        return None

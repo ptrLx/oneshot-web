@@ -27,7 +27,7 @@ start-api:  ## Start the api
 
 .PHONY: start-admintools
 start-admintools:  ## Start the admintools
-	cd backend/api && pipenv run python admintools/main.py
+	cd backend/api && STAGE=dev DATABASE_URL="postgresql://postgres:password@os-web-db:5432/osweb?schema=public" pipenv run python admintools/main.py
 
 
 .PHONY: setup-frontend

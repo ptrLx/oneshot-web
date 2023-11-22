@@ -17,6 +17,20 @@
             },
             "jinja": true,
             "justMyCode": true
+        },
+        {
+            "name": "backend - admintools",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/backend/api/admintools/main.py",
+            "cwd": "${workspaceFolder}/backend/api",
+            "env": {
+                // "LOGGING_LEVEL": "DEBUG",
+                "STAGE": "dev",
+                "DATABASE_URL": "postgresql://postgres:password@os-web-db:5432/osweb?schema=public"
+            },
+            "jinja": true,
+            "justMyCode": true
         }
     ]
 }

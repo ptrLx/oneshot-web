@@ -4,13 +4,17 @@
         "doc",
         "api",
         "deploy",
-        "db"
+        "db",
+        "admtools"
     ],
     "cSpell.words": [
+        "admcore",
         "admintools",
         "aiofiles",
         "devcontainer",
         "fastapi",
+        "gensalt",
+        "hashpw",
         "nginx",
         "oneshot",
         "pipenv",
@@ -27,5 +31,8 @@
     "isort.args": [
         "--profile",
         "black"
+    ],
+    "python.analysis.extraPaths": [
+        "./backend/api/src"
     ],
 }

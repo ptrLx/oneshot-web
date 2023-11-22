@@ -1,7 +1,7 @@
 from datetime import datetime, timedelta
 
 import core.config as config
-from data.user_db import UserDB
+from data.user_db import DBUser, UserDB
 from fastapi import HTTPException, status
 from jose import jwt
 from model.token import Token
@@ -18,12 +18,11 @@ class LoginService:
     def __verify_password(self, plain_password, hashed_password) -> bool:
         return self.__pwd_context.verify(plain_password, hashed_password)
 
-    async def __authenticate_user(self, username: str, password: str):
+    async def __authenticate_user(self, username: str, password: str) -> DBUser:
         user = await user_db.get_user(username)
-        if not user:
-            return False
-        if not self.__verify_password(password, user.hashed_password):
-            return False
+        if user is None or not self.__verify_password(password, user.hashed_password):
+            return None
+
         return user
 
     def __create_access_token(
@@ -45,7 +44,7 @@ class LoginService:
 
     async def login_user(self, username: str, password: str) -> Token:
         user = await self.__authenticate_user(username, password)
-        if not user:
+        if user is None:
             raise HTTPException(
                 status_code=status.HTTP_401_UNAUTHORIZED,
                 detail="Incorrect username or password",

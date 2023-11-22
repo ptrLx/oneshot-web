@@ -13,12 +13,11 @@ generator client {
 }
 
 model User {
-  id              Int     @id @default(autoincrement())
-  username        String
+  //// id              Int     @id @default(autoincrement())
+  username        String  @id
   role            Role    @default(USER)
   disabled        Boolean
   full_name       String?
-  profileimg      String?
   hashed_password String
 }
 
