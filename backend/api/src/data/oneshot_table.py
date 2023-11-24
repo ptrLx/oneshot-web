@@ -36,6 +36,9 @@ class OneShotDB:
 
     async def get_oneshot(self, username: str, date: Date) -> DBOneShot:
         prisma = await app_config.get_prisma_conn()
+
+        username = username.lower()
+
         return await prisma.oneshot.find_first(
             where={"username": username, "date": date.date}
         )

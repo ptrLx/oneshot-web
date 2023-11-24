@@ -1,6 +1,6 @@
 from enum import Enum
 
-from pydantic import BaseModel
+from pydantic import BaseModel, validator
 
 
 class UserRole(str, Enum):
@@ -13,5 +13,7 @@ class User(BaseModel):
     role: UserRole
     disabled: bool
     full_name: str | None = None
-    # * profileimg is always profile.png
-    # // profileimg: str | None = None
+
+    @validator("username")
+    def validate_username_format(cls, v: str):
+        return v.lower()

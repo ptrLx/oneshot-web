@@ -17,6 +17,9 @@ class UserDB:
         full_name: str = None,
     ) -> DBUser:
         prisma = await app_config.get_prisma_conn()
+
+        username = username.lower()
+
         return await prisma.user.create(
             data={
                 "username": username,
@@ -29,6 +32,9 @@ class UserDB:
 
     async def delete_user(self, username: str) -> None:
         prisma = await app_config.get_prisma_conn()
+
+        username = username.lower()
+
         await prisma.user.delete(
             where={"username": username},
         )
@@ -36,16 +42,25 @@ class UserDB:
 
     async def get_user(self, username: str) -> DBUser:
         prisma = await app_config.get_prisma_conn()
+
+        username = username.lower()
+
         return await prisma.user.find_first(
             where={"username": username},
         )
 
     async def get_users(self) -> List[DBUser]:
         prisma = await app_config.get_prisma_conn()
+
+        username = username.lower()
+
         return await prisma.user.find_many(take=9999)
 
     async def change_password(self, username: str, new_hashed_password: str):
         prisma = await app_config.get_prisma_conn()
+
+        username = username.lower()
+
         return await prisma.user.update(
             where={"username": username},
             data={"hashed_password": new_hashed_password},
@@ -53,6 +68,9 @@ class UserDB:
 
     async def disable_user(self, username: str):
         prisma = await app_config.get_prisma_conn()
+
+        username = username.lower()
+
         return await prisma.user.update(
             where={"username": username},
             data={"disabled": True},
@@ -60,6 +78,9 @@ class UserDB:
 
     async def enable_user(self, username: str):
         prisma = await app_config.get_prisma_conn()
+
+        username = username.lower()
+
         return await prisma.user.update(
             where={"username": username},
             data={"disabled": False},

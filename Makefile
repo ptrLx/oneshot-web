@@ -42,6 +42,10 @@ start-frontend:  ## Start the frontend
 compile-frontend:  ## Compile the frontend
 	cd frontend && npm run build
 
+.PHONY: gen-api-client
+gen-api-client:  ## Generate api client for frontend
+	cd frontend && npm run gen-api-client
+
 
 .PHONY: build-docker-image-no-compile
 build-docker-image-no-compile:  ## Build the docker image with nginx, python api server and the compiled frontend in it. Skip compilation of the frontend (build outside of the devcontainer).

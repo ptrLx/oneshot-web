@@ -8,6 +8,7 @@ commands = {
     "CMD_DELETE_USER": "🗑  Delete a user",
     "CMD_DISABLE_USER": "🙅 Disable a user",
     "CMD_ENABLE_USER": "💁 Enable a user",
+    "CMD_RESET_USER_PASSWORD": "↩️  Reset a user's password",
     "CMD_IMPORT": "⬆️  Import OneShots",
     "CMD_EXPORT": "⬇️  Export database",
     "CMD_EXIT": "🚪 Exit the admin tool",
