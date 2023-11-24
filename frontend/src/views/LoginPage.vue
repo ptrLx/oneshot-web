@@ -35,7 +35,7 @@
 import { IonAvatar, IonButton, IonGrid, IonRow, IonCol, IonIcon, IonInput, useIonRouter, IonToast, toastController } from '@ionic/vue';
 import { cameraOutline } from 'ionicons/icons';
 import { defineComponent, ref } from 'vue';
-import { ImageService, LoginService, UserService, Token, OpenAPI, ApiError } from '@/_generated/api-client';
+import { OneShotService, UserService, Token, OpenAPI, ApiError } from '@/_generated/api-client';
 import { useCookies } from 'vue3-cookies'
 import { routerKey } from 'vue-router';
 
@@ -81,7 +81,7 @@ export default defineComponent({
 
             // var token: undefined | Token = undefined;
 
-            LoginService.loginForAccessTokenLoginPost(
+            UserService.loginForAccessTokenLoginPost(
                 {
                     username: username.value,
                     password: password.value

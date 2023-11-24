@@ -33,7 +33,7 @@
 import { IonAvatar, IonButton, IonGrid, IonRow, IonCol, IonIcon, IonInput, useIonRouter, IonToast, toastController, IonText } from '@ionic/vue';
 import { warningOutline } from 'ionicons/icons';
 import { defineComponent, popScopeId, ref } from 'vue';
-import { ImageService, LoginService, UserService, Token, OpenAPI, ApiError } from '@/_generated/api-client';
+import { OneShotService, UserService, Token, OpenAPI, ApiError } from '@/_generated/api-client';
 import { useCookies } from 'vue3-cookies'
 import { routerKey } from 'vue-router';
 

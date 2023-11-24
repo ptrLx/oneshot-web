@@ -25,25 +25,25 @@ import './theme/variables.css';
 
 /* Other imports */
 import BaseLayout from './components/base/BaseLayout.vue';
-import { globalCookiesConfig } from 'vue3-cookies'; 
+import { globalCookiesConfig } from 'vue3-cookies';
 import { OpenAPI } from '@/_generated/api-client';
 import { isPlatform } from '@ionic/vue';
 import { createHead } from '@vueuse/head'
 
 
 globalCookiesConfig({
-  expireTimes:"180DAYS", // define token expiration time
+  expireTimes: "180DAYS", // define token expiration time
   //secure: true // true: only https works
 });
 
 // Set base URL for backend API calls
 const nodeEnv = process.env.NODE_ENV;
-if (nodeEnv === 'development'){
+if (nodeEnv === 'development') {
   // development
   OpenAPI.BASE = 'http://localhost:8200';
   console.log('Running oneshot-web in development mode');
 }
-else{
+else {
   // production
   OpenAPI.BASE = 'http://localhost:8080/api';
   console.log('Running oneshot-web in production mode');
@@ -65,10 +65,10 @@ router.isReady().then(() => {
 
 // --- Accessibility ---
 // Set viewport scalability dependiong on the platform
-if(isPlatform('desktop')){
+if (isPlatform('desktop')) {
   const viewport = document.querySelector('meta[name=viewport]');
 
-  if (viewport){
+  if (viewport) {
     viewport.setAttribute('content', 'minimum-scale=1, maximum-scale=5, initial-scale=1, user-scalable=yes, viewport-fit=cover, width=device-width');
   }
 }
