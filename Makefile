@@ -68,8 +68,8 @@ container-attach-bash:  ## Attach a shell to the docker container.
 
 .PHONY: start-docker-postgres
 start-docker-postgres:  ## Start the docker image from Docker Hub.
-	mkdir -p ./_local_volume
-	docker run --rm --name os-web-db -e POSTGRES_PASSWORD="password" --volume=./_local_volume/db/:/var/lib/postgresql/data/ --volume=./container-assets/init.sql:/docker-entrypoint-initdb.d/init.sql -p 5432:15432 --network=os-web-db postgres:latest
+	mkdir -p ./_local_volume/db
+	docker run --rm --name os-web-db -e POSTGRES_PASSWORD="password" --volume=./_local_volume/db/:/var/lib/postgresql/data/ --volume=./container-assets/init.sql:/docker-entrypoint-initdb.d/init.sql --network=os-web-db postgres:latest
 
 .PHONY: ping-postgres
 ping-postgres:  ## Ping the postgres-container from within the devcontainer.
