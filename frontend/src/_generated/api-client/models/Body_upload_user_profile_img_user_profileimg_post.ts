@@ -3,7 +3,7 @@
 /* tslint:disable */
 /* eslint-disable */
 
-export enum UserRole {
-    ADMIN = 'ADMIN',
-    USER = 'USER',
-}
+export type Body_upload_user_profile_img_user_profileimg_post = {
+    file: Blob;
+};
+

@@ -71,9 +71,9 @@ export default defineComponent({
             });
         }
 
-        const showToastFail = () => {
+        const showToastFail = (msg: string) => {
             toastController.create({
-                message: 'Password change failed. Make sure you entered the correct old password.',
+                message: msg,
                 duration: 2000,
                 color: 'danger'
             }).then((toast) => {
@@ -83,12 +83,11 @@ export default defineComponent({
 
         const handlechangePw = () => {
 
-            UserService.changeUserPasswordUserchpwPost(oldpw.value, newpw.value).then((t) => {
+            UserService.changeUserPasswordUserChpwPost(oldpw.value, newpw.value).then(() => {
                 showToastSuccess();
-                //router.back();
-            }).catch((e: ApiError) => {
-                showToastFail();
-                console.log(e);
+                router.back();
+            }, (e: ApiError) => {
+                showToastFail(e.body.detail);
             })
         }
 

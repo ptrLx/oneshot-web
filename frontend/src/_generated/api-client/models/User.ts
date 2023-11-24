@@ -10,6 +10,5 @@ export type User = {
     role: UserRole;
     disabled: boolean;
     full_name?: (string | null);
-    profileimg?: (string | null);
 };
 

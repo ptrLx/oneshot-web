@@ -125,9 +125,9 @@ export default defineComponent({
 
         UserService.getUserMeUserMeGet().then((response) => {
             username.value = response.username;
-        }).catch((error: ApiError) => {
-            console.log(error);
-        });
+        }, (e: ApiError) => {
+            console.log(e)
+        })
 
 
         onMounted(async () => {

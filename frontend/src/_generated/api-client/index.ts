@@ -9,12 +9,15 @@ export type { OpenAPIConfig } from './core/OpenAPI';
 
 export type { Body_login_for_access_token_login__post } from './models/Body_login_for_access_token_login__post';
 export type { Body_upload_image_image_upload_post } from './models/Body_upload_image_image_upload_post';
+export type { Body_upload_user_profile_img_user_profileimg_post } from './models/Body_upload_user_profile_img_user_profileimg_post';
+export { Happiness } from './models/Happiness';
 export type { HTTPValidationError } from './models/HTTPValidationError';
+export type { OneShot } from './models/OneShot';
 export type { Token } from './models/Token';
 export type { User } from './models/User';
 export { UserRole } from './models/UserRole';
 export type { ValidationError } from './models/ValidationError';
 
-export { ImageService } from './services/ImageService';
-export { LoginService } from './services/LoginService';
+export { OneShotService } from './services/OneShotService';
+export { StatusService } from './services/StatusService';
 export { UserService } from './services/UserService';
