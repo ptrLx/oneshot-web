@@ -28,7 +28,7 @@ Either a happiness or NO_ENTRY.
 
 ## date
 
-Format: YYYY-MM-YY (2023-10-16)
+Format: YYYY-MM-DD (2023-10-16)
 
 ## month
 

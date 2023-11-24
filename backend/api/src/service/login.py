@@ -1,7 +1,7 @@
 from datetime import datetime, timedelta
 
 import core.config as config
-from data.user_db import DBUser, UserDB
+from data.user_table import DBUser, UserDB
 from fastapi import HTTPException, status
 from jose import jwt
 from model.token import Token

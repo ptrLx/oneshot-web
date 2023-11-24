@@ -10,7 +10,7 @@ from core.exception import (
     NoProfileImg,
     PasswordsEqual,
 )
-from data.user_db import DBUser, UserDB
+from data.user_table import DBUser, UserDB
 from fastapi import UploadFile
 from fastapi.responses import FileResponse
 from model.user import User

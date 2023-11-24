@@ -23,7 +23,7 @@ dev-database-prisma-setup:  ## Migrate the database to the current schema.prisma
 
 .PHONY: start-api
 start-api:  ## Start the api
-	cd backend/api && LOGGING_LEVEL=DEBUG STAGE=dev DATABASE_URL="postgresql://postgres:password@os-web-db:5432/osweb?schema=public" pipenv run python src/main.py
+	cd backend/api && STAGE=dev DATABASE_URL="postgresql://postgres:password@os-web-db:5432/osweb?schema=public" pipenv run python src/main.py
 
 .PHONY: start-admintools
 start-admintools:  ## Start the admintools

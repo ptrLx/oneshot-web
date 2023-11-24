@@ -7,6 +7,7 @@ from core.exception import (
     ImgUploadException,
     NoOneShotImgFound,
 )
+from data.oneshot_table import DBOneShot, OneShotDB
 from fastapi.datastructures import UploadFile
 from fastapi.responses import FileResponse
 from model.date import Date
@@ -14,6 +15,7 @@ from model.oneshot import OneShot, OneShotFileName
 from model.user import User
 
 app_config = config.get_config()
+os_db = OneShotDB()
 
 
 class ImageService:
@@ -29,11 +31,11 @@ class ImageService:
 
         file_name = OneShotFileName(
             file_name=oneshot.get_file_name_no_ext(), file_extension=file_extension
-        )
+        )  # for validation
 
-        path = os.path.join(
-            app_config.WEBROOT_PATH, "img", user.username, file_name.get_file_name()
-        )
+        file_name = file_name.get_file_name()
+
+        path = os.path.join(app_config.WEBROOT_PATH, "img", user.username, file_name)
         try:
             async with aiofiles.open(path, "wb") as f:
                 # todo use max file size
@@ -48,18 +50,33 @@ class ImageService:
             await file.close()
 
         # todo create preview
-        # todo store in db
 
-        return file_name.get_file_name()
+        db_oneshot = DBOneShot(
+            username=user.username,
+            date=oneshot.date,
+            time=oneshot.time,
+            file_name=file_name,
+            happiness=oneshot.happiness,
+            text=oneshot.text,
+        )
+        await os_db.create_oneshot(db_oneshot)
+
+        return file_name
 
     async def download_image_by_date(self, user: User, date: Date) -> FileResponse:
-        # todo find file name in db
-        from fastapi import HTTPException
-        from starlette import status
+        oneshot = await os_db.get_oneshot(user.username, date)
 
-        raise HTTPException(
-            status_code=status.HTTP_501_NOT_IMPLEMENTED, detail="not implemented"
+        img_path = os.path.join(
+            app_config.WEBROOT_PATH,
+            "img",
+            user.username,
+            oneshot.file_name,
         )
+
+        if os.path.exists(img_path) and os.path.isfile(img_path):
+            return FileResponse(img_path)
+        else:
+            raise NoOneShotImgFound()
 
     async def download_image_by_file_name(
         self, user: User, file_name: OneShotFileName

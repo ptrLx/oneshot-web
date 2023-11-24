@@ -6,6 +6,8 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from router.image import router as image_router
 from router.login import router as login_router
+from router.metadata import router as metadata_router
+from router.preview import router as preview_router
 from router.user import router as user_router
 
 app_config = config.get_config()
@@ -33,14 +35,16 @@ app.add_middleware(
 )
 
 
-@app.get("/")
+@app.get("/", tags=["Status"])
 def get_status() -> str:
     return "ok"
 
 
 app.include_router(user_router, prefix="/user", tags=["User"])
-app.include_router(login_router, prefix="/login", tags=["Login"])
-app.include_router(image_router, prefix="/image", tags=["Image"])
+app.include_router(login_router, prefix="/login", tags=["User"])
+app.include_router(image_router, prefix="/image", tags=["OneShot"])
+app.include_router(preview_router, prefix="/preview", tags=["OneShot"])
+app.include_router(metadata_router, prefix="/metadata", tags=["OneShot"])
 
 
 logger.info(f"Running in stage {app_config.STAGE}.")

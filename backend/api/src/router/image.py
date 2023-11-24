@@ -53,3 +53,11 @@ async def download_image(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="Either a date or a file name is required but both where provided.",
         )
+
+
+@router.post("/delete")
+async def delete_image(
+    current_user: Annotated[User, Depends(get_current_active_user)],
+    date: str | None = None,
+) -> str:
+    pass  # todo

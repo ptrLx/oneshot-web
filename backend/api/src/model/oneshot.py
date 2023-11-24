@@ -18,7 +18,7 @@ class OneShot(BaseModel):
             # Check if the input string matches the date format (YYYY-MM-DD)
             datetime.strptime(v, "%Y-%m-%d")
         except ValueError:
-            raise ValueError("Invalid date format. Expected YYYY-MM-YY.")
+            raise ValueError("Invalid date format. Expected YYYY-MM-DD.")
         return v
 
     @validator("time")

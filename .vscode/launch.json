@@ -11,7 +11,7 @@
             "program": "${workspaceFolder}/backend/api/src/main.py",
             "cwd": "${workspaceFolder}/backend/api",
             "env": {
-                "LOGGING_LEVEL": "DEBUG",
+                // "LOGGING_LEVEL": "DEBUG",
                 "STAGE": "dev",
                 "DATABASE_URL": "postgresql://postgres:password@os-web-db:5432/osweb?schema=public"
             },

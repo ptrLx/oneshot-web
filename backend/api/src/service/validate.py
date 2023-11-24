@@ -1,7 +1,7 @@
 from typing import Annotated
 
 import core.config as config
-from data.user_db import DBUser, UserDB
+from data.user_table import DBUser, UserDB
 from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
 from jose import JWTError, jwt

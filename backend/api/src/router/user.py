@@ -1,6 +1,6 @@
 from typing import Annotated
 
-from data.user_db import DBUser
+from data.user_table import DBUser
 from fastapi import APIRouter, Depends, File, UploadFile
 from fastapi.responses import FileResponse
 from model.user import User

@@ -1,15 +1,18 @@
 import logging
+import os
 import sys
 
 logger = logging.getLogger(__name__)
 
 import bcrypt
 from admcore.config import commands, welcome_msg
-from data.user_db import UserDB
+from core import config
+from data.user_table import UserDB
 from InquirerPy import inquirer
 from model.user import UserRole
 from prisma.errors import UniqueViolationError
 
+app_config = config.get_config()
 user_db = UserDB()
 
 
@@ -68,10 +71,21 @@ class CLI:
                     password.encode(), bcrypt.gensalt()
                 ).decode(),
             )
-
-            print("\n🪄  User created.")
         except UniqueViolationError:
             print(f"❌ User {username} already exists.")
+            return
+
+        try:
+            os.makedirs(
+                os.path.join(app_config.WEBROOT_PATH, "img", username),
+                exist_ok=False,
+            )
+        except FileExistsError:
+            logger.warn(
+                f"User image directory for {username} already exists. Be careful!"
+            )
+
+        print("\n🪄  User created.")
 
         # todo handle no connection to database
 
