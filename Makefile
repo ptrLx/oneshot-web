@@ -44,11 +44,11 @@ compile-frontend:  ## Compile the frontend
 
 
 .PHONY: build-docker-image-no-compile
-build-docker-image-no-compile: ## Build the docker image with nginx, python api server and the compiled frontend in it. Skip compilation of the frontend (build outside of the devcontainer).
+build-docker-image-no-compile:  ## Build the docker image with nginx, python api server and the compiled frontend in it. Skip compilation of the frontend (build outside of the devcontainer).
 	docker build -t oneshot-web .
 
 .PHONY: build-docker-image
-build-docker-image: compile-frontend build-docker-image-no-compile ## Build the docker image with nginx, the python api server and the compiled frontend in it.
+build-docker-image: compile-frontend build-docker-image-no-compile  ## Build the docker image with nginx, the python api server and the compiled frontend in it.
 	echo "Done."
 
 .PHONY: start-docker-image-bash
@@ -68,11 +68,12 @@ container-attach-bash:  ## Attach a shell to the docker container.
 
 .PHONY: start-docker-postgres
 start-docker-postgres:  ## Start the docker image from Docker Hub.
+	mkdir -p ./_local_volume
 	docker run --rm --name os-web-db -e POSTGRES_PASSWORD="password" --volume=./_local_volume/db/:/var/lib/postgresql/data/ --volume=./container-assets/init.sql:/docker-entrypoint-initdb.d/init.sql -p 5432:15432 --network=os-web-db postgres:latest
 
 .PHONY: ping-postgres
 ping-postgres:  ## Ping the postgres-container from within the devcontainer.
-	ping os-web-db--volume=
+	ping os-web-db
 
 
 .PHONY: start-docker-compose-stack
