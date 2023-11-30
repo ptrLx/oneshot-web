@@ -18,9 +18,6 @@ user_db = UserDB()
 
 
 class CLI:
-    def __init__(self) -> None:
-        self.commands = commands
-
     async def start(self) -> None:
         print(welcome_msg)
 
@@ -28,7 +25,7 @@ class CLI:
             try:
                 result = await inquirer.select(
                     message="What do you want do do?",
-                    choices=self.commands.values(),
+                    choices=commands.values(),
                 ).execute_async()
 
                 if result == commands["CMD_CREATE_USER"]:
@@ -105,8 +102,6 @@ class CLI:
             )
 
         print("\n🪄  User created.")
-
-        # todo handle no connection to database
 
     async def __handle_user_delete(self) -> None:
         username = await inquirer.text(message="username:").execute_async()

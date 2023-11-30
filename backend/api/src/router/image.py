@@ -21,7 +21,7 @@ async def upload_image(
     oneshot: OneShot = Depends(),
     file: UploadFile = File(...),
 ) -> str:
-    return await image_service.store_image(current_user, oneshot, file)
+    return await image_service.upload_image(current_user, oneshot, file)
 
 
 @router.get("/download")

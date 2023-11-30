@@ -13,6 +13,7 @@ python-multipart = "*"
 aiofiles = "*"
 inquirerpy = "*"
 prisma = "*"
+pillow = "*"
 
 [dev-packages]
 pylint = "*"
