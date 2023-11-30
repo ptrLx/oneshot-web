@@ -6,6 +6,7 @@ from core.exception import (
     ImgFileExtensionException,
     ImgUploadException,
     NoOneShotImgFound,
+    NoOneShotInDBFound,
     UnprocessableImage,
 )
 from data.oneshot_table import DBOneShot, OneShotDB
@@ -66,21 +67,6 @@ class ImageService:
 
         return file_name
 
-    async def download_image_by_date(self, user: User, date: Date) -> FileResponse:
-        oneshot = await os_db.get_oneshot(user.username, date)
-
-        img_path = os.path.join(
-            app_config.WEBROOT_PATH,
-            "img",
-            user.username,
-            oneshot.file_name,
-        )
-
-        if os.path.exists(img_path) and os.path.isfile(img_path):
-            return FileResponse(img_path)
-        else:
-            raise NoOneShotImgFound()
-
     async def __create_preview(self, folder_path, file_name):
         # todo make this async. It is blocking.
         max_size = (450, 450)
@@ -94,6 +80,26 @@ class ImageService:
             )
         except:
             raise UnprocessableImage()
+
+    async def download_image_by_date(
+        self, user: User, date: Date, is_preview=False
+    ) -> FileResponse:
+        oneshot = await os_db.get_oneshot(user.username, date)
+
+        if oneshot is None:
+            raise NoOneShotInDBFound()
+
+        img_path = os.path.join(
+            app_config.WEBROOT_PATH,
+            "img",
+            user.username,
+            f"preview.{oneshot.file_name}" if is_preview else oneshot.file_name,
+        )
+
+        if os.path.exists(img_path) and os.path.isfile(img_path):
+            return FileResponse(img_path)
+        else:
+            raise NoOneShotImgFound()
 
     async def download_image_by_file_name(
         self, user: User, file_name: OneShotFileName

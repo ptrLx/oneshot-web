@@ -31,6 +31,14 @@ class NoOneShotImgFound(HTTPException):
         )
 
 
+class NoOneShotInDBFound(HTTPException):
+    def __init__(self):
+        super().__init__(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="OneShot not found in database.",
+        )
+
+
 class ImgUploadException(HTTPException):
     def __init__(self):
         super().__init__(
