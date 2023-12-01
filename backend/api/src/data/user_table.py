@@ -35,10 +35,11 @@ class UserDB:
 
         username = username.lower()
 
+        # todo delete other table entries first
+
         await prisma.user.delete(
             where={"username": username},
         )
-        # todo delete other table entries?
 
     async def get_user(self, username: str) -> DBUser:
         prisma = await app_config.get_prisma_conn()
@@ -51,8 +52,6 @@ class UserDB:
 
     async def get_users(self) -> List[DBUser]:
         prisma = await app_config.get_prisma_conn()
-
-        username = username.lower()
 
         return await prisma.user.find_many(take=9999)
 

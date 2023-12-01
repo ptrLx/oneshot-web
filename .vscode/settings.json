@@ -17,6 +17,7 @@
         "hashpw",
         "nginx",
         "oneshot",
+        "oneshots",
         "pipenv",
         "postgres",
         "prisma"

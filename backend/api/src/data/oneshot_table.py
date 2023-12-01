@@ -1,6 +1,5 @@
 from core import config
 from model.date import Date
-from prisma.errors import UniqueViolationError
 from prisma.models import OneShot as DBOneShot
 
 app_config = config.get_config()
@@ -41,4 +40,22 @@ class OneShotDB:
 
         return await prisma.oneshot.find_first(
             where={"username": username, "date": date.date}
+        )
+
+    async def get_gallery_page(
+        self, username: str, page: int, max_page_size: int
+    ) -> list[DBOneShot]:
+        """
+        returns the next max_page_size OneShots and the start_date for the next page.
+        """
+
+        prisma = await app_config.get_prisma_conn()
+
+        username = username.lower()
+
+        return await prisma.oneshot.find_many(
+            take=max_page_size,
+            skip=max_page_size * page,
+            order={"date": "desc"},
+            where={"username": username},
         )

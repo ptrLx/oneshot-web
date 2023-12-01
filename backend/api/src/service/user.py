@@ -6,9 +6,9 @@ import core.config as config
 from core.exception import (
     ImgFileExtensionException,
     ImgUploadException,
-    InvalidPassword,
-    NoProfileImg,
-    PasswordsEqual,
+    InvalidPasswordException,
+    NoProfileImgException,
+    PasswordsEqualException,
 )
 from data.user_table import DBUser, UserDB
 from fastapi import UploadFile
@@ -29,10 +29,10 @@ class UserService:
         self, user: DBUser, old_password: str, new_password: str
     ) -> FileResponse:
         if not login_service.verify_password(old_password, user.hashed_password):
-            raise InvalidPassword()
+            raise InvalidPasswordException()
 
         if old_password == new_password:
-            raise PasswordsEqual()
+            raise PasswordsEqualException()
 
         new_hashed_password = bcrypt.hashpw(
             new_password.encode(), bcrypt.gensalt()
@@ -49,7 +49,7 @@ class UserService:
         if os.path.exists(profile_img_path) and os.path.isfile(profile_img_path):
             return FileResponse(profile_img_path)
         else:
-            raise NoProfileImg()
+            raise NoProfileImgException()
 
     async def upload_user_profile_img(self, user: User, file: UploadFile) -> str:
         profile_img_path = os.path.join(

@@ -2,28 +2,28 @@ from fastapi import HTTPException
 from starlette import status
 
 
-class PasswordsEqual(HTTPException):
+class PasswordsEqualException(HTTPException):
     def __init__(self):
         super().__init__(
             status_code=status.HTTP_400_BAD_REQUEST, detail="Passwords are equal."
         )
 
 
-class InvalidPassword(HTTPException):
+class InvalidPasswordException(HTTPException):
     def __init__(self):
         super().__init__(
             status_code=status.HTTP_401_UNAUTHORIZED, detail="Wrong password."
         )
 
 
-class NoProfileImg(HTTPException):
+class NoProfileImgException(HTTPException):
     def __init__(self):
         super().__init__(
             status_code=status.HTTP_404_NOT_FOUND, detail="No profile image found."
         )
 
 
-class NoOneShotImgFound(HTTPException):
+class NoOneShotImgFoundException(HTTPException):
     def __init__(self):
         super().__init__(
             status_code=status.HTTP_404_NOT_FOUND,
@@ -31,7 +31,7 @@ class NoOneShotImgFound(HTTPException):
         )
 
 
-class NoOneShotInDBFound(HTTPException):
+class NoOneShotInDBFoundException(HTTPException):
     def __init__(self):
         super().__init__(
             status_code=status.HTTP_404_NOT_FOUND,
@@ -63,9 +63,17 @@ class ImgFileNameException(HTTPException):
         )
 
 
-class UnprocessableImage(HTTPException):
+class UnprocessableImageException(HTTPException):
     def __init__(self):
         super().__init__(
             status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
             detail="Image was not processable.",
+        )
+
+
+class InvalidPageSizeException(HTTPException):
+    def __init__(self):
+        super().__init__(
+            status_code=status.HTTP_406_NOT_ACCEPTABLE,
+            detail="Invalid page size.",
         )

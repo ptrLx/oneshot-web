@@ -4,7 +4,7 @@ from typing import Annotated
 from fastapi import APIRouter, Depends, File, HTTPException, UploadFile
 from fastapi.responses import FileResponse
 from model.date import Date
-from model.oneshot import OneShot, OneShotFileName
+from model.oneshot import OneShot, OneShotFileName, OneShotOut
 from model.user import User
 from service.image import ImageService
 from service.validate import get_current_active_user
@@ -55,9 +55,19 @@ async def download_image(
         )
 
 
-@router.post("/delete")
-async def delete_image(
+# todo
+# @router.post("/delete")
+# async def delete_image(
+#     current_user: Annotated[User, Depends(get_current_active_user)],
+#     date: str | None = None,
+# ) -> str:
+#     pass
+
+
+@router.get("/gallery")
+async def paginate_gallery(
     current_user: Annotated[User, Depends(get_current_active_user)],
-    date: str | None = None,
-) -> str:
-    pass  # todo
+    page: int = 0,
+    max_page_size: int = 20,
+) -> list[OneShotOut]:
+    return await image_service.paginate_gallery(current_user, page, max_page_size)

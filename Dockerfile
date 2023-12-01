@@ -17,8 +17,12 @@ RUN pipenv install --deploy
 COPY backend/api/prisma /api/prisma
 RUN pipenv run prisma generate
 
-# Copy source code of api
+# Add alias for admintools
+RUN echo 'alias admintools="cd /api && pipenv run python admintools/main.py"' >> ~/.bashrc
+
+# Copy source code of api and admintools
 COPY backend/api/src /api/src
+COPY backend/api/admintools /api/admintools
 
 # --- nginx --- #
 

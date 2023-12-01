@@ -2,6 +2,7 @@ from datetime import datetime
 
 from core import config
 from core.exception import ImgFileExtensionException, ImgFileNameException
+from data.oneshot_table import DBOneShot
 from model.happiness import Happiness
 from pydantic import BaseModel, validator
 
@@ -15,16 +16,27 @@ class OneShot(BaseModel):
     @validator("date")
     def validate_date_format(cls, v):
         try:
-            # Check if the input string matches the date format (YYYY-MM-DD)
-            datetime.strptime(v, "%Y-%m-%d")
+            # Check if the input string matches the date format (YYYY-MM-DD). strftime again to add leading zeros.
+            return datetime.strptime(v, "%Y-%m-%d").strftime("%Y-%m-%d")
         except ValueError:
-            raise ValueError("Invalid date format. Expected YYYY-MM-DD.")
-        return v
+            from fastapi import HTTPException
+            from starlette import status
+
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Invalid date format. Expected YYYY-MM-DD.",
+            )
 
     @validator("time")
     def validate_unix_timestamp(cls, v):
         if v < 0:
-            raise ValueError("Unix timestamp must be a non-negative integer.")
+            from fastapi import HTTPException
+            from starlette import status
+
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Timestamp must be a positive integer.",
+            )
         return v
 
     def get_file_name_no_ext(self) -> str:
@@ -34,6 +46,23 @@ class OneShot(BaseModel):
         file_naming_number = dt_object.strftime("%Y%m%d%H%M%S")
 
         return "OneShot_" + str(file_naming_number)
+
+
+class OneShotOut(OneShot):
+    """
+    Output model for a OneShot.
+    """
+
+    file_name: str
+
+    def from_db_oneshot(oneshot: DBOneShot):
+        return OneShotOut(
+            date=oneshot.date,
+            time=oneshot.time.timestamp(),
+            happiness=oneshot.happiness,
+            text=oneshot.text,
+            file_name=oneshot.file_name,
+        )
 
 
 class OneShotFileName(BaseModel):

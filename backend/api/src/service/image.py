@@ -5,15 +5,16 @@ from core import config
 from core.exception import (
     ImgFileExtensionException,
     ImgUploadException,
-    NoOneShotImgFound,
-    NoOneShotInDBFound,
-    UnprocessableImage,
+    InvalidPageSizeException,
+    NoOneShotImgFoundException,
+    NoOneShotInDBFoundException,
+    UnprocessableImageException,
 )
 from data.oneshot_table import DBOneShot, OneShotDB
 from fastapi.datastructures import UploadFile
 from fastapi.responses import FileResponse
 from model.date import Date
-from model.oneshot import OneShot, OneShotFileName
+from model.oneshot import OneShot, OneShotFileName, OneShotOut
 from model.user import User
 from PIL import Image
 
@@ -79,7 +80,7 @@ class ImageService:
                 quality=85,
             )
         except:
-            raise UnprocessableImage()
+            raise UnprocessableImageException()
 
     async def download_image_by_date(
         self, user: User, date: Date, is_preview=False
@@ -87,7 +88,7 @@ class ImageService:
         oneshot = await os_db.get_oneshot(user.username, date)
 
         if oneshot is None:
-            raise NoOneShotInDBFound()
+            raise NoOneShotInDBFoundException()
 
         img_path = os.path.join(
             app_config.WEBROOT_PATH,
@@ -99,7 +100,7 @@ class ImageService:
         if os.path.exists(img_path) and os.path.isfile(img_path):
             return FileResponse(img_path)
         else:
-            raise NoOneShotImgFound()
+            raise NoOneShotImgFoundException()
 
     async def download_image_by_file_name(
         self, user: User, file_name: OneShotFileName
@@ -114,4 +115,13 @@ class ImageService:
         if os.path.exists(img_path) and os.path.isfile(img_path):
             return FileResponse(img_path)
         else:
-            raise NoOneShotImgFound()
+            raise NoOneShotImgFoundException()
+
+    async def paginate_gallery(
+        self, user: User, page: int, max_page_size: int
+    ) -> list[OneShotOut]:
+        if max_page_size >= 1000 or max_page_size <= 0:
+            raise InvalidPageSizeException
+
+        oneshots = await os_db.get_gallery_page(user.username, page, max_page_size)
+        return [OneShotOut.from_db_oneshot(i) for i in oneshots]
