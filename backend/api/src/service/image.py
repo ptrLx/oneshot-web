@@ -103,13 +103,15 @@ class ImageService:
             raise NoOneShotImgFoundException()
 
     async def download_image_by_file_name(
-        self, user: User, file_name: OneShotFileName
+        self, user: User, file_name: OneShotFileName, is_preview=False
     ) -> FileResponse:
         img_path = os.path.join(
             app_config.WEBROOT_PATH,
             "img",
             user.username,
-            file_name.get_file_name(),
+            f"preview.{file_name.get_file_name()}"
+            if is_preview
+            else file_name.get_file_name(),
         )
 
         if os.path.exists(img_path) and os.path.isfile(img_path):

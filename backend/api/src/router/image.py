@@ -29,6 +29,7 @@ async def download_image(
     current_user: Annotated[User, Depends(get_current_active_user)],
     file_name: str | None = None,
     date: str | None = None,
+    preview: bool = False,
 ) -> FileResponse:
     if date is None:
         if file_name is None:
@@ -44,10 +45,12 @@ async def download_image(
             file_name = OneShotFileName(file_name=name, file_extension=extension)
 
             return await image_service.download_image_by_file_name(
-                current_user, file_name
+                current_user, file_name, preview
             )
     elif file_name is None:
-        return await image_service.download_image_by_date(current_user, Date(date=date))
+        return await image_service.download_image_by_date(
+            current_user, Date(date=date), preview
+        )
     else:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
