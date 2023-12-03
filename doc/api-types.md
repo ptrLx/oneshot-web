@@ -22,10 +22,6 @@
 * SAD
 * VERY_SAD
 
-## happiness_state
-
-Either a happiness or NO_ENTRY.
-
 ## date
 
 Format: YYYY-MM-DD (2023-10-16)

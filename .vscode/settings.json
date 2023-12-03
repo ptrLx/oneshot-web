@@ -20,7 +20,8 @@
         "oneshots",
         "pipenv",
         "postgres",
-        "prisma"
+        "prisma",
+        "uvicorn"
     ],
     "[python]": {
         "editor.defaultFormatter": "ms-python.black-formatter",

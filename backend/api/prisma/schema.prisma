@@ -28,7 +28,6 @@ model User {
 }
 
 enum Happiness {
-  NOT_SPECIFIED
   VERY_HAPPY
   HAPPY
   NEUTRAL

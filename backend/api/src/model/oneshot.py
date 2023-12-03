@@ -2,8 +2,8 @@ from datetime import datetime
 
 from core import config
 from core.exception import ImgFileExtensionException, ImgFileNameException
-from data.oneshot_table import DBOneShot
 from model.happiness import HappinessDTO
+from prisma.models import OneShot as DBOneShot
 from pydantic import BaseModel, validator
 
 
@@ -48,7 +48,7 @@ class OneShotDTO(BaseModel):
         return "OneShot_" + str(file_naming_number)
 
 
-class OneShotOutDTO(OneShotDTO):
+class OneShotRespDTO(OneShotDTO):
     """
     Output model for a OneShot.
     """
@@ -56,7 +56,7 @@ class OneShotOutDTO(OneShotDTO):
     file_name: str
 
     def from_db_oneshot(oneshot: DBOneShot):
-        return OneShotOutDTO(
+        return OneShotRespDTO(
             date=oneshot.date,
             time=oneshot.time.timestamp(),
             happiness=oneshot.happiness,

@@ -1,6 +1,6 @@
 from core import config
 from core.exception import NoOneShotInDBFoundException
-from model.date import DateDTO
+from model.date import DateDTO, MonthDTO
 from prisma.models import OneShot as DBOneShot
 
 app_config = config.get_config()
@@ -59,6 +59,21 @@ class OneShotDB:
             skip=max_page_size * page,
             order={"date": "desc"},
             where={"username": username},
+        )
+
+    async def get_calendar_month(
+        self, username: str, month: MonthDTO
+    ) -> list[DBOneShot]:
+        prisma = await app_config.get_prisma_conn()
+
+        username = username.lower()
+
+        return await prisma.oneshot.find_many(
+            order={"date": "asc"},
+            where={
+                "username": username,
+                "date": {"startswith": month.month},
+            },
         )
 
     async def delete_image(self, username: str, date: DateDTO) -> None:

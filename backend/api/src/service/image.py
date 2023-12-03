@@ -14,7 +14,7 @@ from data.oneshot_table import DBOneShot, OneShotDB
 from fastapi.datastructures import UploadFile
 from fastapi.responses import FileResponse
 from model.date import DateDTO
-from model.oneshot import OneShotDTO, OneShotFileNameDTO, OneShotOutDTO
+from model.oneshot import OneShotDTO, OneShotFileNameDTO, OneShotRespDTO
 from model.user import UserDTO
 from PIL import Image
 
@@ -123,12 +123,12 @@ class ImageService:
 
     async def paginate_gallery(
         self, user: UserDTO, page: int, max_page_size: int
-    ) -> list[OneShotOutDTO]:
+    ) -> list[OneShotRespDTO]:
         if max_page_size >= 1000 or max_page_size <= 0:
             raise InvalidPageSizeException
 
         oneshots = await os_db.get_gallery_page(user.username, page, max_page_size)
-        return [OneShotOutDTO.from_db_oneshot(i) for i in oneshots]
+        return [OneShotRespDTO.from_db_oneshot(i) for i in oneshots]
 
     async def delete_image(self, user: UserDTO, date: DateDTO) -> str:
         await os_db.delete_image(user.username, date)

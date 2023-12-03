@@ -4,7 +4,7 @@ from typing import Annotated
 from fastapi import APIRouter, Depends, File, HTTPException, UploadFile
 from fastapi.responses import FileResponse
 from model.date import DateDTO
-from model.oneshot import OneShotDTO, OneShotFileNameDTO, OneShotOutDTO
+from model.oneshot import OneShotDTO, OneShotFileNameDTO, OneShotRespDTO
 from model.user import UserDTO
 from service.image import ImageService
 from service.validate import get_current_active_user
@@ -71,5 +71,5 @@ async def paginate_gallery(
     current_user: Annotated[UserDTO, Depends(get_current_active_user)],
     page: int = 0,
     max_page_size: int = 20,
-) -> list[OneShotOutDTO]:
+) -> list[OneShotRespDTO]:
     return await image_service.paginate_gallery(current_user, page, max_page_size)

@@ -143,22 +143,6 @@ response:
 "ok"
 ```
 
-### /image/preview
-
-> GET
-
-attribute:
-
-* token
-
-parameter:
-
-* date
-
-response:
-
-<!-- image file -->
-
 ### /image/gallery
 
 > GET
@@ -250,32 +234,6 @@ response:
         }
     ],
     ...
-}
-```
-
-### calendar/preview
-
-> GET
-
-attribute:
-
-* token
-
-response:
-
-```json
-{
-    [
-        {
-            "date": "date",
-            "happiness_state": "HAPPINESS",
-        },
-        {
-            "date": "date",
-            "happiness_state": "NO_ENTRY",
-        },
-        ... x28 entries
-    ]
 }
 ```
 

@@ -1,7 +1,7 @@
 from typing import Annotated
 
 from fastapi import APIRouter, Depends
-from model.oneshot import OneShotOutDTO
+from model.oneshot import OneShotRespDTO
 from model.user import UserDTO
 from service.validate import get_current_active_user
 

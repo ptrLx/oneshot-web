@@ -4,6 +4,7 @@ from core import config
 from core.lifespan import lifespan
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from router.calendar import router as calendar_router
 from router.image import router as image_router
 from router.login import router as login_router
 from router.metadata import router as metadata_router
@@ -43,6 +44,7 @@ app.include_router(user_router, prefix="/user", tags=["User"])
 app.include_router(login_router, prefix="/login", tags=["User"])
 app.include_router(image_router, prefix="/image", tags=["OneShot"])
 app.include_router(metadata_router, prefix="/metadata", tags=["OneShot"])
+app.include_router(calendar_router, prefix="/calendar", tags=["Calendar"])
 
 
 logger.info(f"Running in stage {app_config.STAGE}.")
@@ -59,7 +61,7 @@ if __name__ == "__main__":
         logger.error("App should only be executed directly in development stage.")
         sys.exit(1)
 
-    # * in qa and prod uvicorn will be executed as command directly
+    # * uvicorn will be executed as command directly in qa and prod
     # // elif app_config.STAGE == "qa":  # API is behind nginx
     # //     logger.info(f"Running in stage qa on {app_config.HOST_URL}/api.")
     # //     uvicorn.run("main:app", host="0.0.0.0", port=8200, root_path="/api")
