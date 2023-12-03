@@ -13,9 +13,9 @@ from core.exception import (
 from data.oneshot_table import DBOneShot, OneShotDB
 from fastapi.datastructures import UploadFile
 from fastapi.responses import FileResponse
-from model.date import Date
-from model.oneshot import OneShot, OneShotFileName, OneShotOut
-from model.user import User
+from model.date import DateDTO
+from model.oneshot import OneShotDTO, OneShotFileNameDTO, OneShotOutDTO
+from model.user import UserDTO
 from PIL import Image
 
 app_config = config.get_config()
@@ -23,7 +23,9 @@ os_db = OneShotDB()
 
 
 class ImageService:
-    async def upload_image(self, user: User, oneshot: OneShot, file: UploadFile) -> str:
+    async def upload_image(
+        self, user: UserDTO, oneshot: OneShotDTO, file: UploadFile
+    ) -> str:
         file_extension = (
             file.filename[file.filename.rfind(".") + 1 :].lower()
             if "." in file.filename
@@ -33,7 +35,7 @@ class ImageService:
         if file_extension is None:
             raise ImgFileExtensionException()
 
-        file_name = OneShotFileName(
+        file_name = OneShotFileNameDTO(
             file_name=oneshot.get_file_name_no_ext(), file_extension=file_extension
         )  # for validation
 
@@ -83,7 +85,7 @@ class ImageService:
             raise UnprocessableImageException()
 
     async def download_image_by_date(
-        self, user: User, date: Date, is_preview=False
+        self, user: UserDTO, date: DateDTO, is_preview=False
     ) -> FileResponse:
         oneshot = await os_db.get_oneshot(user.username, date)
 
@@ -103,7 +105,7 @@ class ImageService:
             raise NoOneShotImgFoundException()
 
     async def download_image_by_file_name(
-        self, user: User, file_name: OneShotFileName, is_preview=False
+        self, user: UserDTO, file_name: OneShotFileNameDTO, is_preview=False
     ) -> FileResponse:
         img_path = os.path.join(
             app_config.WEBROOT_PATH,
@@ -120,14 +122,14 @@ class ImageService:
             raise NoOneShotImgFoundException()
 
     async def paginate_gallery(
-        self, user: User, page: int, max_page_size: int
-    ) -> list[OneShotOut]:
+        self, user: UserDTO, page: int, max_page_size: int
+    ) -> list[OneShotOutDTO]:
         if max_page_size >= 1000 or max_page_size <= 0:
             raise InvalidPageSizeException
 
         oneshots = await os_db.get_gallery_page(user.username, page, max_page_size)
-        return [OneShotOut.from_db_oneshot(i) for i in oneshots]
+        return [OneShotOutDTO.from_db_oneshot(i) for i in oneshots]
 
-    async def delete_image(self, user: User, date: Date) -> str:
+    async def delete_image(self, user: UserDTO, date: DateDTO) -> str:
         await os_db.delete_image(user.username, date)
         return "ok"

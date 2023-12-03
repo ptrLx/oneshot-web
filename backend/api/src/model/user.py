@@ -3,14 +3,14 @@ from enum import Enum
 from pydantic import BaseModel, validator
 
 
-class UserRole(str, Enum):
+class UserRoleDTO(str, Enum):
     ADMIN = "ADMIN"
     USER = "USER"
 
 
-class User(BaseModel):
+class UserDTO(BaseModel):
     username: str
-    role: UserRole
+    role: UserRoleDTO
     disabled: bool
     full_name: str | None = None
 

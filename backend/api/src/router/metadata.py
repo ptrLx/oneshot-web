@@ -1,8 +1,8 @@
 from typing import Annotated
 
 from fastapi import APIRouter, Depends
-from model.oneshot import OneShotOut
-from model.user import User
+from model.oneshot import OneShotOutDTO
+from model.user import UserDTO
 from service.validate import get_current_active_user
 
 router = APIRouter()

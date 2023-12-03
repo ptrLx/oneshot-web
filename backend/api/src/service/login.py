@@ -4,7 +4,7 @@ import core.config as config
 from data.user_table import DBUser, UserDB
 from fastapi import HTTPException, status
 from jose import jwt
-from model.token import Token
+from model.token import TokenDTO
 from passlib.context import CryptContext
 
 app_config = config.get_config()
@@ -42,7 +42,7 @@ class LoginService:
     # def get_password_hash(self, password):
     #     return self.__pwd_context.hash(password)
 
-    async def login_user(self, username: str, password: str) -> Token:
+    async def login_user(self, username: str, password: str) -> TokenDTO:
         user = await self.__authenticate_user(username, password)
         if user is None:
             raise HTTPException(

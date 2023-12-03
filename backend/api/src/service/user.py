@@ -13,7 +13,7 @@ from core.exception import (
 from data.user_table import DBUser, UserDB
 from fastapi import UploadFile
 from fastapi.responses import FileResponse
-from model.user import User
+from model.user import UserDTO
 from service.login import LoginService
 
 app_config = config.get_config()
@@ -22,7 +22,7 @@ login_service = LoginService()
 
 
 class UserService:
-    def get_user_info(self, user: User):
+    def get_user_info(self, user: UserDTO):
         return user
 
     async def change_password(
@@ -41,7 +41,7 @@ class UserService:
 
         return "ok"
 
-    def get_user_profile_img(self, user: User) -> FileResponse:
+    def get_user_profile_img(self, user: UserDTO) -> FileResponse:
         profile_img_path = os.path.join(
             app_config.WEBROOT_PATH, "img", user.username, "profile.png"
         )
@@ -51,7 +51,7 @@ class UserService:
         else:
             raise NoProfileImgException()
 
-    async def upload_user_profile_img(self, user: User, file: UploadFile) -> str:
+    async def upload_user_profile_img(self, user: UserDTO, file: UploadFile) -> str:
         profile_img_path = os.path.join(
             app_config.WEBROOT_PATH, "img", user.username, "profile.png"
         )

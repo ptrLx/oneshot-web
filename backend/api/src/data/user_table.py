@@ -1,7 +1,7 @@
 from typing import List
 
 from core import config
-from model.user import UserRole
+from model.user import UserRoleDTO
 from prisma.models import User as DBUser
 
 app_config = config.get_config()
@@ -12,7 +12,7 @@ class UserDB:
         self,
         username: str,
         hashed_password: str,
-        role: UserRole = "USER",
+        role: UserRoleDTO = "USER",
         disabled: bool = False,
         full_name: str = None,
     ) -> DBUser:

@@ -3,14 +3,14 @@ from datetime import datetime
 from core import config
 from core.exception import ImgFileExtensionException, ImgFileNameException
 from data.oneshot_table import DBOneShot
-from model.happiness import Happiness
+from model.happiness import HappinessDTO
 from pydantic import BaseModel, validator
 
 
-class OneShot(BaseModel):
+class OneShotDTO(BaseModel):
     date: str  # YYYY-MM-YY format
     time: int  # Unix timestamp
-    happiness: Happiness | None = None
+    happiness: HappinessDTO | None = None
     text: str | None = None
 
     @validator("date")
@@ -48,7 +48,7 @@ class OneShot(BaseModel):
         return "OneShot_" + str(file_naming_number)
 
 
-class OneShotOut(OneShot):
+class OneShotOutDTO(OneShotDTO):
     """
     Output model for a OneShot.
     """
@@ -56,7 +56,7 @@ class OneShotOut(OneShot):
     file_name: str
 
     def from_db_oneshot(oneshot: DBOneShot):
-        return OneShotOut(
+        return OneShotOutDTO(
             date=oneshot.date,
             time=oneshot.time.timestamp(),
             happiness=oneshot.happiness,
@@ -65,7 +65,7 @@ class OneShotOut(OneShot):
         )
 
 
-class OneShotFileName(BaseModel):
+class OneShotFileNameDTO(BaseModel):
     file_name: str
     file_extension: str
 

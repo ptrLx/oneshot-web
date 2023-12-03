@@ -1,7 +1,7 @@
 from enum import Enum
 
 
-class Happiness(str, Enum):
+class HappinessDTO(str, Enum):
     NOT_SPECIFIED = "NOT_SPECIFIED"
     VERY_HAPPY = "VERY_HAPPY"
     HAPPY = "HAPPY"

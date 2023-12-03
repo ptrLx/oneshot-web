@@ -9,7 +9,7 @@ from admcore.config import commands, welcome_msg
 from core import config
 from data.user_table import UserDB
 from InquirerPy import inquirer
-from model.user import UserRole
+from model.user import UserRoleDTO
 from prisma.engine.errors import EngineConnectionError
 from prisma.errors import UniqueViolationError
 
@@ -75,7 +75,7 @@ class CLI:
 
         full_name = await inquirer.text(message="Full name:").execute_async()
         role = await inquirer.select(
-            message="Select a role:", choices=[role.value for role in UserRole]
+            message="Select a role:", choices=[role.value for role in UserRoleDTO]
         ).execute_async()
         try:
             user = await user_db.create_user(

@@ -3,7 +3,7 @@ from typing import Annotated
 from data.user_table import DBUser
 from fastapi import APIRouter, Depends, File, UploadFile
 from fastapi.responses import FileResponse
-from model.user import User
+from model.user import UserDTO
 from service.user import UserService
 from service.validate import get_current_active_user
 
@@ -14,21 +14,21 @@ user_service = UserService()
 
 @router.get("/me")
 async def get_user_me(
-    current_user: Annotated[User, Depends(get_current_active_user)]
-) -> User:
+    current_user: Annotated[UserDTO, Depends(get_current_active_user)]
+) -> UserDTO:
     return user_service.get_user_info(current_user)
 
 
 @router.get("/profileimg")
 async def get_user_profile_img(
-    current_user: Annotated[User, Depends(get_current_active_user)]
+    current_user: Annotated[UserDTO, Depends(get_current_active_user)]
 ) -> FileResponse:
     return user_service.get_user_profile_img(current_user)
 
 
 @router.post("/profileimg")
 async def upload_user_profile_img(
-    current_user: Annotated[User, Depends(get_current_active_user)],
+    current_user: Annotated[UserDTO, Depends(get_current_active_user)],
     file: UploadFile = File(...),
 ) -> str:
     return await user_service.upload_user_profile_img(current_user, file)
