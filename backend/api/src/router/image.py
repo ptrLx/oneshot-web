@@ -58,13 +58,12 @@ async def download_image(
         )
 
 
-# todo
-# @router.post("/delete")
-# async def delete_image(
-#     current_user: Annotated[User, Depends(get_current_active_user)],
-#     date: str | None = None,
-# ) -> str:
-#     pass
+@router.post("/delete")
+async def delete_image(
+    current_user: Annotated[User, Depends(get_current_active_user)],
+    date: str | None = None,
+) -> str:
+    return await image_service.delete_image(current_user, Date(date=date))
 
 
 @router.get("/gallery")

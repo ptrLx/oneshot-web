@@ -1,4 +1,5 @@
 from core import config
+from core.exception import NoOneShotInDBFoundException
 from model.date import Date
 from prisma.models import OneShot as DBOneShot
 
@@ -59,3 +60,20 @@ class OneShotDB:
             order={"date": "desc"},
             where={"username": username},
         )
+
+    async def delete_image(self, username: str, date: Date) -> None:
+        prisma = await app_config.get_prisma_conn()
+
+        username = username.lower()
+
+        deleted_oneshot = await prisma.oneshot.delete(
+            where={
+                "username_date": {
+                    "username": username,
+                    "date": date.date,
+                }
+            },
+        )
+
+        if deleted_oneshot is None:
+            raise NoOneShotInDBFoundException

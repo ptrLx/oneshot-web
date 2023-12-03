@@ -127,3 +127,7 @@ class ImageService:
 
         oneshots = await os_db.get_gallery_page(user.username, page, max_page_size)
         return [OneShotOut.from_db_oneshot(i) for i in oneshots]
+
+    async def delete_image(self, user: User, date: Date) -> str:
+        await os_db.delete_image(user.username, date)
+        return "ok"
