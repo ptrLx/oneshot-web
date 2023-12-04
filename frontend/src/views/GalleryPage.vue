@@ -44,10 +44,10 @@ export default defineComponent({
         const { downloadGalleryImg } = useImageService();
         const galleryRows = ref<{ date: string; url: string; happiness: string }[][]>([]);
         let imgPage = 0;
+
+        // if this set is too small, dynamic loading will not work (ion-infinite event will not trigger)
         let imgPageSize = 10; // initial load / batch size when loading more images
 
-        // mapping of happiness values to emojis
-        // VERY_HAPPY, HAPPY, NEUTRAL, SAD, VERY_SAD
         const happinessMap = {
             VERY_HAPPY: '😁',
             HAPPY: '🙂',
@@ -56,9 +56,6 @@ export default defineComponent({
             VERY_SAD: '😭',
             NOT_SPECIFIED: '❓'
         };
-
-
-
         const loadGalleryImages = async () => {
             const images = await OneShotService.paginateGalleryImageGalleryGet(imgPage, imgPageSize);
             const galleryImages = await Promise.all(
@@ -85,29 +82,14 @@ export default defineComponent({
             await loadGalleryImages();
             imgPage++;
             if (event) {
-                (event?.target as HTMLIonInfiniteScrollElement).complete();
+                (event.target as HTMLIonInfiniteScrollElement).complete();
             }
         };
 
-        /**
-         * Make sure infinite scroll is triggered at least once,
-         * even if content does not fill the viewport. (example: imgPageSize = 2)
-         * Without this, content would not be loaded dynamically if the initial
-         * set does not fill the viewport.
-         */
-        const checkFillViewport = async () => {
-            await nextTick();
-            const ionGrid = document.querySelector('ion-grid');
-            const ionContent = document.querySelector('ion-content');
-            if (ionGrid && ionContent && ionGrid.clientHeight < ionContent.clientHeight + 100) {
-                await loadMoreImages();
-                setTimeout(checkFillViewport, 0);
-            }
-        };
 
         onMounted(() => {
             // Initial load 
-            setTimeout(checkFillViewport, 0);
+            loadMoreImages();
         });
 
         return {
