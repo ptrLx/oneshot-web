@@ -1,88 +1,122 @@
 <template>
-    <base-layout page-title="Gallery" :hide-back-button=false>
+    <base-layout page-title="Gallery" :hide-back-button="false">
         <ion-grid>
-            <ion-grid>
-                <ion-row v-for="(row, rowIndex) in galleryRows" :key="rowIndex">
-                    <ion-col v-for="(image, colIndex) in row" :key="colIndex" size="6">
-                        <gallery-image :id="(image.id).toString()" :imgsrc="image.url" :emoji="image.happiness">
-
-                        </gallery-image>
-                    </ion-col>
-                </ion-row>
-                <ion-infinite-scroll @ionInfinite="loadMoreImages">
-                    <ion-infinite-scroll-content loadingText="Please wait..."
-                        loadingSpinner="bubbles"></ion-infinite-scroll-content>
-                </ion-infinite-scroll>
-            </ion-grid>
+            <ion-row v-for="(row, rowIndex) in galleryRows" :key="rowIndex">
+                <ion-col v-for="(image, colIndex) in row" :key="colIndex" size="6">
+                    <gallery-image :id="(image.date).toString()" :imagetitle="(image.date).toString()" :imgsrc="image.url"
+                        :emoji="image.happiness">
+                    </gallery-image>
+                </ion-col>
+            </ion-row>
+            <ion-infinite-scroll @ionInfinite="loadMoreImages">
+                <ion-infinite-scroll-content loadingText="Please wait..." loadingSpinner="bubbles">
+                </ion-infinite-scroll-content>
+            </ion-infinite-scroll>
         </ion-grid>
     </base-layout>
 </template>
   
 <script lang="ts">
-import { IonAvatar, IonButton, IonGrid, IonRow, IonCol, IonIcon, IonTextarea, useIonRouter, IonInfiniteScrollContent, IonInfiniteScroll, IonTitle, IonImg } from '@ionic/vue';
+import {
+    IonGrid,
+    IonRow,
+    IonCol,
+    IonInfiniteScroll,
+    IonInfiniteScrollContent
+} from '@ionic/vue';
 
-import { defineComponent, ref } from 'vue';
-import { OneShotService, UserService, OpenAPI, ApiError } from '@/_generated/api-client';
+import { defineComponent, ref, onMounted, nextTick } from 'vue';
+import { OneShotService } from '@/_generated/api-client';
+import { useImageService } from '@/composables/imageService';
 import GalleryImage from '@/components/GalleryImage.vue';
-
+import { images } from 'ionicons/icons';
 
 export default defineComponent({
     components: {
-        IonButton,
         IonGrid,
         IonRow,
         IonCol,
-        IonIcon,
-        IonTitle,
-        IonImg,
-        IonInfiniteScroll, // TODO: Loading Spinner and Waiting text not showing/working
+        IonInfiniteScroll,
         IonInfiniteScrollContent,
         GalleryImage
     },
     setup() {
-        const galleryRows = ref<{ id: number, url: string, happiness: string }[][]>([]);
-        const url_base = ref<string>('https://placekitten.com/200/300?image=');
+        const { downloadGalleryImg } = useImageService();
+        const galleryRows = ref<{ date: string; url: string; happiness: string }[][]>([]);
+        let imgPage = 0;
+        let imgPageSize = 10; // initial load / batch size when loading more images
 
-        let index = 0;
+        // mapping of happiness values to emojis
+        // VERY_HAPPY, HAPPY, NEUTRAL, SAD, VERY_SAD
+        const happinessMap = {
+            VERY_HAPPY: '😁',
+            HAPPY: '🙂',
+            NEUTRAL: '😐',
+            SAD: '😞',
+            VERY_SAD: '😭',
+            NOT_SPECIFIED: '❓'
+        };
 
-        // Simulated data
-        const happinessOptions = ['😄', '😃', '😐', '😞', '😢'];
-        const initialImages = Array.from({ length: 10 }, () => ({
-            id: index,
-            url: url_base.value + index++,
-            happiness: happinessOptions[Math.floor(Math.random() * happinessOptions.length)],
-        }));
 
 
-        // Initialize gallery with the initial images
-        galleryRows.value.push(initialImages);
+        const loadGalleryImages = async () => {
+            const images = await OneShotService.paginateGalleryImageGalleryGet(imgPage, imgPageSize);
+            const galleryImages = await Promise.all(
+                images.map(async (image) => {
+                    const blob = await downloadGalleryImg(image.date);
+                    const url = URL.createObjectURL(blob);
+                    let hapinessEmoji = happinessMap["NOT_SPECIFIED"];
+                    if (image.happiness) {
+                        hapinessEmoji = happinessMap[image.happiness];
+                    }
 
-        const loadMoreImages = async (event: CustomEvent<void>) => {
-            console.log('Loading more images called..');
-            // Simulated asynchronous data fetching
-            const newImages = Array.from({ length: 2 }, () => ({
-                id: index,
-                url: url_base.value + index++,
-                happiness: happinessOptions[Math.floor(Math.random() * happinessOptions.length)]
-            }));
-            if (newImages.length > 0) {
-                // Add new images to the gallery
-                galleryRows.value.push(newImages);
-                (event.target as HTMLIonInfiniteScrollElement).complete(); // Inform infinite-scroll that loading is complete
-            } else {
-                (event.target as HTMLIonInfiniteScrollElement).disabled = true; // Disable infinite-scroll if no more images
+                    return {
+                        date: image.date,
+                        url: url,
+                        happiness: hapinessEmoji
+                    };
+                })
+            );
+            galleryRows.value.push(galleryImages);
+        };
+
+        const loadMoreImages = async (event?: CustomEvent<void>) => {
+            console.log('Loading more images ... ');
+            await loadGalleryImages();
+            imgPage++;
+            if (event) {
+                (event?.target as HTMLIonInfiniteScrollElement).complete();
             }
         };
 
+        /**
+         * Make sure infinite scroll is triggered at least once,
+         * even if content does not fill the viewport. (example: imgPageSize = 2)
+         * Without this, content would not be loaded dynamically if the initial
+         * set does not fill the viewport.
+         */
+        const checkFillViewport = async () => {
+            await nextTick();
+            const ionGrid = document.querySelector('ion-grid');
+            const ionContent = document.querySelector('ion-content');
+            if (ionGrid && ionContent && ionGrid.clientHeight < ionContent.clientHeight + 100) {
+                await loadMoreImages();
+                setTimeout(checkFillViewport, 0);
+            }
+        };
+
+        onMounted(() => {
+            // Initial load 
+            setTimeout(checkFillViewport, 0);
+        });
+
         return {
             galleryRows,
-            loadMoreImages,
+            loadMoreImages
         };
-    },
+    }
 });
-
 </script>
-
+  
 <style scoped></style>
-
   

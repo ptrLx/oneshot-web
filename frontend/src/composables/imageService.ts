@@ -30,6 +30,19 @@ export const useImageService = () => {
     
         return await uploadImage(src, endpoint, fileName);
     };
+
+    const downloadGalleryImg = async (date: string, preview: boolean = true) => {
+        let endpoint = OpenAPI.BASE + "/image/download";
+        
+        const params = new URLSearchParams();
+
+        params.append('date', date);
+        params.append('preview', preview.toString());
+
+        endpoint += `?${params.toString()}`
+
+        return await loadImg(endpoint);
+    }
     
     const uploadGalleryImg = async (src: string, data: OneShotUpdate) => {
         let endpoint = OpenAPI.BASE + "/image/upload";
@@ -73,11 +86,10 @@ export const useImageService = () => {
         }
     };
     
-    
-
     return {
         loadImg,
         uploadProfileImg,
-        uploadGalleryImg
+        uploadGalleryImg,
+        downloadGalleryImg
     }
 }
