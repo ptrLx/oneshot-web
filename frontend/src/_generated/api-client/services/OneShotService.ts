@@ -118,25 +118,4 @@ export class OneShotService {
         });
     }
 
-    /**
-     * Get Metadata
-     * @param date
-     * @returns OneShotRespDTO Successful Response
-     * @throws ApiError
-     */
-    public static getMetadataMetadataGet(
-        date?: (string | null),
-    ): CancelablePromise<OneShotRespDTO> {
-        return __request(OpenAPI, {
-            method: 'GET',
-            url: '/metadata/',
-            query: {
-                'date': date,
-            },
-            errors: {
-                422: `Validation Error`,
-            },
-        });
-    }
-
 }
