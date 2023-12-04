@@ -3,8 +3,8 @@
 /* tslint:disable */
 /* eslint-disable */
 import type { Body_upload_image_image_upload_post } from '../models/Body_upload_image_image_upload_post';
-import type { Happiness } from '../models/Happiness';
-import type { OneShot } from '../models/OneShot';
+import type { HappinessDTO } from '../models/HappinessDTO';
+import type { OneShotRespDTO } from '../models/OneShotRespDTO';
 
 import type { CancelablePromise } from '../core/CancelablePromise';
 import { OpenAPI } from '../core/OpenAPI';
@@ -26,7 +26,7 @@ export class OneShotService {
         date: string,
         time: number,
         formData: Body_upload_image_image_upload_post,
-        happiness?: (Happiness | null),
+        happiness?: (HappinessDTO | null),
         text?: (string | null),
     ): CancelablePromise<string> {
         return __request(OpenAPI, {
@@ -50,12 +50,14 @@ export class OneShotService {
      * Download Image
      * @param fileName
      * @param date
+     * @param preview
      * @returns any Successful Response
      * @throws ApiError
      */
     public static downloadImageImageDownloadGet(
         fileName?: (string | null),
         date?: (string | null),
+        preview: boolean = false,
     ): CancelablePromise<any> {
         return __request(OpenAPI, {
             method: 'GET',
@@ -63,6 +65,7 @@ export class OneShotService {
             query: {
                 'file_name': fileName,
                 'date': date,
+                'preview': preview,
             },
             errors: {
                 422: `Validation Error`,
@@ -92,19 +95,22 @@ export class OneShotService {
     }
 
     /**
-     * Download Image
-     * @param date
-     * @returns any Successful Response
+     * Paginate Gallery
+     * @param page
+     * @param maxPageSize
+     * @returns OneShotRespDTO Successful Response
      * @throws ApiError
      */
-    public static downloadImagePreviewGet(
-        date?: (string | null),
-    ): CancelablePromise<any> {
+    public static paginateGalleryImageGalleryGet(
+        page?: number,
+        maxPageSize: number = 20,
+    ): CancelablePromise<Array<OneShotRespDTO>> {
         return __request(OpenAPI, {
             method: 'GET',
-            url: '/preview/',
+            url: '/image/gallery',
             query: {
-                'date': date,
+                'page': page,
+                'max_page_size': maxPageSize,
             },
             errors: {
                 422: `Validation Error`,
@@ -113,14 +119,14 @@ export class OneShotService {
     }
 
     /**
-     * Download Image
+     * Get Metadata
      * @param date
-     * @returns OneShot Successful Response
+     * @returns OneShotRespDTO Successful Response
      * @throws ApiError
      */
-    public static downloadImageMetadataGet(
+    public static getMetadataMetadataGet(
         date?: (string | null),
-    ): CancelablePromise<OneShot> {
+    ): CancelablePromise<OneShotRespDTO> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/metadata/',

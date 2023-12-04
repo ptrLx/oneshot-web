@@ -3,8 +3,7 @@
 /* tslint:disable */
 /* eslint-disable */
 
-export enum Happiness {
-    NOT_SPECIFIED = 'NOT_SPECIFIED',
+export enum HappinessDTO {
     VERY_HAPPY = 'VERY_HAPPY',
     HAPPY = 'HAPPY',
     NEUTRAL = 'NEUTRAL',

@@ -133,3 +133,11 @@ class ImageService:
     async def delete_image(self, user: UserDTO, date: DateDTO) -> str:
         await os_db.delete_image(user.username, date)
         return "ok"
+
+    async def get_metadata(self, user: UserDTO, date: DateDTO) -> OneShotRespDTO:
+        oneshot = await os_db.get_oneshot(user.username, date)
+
+        if oneshot is None:
+            raise NoOneShotInDBFoundException()
+
+        return OneShotRespDTO.from_db_oneshot(oneshot)

@@ -3,7 +3,7 @@
 /* tslint:disable */
 /* eslint-disable */
 
-export enum UserRole {
+export enum UserRoleDTO {
     ADMIN = 'ADMIN',
     USER = 'USER',
 }

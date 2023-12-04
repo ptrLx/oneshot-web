@@ -4,8 +4,8 @@
 /* eslint-disable */
 import type { Body_login_for_access_token_login__post } from '../models/Body_login_for_access_token_login__post';
 import type { Body_upload_user_profile_img_user_profileimg_post } from '../models/Body_upload_user_profile_img_user_profileimg_post';
-import type { Token } from '../models/Token';
-import type { User } from '../models/User';
+import type { TokenDTO } from '../models/TokenDTO';
+import type { UserDTO } from '../models/UserDTO';
 
 import type { CancelablePromise } from '../core/CancelablePromise';
 import { OpenAPI } from '../core/OpenAPI';
@@ -15,10 +15,10 @@ export class UserService {
 
     /**
      * Get User Me
-     * @returns User Successful Response
+     * @returns UserDTO Successful Response
      * @throws ApiError
      */
-    public static getUserMeUserMeGet(): CancelablePromise<User> {
+    public static getUserMeUserMeGet(): CancelablePromise<UserDTO> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/user/me',
@@ -84,12 +84,12 @@ export class UserService {
     /**
      * Login For Access Token
      * @param formData
-     * @returns Token Successful Response
+     * @returns TokenDTO Successful Response
      * @throws ApiError
      */
     public static loginForAccessTokenLoginPost(
         formData: Body_login_for_access_token_login__post,
-    ): CancelablePromise<Token> {
+    ): CancelablePromise<TokenDTO> {
         return __request(OpenAPI, {
             method: 'POST',
             url: '/login/',

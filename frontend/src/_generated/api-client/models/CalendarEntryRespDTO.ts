@@ -3,12 +3,10 @@
 /* tslint:disable */
 /* eslint-disable */
 
-import type { Happiness } from './Happiness';
+import type { OneShotRespDTO } from './OneShotRespDTO';
 
-export type OneShot = {
+export type CalendarEntryRespDTO = {
     date: string;
-    time: number;
-    happiness?: (Happiness | null);
-    text?: (string | null);
+    oneshot?: (OneShotRespDTO | null);
 };
 
