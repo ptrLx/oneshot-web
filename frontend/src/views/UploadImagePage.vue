@@ -37,7 +37,7 @@
 import { IonAvatar, IonButton, IonGrid, IonRow, IonCol, IonIcon, IonTextarea, useIonRouter, IonToast, toastController, IonTitle, IonImg } from '@ionic/vue';
 
 import { defineComponent, ref } from 'vue';
-import { OneShotService, UserService, Token, OpenAPI, ApiError } from '@/_generated/api-client';
+import { OneShotService, UserService, OpenAPI, ApiError } from '@/_generated/api-client';
 import { routerKey, useRoute } from 'vue-router';
 import { useCameraService } from '@/composables/cameraService';
 import { useImageService } from '@/composables/imageService';

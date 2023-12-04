@@ -56,7 +56,7 @@
   
 <script lang="ts">
 import { IonAvatar, IonButton, IonGrid, IonRow, IonCol, IonIcon, IonTitle, useIonRouter, IonImg, IonActionSheet } from '@ionic/vue';
-import { OneShotService, UserService, Token, OpenAPI, ApiError } from '@/_generated/api-client';
+import { OneShotService, UserService, OpenAPI, ApiError } from '@/_generated/api-client';
 import { cameraOutline, chatboxEllipsesOutline, constructOutline, image } from 'ionicons/icons';
 import { computed, defineComponent, onMounted, ref } from 'vue';
 import { useCookies } from 'vue3-cookies'

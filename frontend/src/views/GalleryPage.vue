@@ -22,7 +22,7 @@
 import { IonAvatar, IonButton, IonGrid, IonRow, IonCol, IonIcon, IonTextarea, useIonRouter, IonInfiniteScrollContent, IonInfiniteScroll, IonTitle, IonImg } from '@ionic/vue';
 
 import { defineComponent, ref } from 'vue';
-import { OneShotService, UserService, Token, OpenAPI, ApiError } from '@/_generated/api-client';
+import { OneShotService, UserService, OpenAPI, ApiError } from '@/_generated/api-client';
 import GalleryImage from '@/components/GalleryImage.vue';
 
 
