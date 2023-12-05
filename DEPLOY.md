@@ -3,14 +3,56 @@
 Use following `docker-compose.yml`-template to host oneshot-web:
 
 ```yml
-# todo use docker hub image
-# todo use host port 8080
+version: '3.9'
+
+services:
+  db:
+    container_name: oneshot-web-db
+    image: 'postgres:latest'
+    env_file:
+      - .env
+    networks:
+      - oneshot-web-db
+    volumes:
+      - ./db/:/var/lib/postgresql/data/:Z
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    restart: unless-stopped
+
+  app:
+    image: ptrlx/oneshot-web:latest
+    container_name: oneshot-web-app
+    ports:
+      - 8080:80
+    env_file:
+      - .env
+    networks:
+      - oneshot-web-db
+    depends_on:
+      db:
+        condition: service_started
+    volumes:
+      - ./app/:/srv/oneshot
+    restart: unless-stopped
+
+networks:
+  oneshot-web-db:
+    driver: bridge
 ```
 
-`.env`-example:
+Store the `.env` file and the `ìnit.sql` file next to the `docker-compose.yml`
+
+`.env`:
 
 ```conf
-WEBROOT_PATH=/srv/oneshot/
-HOST_URL=http://osweb.example.com
-TZ=Europe/Berlin
+TZ="Europe/Berlin"
+HOST_URL="example.com"
+POSTGRES_PASSWORD="change_this_password"
+DATABASE_HOST="oneshot-web-db"
+```
+
+`init.sql`:
+
+```sql
+CREATE DATABASE osweb;
+GRANT ALL PRIVILEGES ON DATABASE osweb TO postgres;
 ```

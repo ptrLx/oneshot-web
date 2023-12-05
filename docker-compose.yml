@@ -7,7 +7,7 @@ version: '3.9'
 ###
 
 services:
-  database:
+  db:
     container_name: os-web-compose-db
     image: 'postgres:latest'
     env_file:
@@ -23,9 +23,9 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: os-web-compose
+    container_name: os-web-compose-app
     ports:
-      - 80:8080
+      - 8080:80
     env_file:
       - .env
     networks:

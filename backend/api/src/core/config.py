@@ -13,6 +13,27 @@ class AppConfig:
 
         self.STAGE = os.getenv("STAGE", "prod")
 
+        self.DATABASE_HOST = os.getenv("DATABASE_HOST")
+        if self.DATABASE_HOST is None:
+            if self.STAGE == "dev":
+                self.DATABASE_HOST = "os-web-db"
+            else:
+                self.logger.error(f"DATABASE_HOST environment variable is not set.")
+                sys.exit(1)
+
+        self.POSTGRES_PASSWORD = os.getenv("POSTGRES_PASSWORD")
+        if self.POSTGRES_PASSWORD is None:
+            if self.STAGE == "dev":
+                self.POSTGRES_PASSWORD = "password"
+            else:
+                self.logger.error(f"POSTGRES_PASSWORD environment variable is not set.")
+                sys.exit(1)
+
+        # Read by prisma. There is no way to read and concat both DATABASE_HOST and POSTGRES_PASSWORD in schema.
+        os.environ[
+            "DATABASE_URL"
+        ] = f"postgresql://postgres:{self.POSTGRES_PASSWORD}@{self.DATABASE_HOST}:5432/osweb?schema=public"
+
         self.WEBROOT_PATH = os.getenv("WEBROOT_PATH")
         if self.WEBROOT_PATH is None:
             if self.STAGE == "dev":
