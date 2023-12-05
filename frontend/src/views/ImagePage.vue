@@ -10,10 +10,11 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue';
+import { computed, defineComponent, ref } from 'vue';
 import { IonCard, IonImg, IonCardSubtitle, IonCardTitle } from '@ionic/vue';
 import { useRoute } from 'vue-router'
 import { useImageService } from '@/composables/imageService';
+import { OneShotService } from '@/_generated/api-client';
 
 export default defineComponent({
     components: {
@@ -25,21 +26,41 @@ export default defineComponent({
     setup() {
         const route = useRoute()
         const { downloadGalleryImg } = useImageService();
-        const id = route.params.id as string
+
+        const happinessMap = {
+            VERY_HAPPY: '😁',
+            HAPPY: '🙂',
+            NEUTRAL: '😐',
+            SAD: '😞',
+            VERY_SAD: '😭',
+            NOT_SPECIFIED: '❓'
+        };
+        const id = route.params.id as string // the image date in format YYYY-MM-DD
         const imgSrc = ref<string>('')
+        const imageDate = ref<string>(id)
+        const imageHappiness = ref<string>(happinessMap.NOT_SPECIFIED)
+        const imageTitle = computed(() => `${imageDate.value} | ${imageHappiness.value}`);
+        const descriptionText = ref<string>('')
+
+
+        const isExpanded = ref<boolean>(false)
+        const expandDescription = () => {
+            isExpanded.value = !isExpanded.value
+        }
 
         downloadGalleryImg(id).then((blob) => {
             imgSrc.value = URL.createObjectURL(blob)
         })
 
-        const imageDate = id
-        const imageHappiness = '😄'
-        const imageTitle = ref<string>(`${imageDate} |  ${imageHappiness}`)
-        const descriptionText = ref<string>('Exorcizamus te omnis immundus spiritus omnis satanica potestas, omnis incursio infernalis adversarii, omnis legio, omnis congregatio et secta diabolica. Ergo draco maledicte et omnis legio diabolica adjuramus te. Cessa decipere humanas creaturas, eisque æternæ perditionìs venenum propinare. Vade, satana, inventor et magister omnis fallaciæ, hostis humanæ salutis. Humiliare sub potenti manu Dei; contremisce et effuge, invocato a nobis sancto et terribili nomine, quem inferi tremunt. Ab insidiis diaboli, libera nos, Domine. Ut Ecclesiam tuam secura tibi facias libertate servire, te rogamus, audi nos. Ut inimicos sanctæ Ecclesiæ humiliare digneris, te rogamus, audi nos. Terribilis Deus de sanctuario suo. Deus Israël ipse truderit virtutem et fortitudinem plebi suæ. Benedictus Deus. Gloria Patri. Sicut erat. Terribilis Deus de sanctuario suo. Deus Israël ipse truderit virtutem et fortitudinem plebi suæ. Benedictus Deus. Gloria Patri. Sicut erat. Terribilis Deus de sanctuario suo. Deus Israël ipse truderit virtutem et fortitudinem plebi suæ. Benedictus Deus. Gloria Patri. Sicut erat. Terribilis Deus de sanctuario suo. Deus Israël ipse truderit virtutem et fortitudinem plebi suæ. Benedictus Deus. Gloria Patri. Sicut erat. Terribilis Deus de sanctuario suo. Deus Israël ipse truderit virtutem et fortitudinem plebi suæ. Benedictus Deus. Gloria Patri. Sicut erat. ')
-        const isExpanded = ref<boolean>(false)
-        const expandDescription = () => {
-            isExpanded.value = !isExpanded.value
-        }
+        OneShotService.getMetadataMetadataGet(id).then((response) => {
+            if (response.happiness) {
+                imageHappiness.value = happinessMap[response.happiness]
+            }
+            if (response.text) {
+                descriptionText.value = response.text
+            }
+        })
+
 
         return {
             imgSrc,
