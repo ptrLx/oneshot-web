@@ -1,6 +1,10 @@
 <template>
     <base-layout :page-title="imageTitle" :hide-back-button=false>
-
+        <template #custom-buttons>
+            <ion-button>
+                <ion-icon :icon="createOutline"></ion-icon>
+            </ion-button>
+        </template>
         <ion-img alt="Img" :src="imgSrc" class="fullscreen-image"></ion-img>
         <div :class="{ 'no-overlay': !isExpanded, 'overlay': isExpanded }"></div>
         <div :class="{ 'description': !isExpanded, 'description-expanded': isExpanded }" @click="expandDescription">
@@ -11,10 +15,11 @@
 
 <script lang="ts">
 import { computed, defineComponent, ref } from 'vue';
-import { IonCard, IonImg, IonCardSubtitle, IonCardTitle } from '@ionic/vue';
+import { IonCard, IonImg, IonCardSubtitle, IonCardTitle, IonButton, IonIcon } from '@ionic/vue';
 import { useRoute } from 'vue-router'
 import { useImageService } from '@/composables/imageService';
 import { OneShotService } from '@/_generated/api-client';
+import { createOutline } from 'ionicons/icons';
 
 export default defineComponent({
     components: {
@@ -22,10 +27,12 @@ export default defineComponent({
         IonImg,
         IonCardSubtitle,
         IonCardTitle,
+        IonButton,
+        IonIcon,
     },
     setup() {
         const route = useRoute()
-        const { downloadGalleryImg } = useImageService();
+        const { downloadGalleryImg } = useImageService()
 
         const happinessMap = {
             VERY_HAPPY: '😁',
@@ -67,7 +74,8 @@ export default defineComponent({
             imageTitle,
             descriptionText,
             isExpanded,
-            expandDescription
+            expandDescription,
+            createOutline
         }
     }
 });

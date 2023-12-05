@@ -6,6 +6,9 @@
                     <ion-back-button v-if="hideBackButton == false" :default-href="defaultBackLink" />
                 </ion-buttons>
                 <ion-title> {{ pageTitle }}</ion-title>
+                <ion-buttons slot="end">
+                    <slot name="custom-buttons"></slot>
+                </ion-buttons>
             </ion-toolbar>
         </ion-header>
         <ion-content :fullscreen="true">
