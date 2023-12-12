@@ -42,7 +42,7 @@ import { routerKey, useRoute } from 'vue-router';
 import { useCameraService } from '@/composables/cameraService';
 import { useImageService } from '@/composables/imageService';
 import HappinessSelector from '@/components/HappinessSelector.vue';
-import { Happiness } from '@/types/Happiness';
+import { HappinessDTO } from '@/_generated/api-client';
 import { OneShotUpdate } from '@/types/OneShotUpdate';
 
 export default defineComponent({
@@ -69,7 +69,7 @@ export default defineComponent({
         const uploadedImage = ref<string>("");
         const description = ref<string>("");
 
-        let selectedHappiness = Happiness.NOT_SPECIFIED; // Default value
+        let selectedHappiness = HappinessDTO.NEUTRAL // Default value
 
         switch (route.query.action) {
             case 'capture':
@@ -89,7 +89,7 @@ export default defineComponent({
                 break;
         }
 
-        const handleNewHappiness = (newHappiness: Happiness) => {
+        const handleNewHappiness = (newHappiness: HappinessDTO) => {
             selectedHappiness = newHappiness;
         }
 

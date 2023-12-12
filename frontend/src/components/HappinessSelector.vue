@@ -20,7 +20,7 @@
 <script lang="ts">
 import { defineComponent, ref, watch } from 'vue';
 import { IonRadio, IonRadioGroup, IonRow, IonCol, IonLabel } from '@ionic/vue';
-import { Happiness } from '@/types/Happiness';
+import { HappinessDTO } from '@/_generated/api-client';
 import { computed } from '@vue/reactivity';
 
 export default defineComponent({
@@ -32,13 +32,13 @@ export default defineComponent({
         IonLabel,
     },
     setup(props, { emit }) {
-        const selectedHappiness = ref<Happiness>(Happiness.NOT_SPECIFIED);
+        const selectedHappiness = ref(null);
         const happinessOptions = [
-            { emoji: '😄', value: Happiness.VERY_HAPPY },
-            { emoji: '😃', value: Happiness.HAPPY },
-            { emoji: '😐', value: Happiness.NEUTRAL },
-            { emoji: '😞', value: Happiness.SAD },
-            { emoji: '😢', value: Happiness.VERY_SAD },
+            { emoji: '😄', value: HappinessDTO.VERY_HAPPY },
+            { emoji: '😃', value: HappinessDTO.HAPPY },
+            { emoji: '😐', value: HappinessDTO.NEUTRAL },
+            { emoji: '😞', value: HappinessDTO.SAD },
+            { emoji: '😢', value: HappinessDTO.VERY_SAD },
         ];
 
         watch(selectedHappiness, (newValue) => {
@@ -46,7 +46,7 @@ export default defineComponent({
             emit('update:selectedHappiness', newValue)
         });
 
-        const isSelected = (happiness: { value: Happiness; }) =>
+        const isSelected = (happiness: { value: HappinessDTO; }) =>
             selectedHappiness.value === happiness.value;
 
         return {
