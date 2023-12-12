@@ -1,15 +1,17 @@
 <template>
-    <ion-datetime id="calendar" class="datetime" presentation="date" display-format="DDDD MMMM D, YYYY"
+    <ion-datetime ref="datetime" id="calendar" class="datetime" presentation="date" display-format="DDDD MMMM D, YYYY"
         picker-format="DDDD MMMM D, YYYY" placeholder="Select Date" size="cover" :highlightedDates="highlightedDates"
-        :value="selectedDate.toISOString()"></ion-datetime>
+        v-model="selectedDate" @ion-change="handleSelection"></ion-datetime>
 </template>
   
 <script lang="ts">
 import { IonDatetime, onIonViewDidEnter } from '@ionic/vue';
-import { defineComponent, ref, onMounted, watch, nextTick } from 'vue';
-import { CalendarService } from '@/_generated/api-client';
+import { defineComponent, ref, onMounted, watch, nextTick, Ref } from 'vue';
+import { useRouter } from 'vue-router';
+import { ApiError, CalendarService } from '@/_generated/api-client';
 import { CalendarEntryRespDTO } from '@/_generated/api-client/models/CalendarEntryRespDTO';
 import { HappinessDTO } from '@/_generated/api-client/models/HappinessDTO';
+import { OneShotService } from '@/_generated/api-client';
 
 export default defineComponent({
     components: {
@@ -17,10 +19,12 @@ export default defineComponent({
     },
     setup() {
 
-
-        const selectedDate = new Date();
+        const router = useRouter();
+        const datetime: Ref<typeof IonDatetime | null> = ref(null);
+        const selectedDate = ref<string>((new Date).toISOString());
         const displayedMonth = ref<string>('');
         const highlightedDates = ref<{ date: string; textColor: string, backgroundColor: string }[]>();
+
         const observeCalendarChanges = () => {
             const targetNode = document.querySelector('ion-datetime#calendar');
             if (!targetNode) return;
@@ -35,7 +39,6 @@ export default defineComponent({
                         if (textContent && textContent !== displayedMonth.value) {
                             displayedMonth.value = textContent
                             handleMonthChange(textContent);
-                            console.log(textContent);
                         }
                     }
                 }
@@ -48,7 +51,6 @@ export default defineComponent({
         onMounted(observeCalendarChanges);
 
         const handleMonthChange = (dateText: string) => {
-            selectedDate.setMonth(new Date(`1 ${dateText}`).getMonth());
             const formattedDate = formatDisplayDate(dateText);
             CalendarService.getCalendarCalendarGet(formattedDate).then((response) => {
                 highlightedDates.value = updateHighlightedDates(response);
@@ -97,9 +99,19 @@ export default defineComponent({
             return result;
         };
 
+        const handleSelection = async (event: CustomEvent) => {
+            const formattedDate = new Date(selectedDate.value).toLocaleDateString('en-CA');
+            OneShotService.getMetadataMetadataGet(formattedDate).then((response) => {
+                router.push("/image/" + formattedDate);
+            }, (e: ApiError) => {
+                console.log("No image for this date exists");
+            })
+        };
+
         return {
             highlightedDates,
             selectedDate,
+            handleSelection,
         };
     },
 });
