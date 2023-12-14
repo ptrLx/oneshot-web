@@ -7,7 +7,8 @@
         </template>
         <ion-img alt="Img" :src="imgSrc" class="fullscreen-image"></ion-img>
         <div :class="{ 'no-overlay': !isExpanded, 'overlay': isExpanded }"></div>
-        <div :class="{ 'description': !isExpanded, 'description-expanded': isExpanded }" @click="expandDescription">
+        <div ref="descriptionRef" :class="{ 'description': !isExpanded, 'description-expanded': isExpanded }"
+            @click="expandDescription">
             {{ descriptionText }}
         </div>
     </base-layout>
@@ -49,10 +50,20 @@ export default defineComponent({
         const imageTitle = computed(() => `${imageDate.value} | ${imageHappiness.value}`);
         const descriptionText = ref<string>('')
 
+        const descriptionRef = ref<HTMLDivElement | null>(null)
+        const isOverflowing = computed(() => {
+            if (descriptionRef.value) {
+                return descriptionRef.value.scrollHeight > descriptionRef.value.clientHeight;
+            }
+            return false
+        })
 
         const isExpanded = ref<boolean>(false)
         const expandDescription = () => {
-            isExpanded.value = !isExpanded.value
+            // Make sure to only allow expanding if the description is overflowing
+            if (isOverflowing.value) {
+                isExpanded.value = !isExpanded.value
+            }
         }
 
         downloadGalleryImg(id).then((blob) => {
@@ -75,7 +86,9 @@ export default defineComponent({
             descriptionText,
             isExpanded,
             expandDescription,
-            createOutline
+            createOutline,
+            isOverflowing,
+            descriptionRef,
         }
     }
 });
@@ -84,7 +97,7 @@ export default defineComponent({
 <style scoped>
 .fullscreen-image {
     width: 100%;
-    height: auto;
+    height: 100%;
 }
 
 .description {
@@ -96,9 +109,22 @@ export default defineComponent({
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
-    text-overflow: 'ellipsis';
+    text-overflow: 'clip';
     color: white;
     transition: max-height 0.2s ease-out;
+}
+
+.description::after {
+    content: '... (Click to expand)';
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 100%;
+    background: linear-gradient(to left, rgb(0, 0, 0), rgba(0, 0, 0, 0) 80%);
+    color: var(--ion-color-primary);
+
+    padding-left: 10px;
+    text-align: right;
 }
 
 .description-expanded {

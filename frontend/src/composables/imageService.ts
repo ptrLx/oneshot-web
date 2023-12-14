@@ -2,7 +2,6 @@ import FormData from 'form-data'
 import axios, { AxiosRequestConfig } from 'axios';
 import { OpenAPI } from '@/_generated/api-client';
 import { OneShotUpdate } from '@/types/OneShotUpdate';
-import { Happiness } from '@/types/Happiness';
 import { useCookies } from 'vue3-cookies'
 
 export const useImageService = () => {
