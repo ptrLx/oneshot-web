@@ -7,15 +7,17 @@
         </template>
         <ion-img alt="Img" :src="imgSrc" class="fullscreen-image"></ion-img>
         <div :class="{ 'no-overlay': !isExpanded, 'overlay': isExpanded }"></div>
-        <div ref="descriptionRef" :class="{ 'description': !isExpanded, 'description-expanded': isExpanded }"
-            @click="expandDescription">
+        <div ref="descriptionRef" :class="{
+            'description': !isExpanded,
+            'description-expanded': isExpanded,
+        }" @click="expandDescription">
             {{ descriptionText }}
         </div>
     </base-layout>
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, ref } from 'vue';
+import { computed, defineComponent, nextTick, ref, watch } from 'vue';
 import { IonCard, IonImg, IonCardSubtitle, IonCardTitle, IonButton, IonIcon } from '@ionic/vue';
 import { useRoute } from 'vue-router'
 import { useImageService } from '@/composables/imageService';
@@ -49,13 +51,13 @@ export default defineComponent({
         const imageHappiness = ref<string>(happinessMap.NOT_SPECIFIED)
         const imageTitle = computed(() => `${imageDate.value} | ${imageHappiness.value}`);
         const descriptionText = ref<string>('')
-
         const descriptionRef = ref<HTMLDivElement | null>(null)
+
         const isOverflowing = computed(() => {
             if (descriptionRef.value) {
                 return descriptionRef.value.scrollHeight > descriptionRef.value.clientHeight;
             }
-            return false
+            return false;
         })
 
         const isExpanded = ref<boolean>(false)
@@ -79,6 +81,37 @@ export default defineComponent({
             }
         })
 
+        const updateDescriptionCSS = () => {
+            console.log("update css");
+            console.log(isOverflowing.value);
+            if (isOverflowing.value) {
+                descriptionRef.value?.classList.add('description-overflowing');
+                console.log(descriptionRef.value?.classList);
+            } else {
+                descriptionRef.value?.classList.remove('description-overflowing');
+            }
+
+            nextTick(() => {
+                console.log(descriptionRef.value?.classList);
+            });
+        }
+
+        watch(descriptionText, (newVal, oldVal) => {
+            nextTick(() => {
+                // update css clas of description
+                updateDescriptionCSS();
+            });
+        })
+
+        watch(isExpanded, (newVal, oldVal) => {
+            nextTick(() => {
+                // update css clas of description
+                if (newVal)
+                    descriptionRef.value?.classList.remove('description-overflowing');
+                else
+                    descriptionRef.value?.classList.add('description-overflowing');
+            });
+        })
 
         return {
             imgSrc,
@@ -114,9 +147,25 @@ export default defineComponent({
     transition: max-height 0.2s ease-out;
 }
 
-.description::after {
+.description-overflowing {
+    position: absolute;
+    bottom: 15px;
+    left: 3%;
+    width: 94%;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: 'clip';
+    color: white;
+    transition: max-height 0.2s ease-out;
+}
+
+
+.description-overflowing::after {
     content: '... (Click to expand)';
     position: absolute;
+
     bottom: 0;
     right: 0;
     width: 100%;
