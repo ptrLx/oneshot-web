@@ -22,7 +22,7 @@ import { IonCard, IonImg, IonCardSubtitle, IonCardTitle, IonButton, IonIcon } fr
 import { useRoute } from 'vue-router'
 import { useImageService } from '@/composables/imageService';
 import { OneShotService } from '@/_generated/api-client';
-import { createOutline } from 'ionicons/icons';
+import { createOutline, printOutline } from 'ionicons/icons';
 
 export default defineComponent({
     components: {
@@ -53,6 +53,7 @@ export default defineComponent({
         const descriptionText = ref<string>('')
         const descriptionRef = ref<HTMLDivElement | null>(null)
 
+        const isExpanded = ref<boolean>(false)
         const isOverflowing = computed(() => {
             if (descriptionRef.value) {
                 return descriptionRef.value.scrollHeight > descriptionRef.value.clientHeight;
@@ -60,13 +61,30 @@ export default defineComponent({
             return false;
         })
 
-        const isExpanded = ref<boolean>(false)
+        const updateDescriptionClass = () => {
+            nextTick(() => {
+                const method = isExpanded.value ? 'remove' : 'add';
+                descriptionRef.value?.classList[method]('description-overflowing');
+            });
+        };
+
         const expandDescription = () => {
-            // Make sure to only allow expanding if the description is overflowing
             if (isOverflowing.value) {
-                isExpanded.value = !isExpanded.value
+                isExpanded.value = !isExpanded.value;
+                updateDescriptionClass();
             }
-        }
+        };
+
+        // Initial update of css class when description is set
+        watch(descriptionText, () => {
+            nextTick(() => {
+                // update css class of description
+                if (isOverflowing.value) {
+                    descriptionRef.value?.classList.add('description-overflowing');
+                }
+            });
+        })
+
 
         downloadGalleryImg(id).then((blob) => {
             imgSrc.value = URL.createObjectURL(blob)
@@ -79,38 +97,6 @@ export default defineComponent({
             if (response.text) {
                 descriptionText.value = response.text
             }
-        })
-
-        const updateDescriptionCSS = () => {
-            console.log("update css");
-            console.log(isOverflowing.value);
-            if (isOverflowing.value) {
-                descriptionRef.value?.classList.add('description-overflowing');
-                console.log(descriptionRef.value?.classList);
-            } else {
-                descriptionRef.value?.classList.remove('description-overflowing');
-            }
-
-            nextTick(() => {
-                console.log(descriptionRef.value?.classList);
-            });
-        }
-
-        watch(descriptionText, (newVal, oldVal) => {
-            nextTick(() => {
-                // update css clas of description
-                updateDescriptionCSS();
-            });
-        })
-
-        watch(isExpanded, (newVal, oldVal) => {
-            nextTick(() => {
-                // update css clas of description
-                if (newVal)
-                    descriptionRef.value?.classList.remove('description-overflowing');
-                else
-                    descriptionRef.value?.classList.add('description-overflowing');
-            });
         })
 
         return {
@@ -169,7 +155,7 @@ export default defineComponent({
     bottom: 0;
     right: 0;
     width: 100%;
-    background: linear-gradient(to left, rgb(0, 0, 0), rgba(0, 0, 0, 0) 80%);
+    background: linear-gradient(to left, rgb(0, 0, 0) 5%, rgba(0, 0, 0, 0) 100%);
     color: var(--ion-color-primary);
 
     padding-left: 10px;
