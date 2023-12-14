@@ -1,7 +1,7 @@
 <template>
     <base-layout :page-title="imageTitle" :hide-back-button=false>
         <template #custom-buttons>
-            <ion-button>
+            <ion-button :router-link="`/image/${id}/edit`">
                 <ion-icon :icon="createOutline"></ion-icon>
             </ion-button>
         </template>
@@ -108,6 +108,7 @@ export default defineComponent({
             createOutline,
             isOverflowing,
             descriptionRef,
+            id
         }
     }
 });

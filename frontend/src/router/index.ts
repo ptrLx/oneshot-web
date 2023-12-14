@@ -50,6 +50,12 @@ const routes: Array<RouteRecordRaw> = [
     name: 'Image',
     component: () => import('../views/ImagePage.vue'), // Lazy load component
     meta: { requiresAuth: true}
+  },
+  {
+    path: '/image/:id/edit',
+    name: 'EditImage',
+    component: () => import('../views/UpdateImagePage.vue'), // Lazy load component
+    meta: { requiresAuth: true}
   }
 ]
 
