@@ -11,6 +11,7 @@ export type { Body_login_for_access_token_login__post } from './models/Body_logi
 export type { Body_upload_image_image_upload_post } from './models/Body_upload_image_image_upload_post';
 export type { Body_upload_user_profile_img_user_profileimg_post } from './models/Body_upload_user_profile_img_user_profileimg_post';
 export type { CalendarEntryRespDTO } from './models/CalendarEntryRespDTO';
+export type { FlashbackDTO } from './models/FlashbackDTO';
 export { HappinessDTO } from './models/HappinessDTO';
 export type { HTTPValidationError } from './models/HTTPValidationError';
 export type { OneShotRespDTO } from './models/OneShotRespDTO';

@@ -1,4 +1,5 @@
 import os
+from datetime import datetime, timedelta
 
 import aiofiles
 from core import config
@@ -14,6 +15,7 @@ from data.oneshot_table import DBOneShot, OneShotDB
 from fastapi.datastructures import UploadFile
 from fastapi.responses import FileResponse
 from model.date import DateDTO
+from model.flashback import FlashbackDTO
 from model.oneshot import OneShotDTO, OneShotFileNameDTO, OneShotRespDTO
 from model.user import UserDTO
 from PIL import Image
@@ -141,3 +143,48 @@ class ImageService:
             raise NoOneShotInDBFoundException()
 
         return OneShotRespDTO.from_db_oneshot(oneshot)
+
+    async def get_flashbacks(self, user: UserDTO) -> FlashbackDTO:
+        today_t = datetime.now()
+
+        async def get_random_happy() -> OneShotRespDTO:
+            return None  # todo
+
+        async def get_last_very_happy_day() -> OneShotRespDTO:
+            return None  # todo
+
+        async def get_same_day_last_month() -> OneShotRespDTO:
+            first_day_of_current_month_d = today_t.replace(day=1)
+            last_day_of_previous_month_d = first_day_of_current_month_d - timedelta(
+                days=1
+            )
+            try:
+                same_day_last_month_d = last_day_of_previous_month_d.replace(
+                    day=today_t.day
+                )
+            except ValueError:
+                same_day_last_month_d = None  # Last month has not the same day (e.g. 2023-11-31 does not exist).
+
+            same_day_last_month_db = (
+                await os_db.get_oneshot(
+                    user.username, DateDTO(date=same_day_last_month_d)
+                )
+                if same_day_last_month_d is not None
+                else None
+            )
+
+            return (
+                (OneShotRespDTO.from_db_oneshot(same_day_last_month_db))
+                if same_day_last_month_db is not None
+                else None
+            )
+
+        async def get_same_day_last_years() -> list[OneShotRespDTO]:
+            return []  # todo
+
+        return FlashbackDTO(
+            random_happy=await get_random_happy(),
+            last_very_happy_day=await get_last_very_happy_day(),
+            same_day_last_month=await get_same_day_last_month(),
+            same_date_last_years=await get_same_day_last_years(),
+        )

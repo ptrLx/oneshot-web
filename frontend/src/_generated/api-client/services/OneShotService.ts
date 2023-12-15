@@ -3,6 +3,7 @@
 /* tslint:disable */
 /* eslint-disable */
 import type { Body_upload_image_image_upload_post } from '../models/Body_upload_image_image_upload_post';
+import type { FlashbackDTO } from '../models/FlashbackDTO';
 import type { HappinessDTO } from '../models/HappinessDTO';
 import type { OneShotRespDTO } from '../models/OneShotRespDTO';
 
@@ -136,6 +137,18 @@ export class OneShotService {
             errors: {
                 422: `Validation Error`,
             },
+        });
+    }
+
+    /**
+     * Get Flashbacks
+     * @returns FlashbackDTO Successful Response
+     * @throws ApiError
+     */
+    public static getFlashbacksFlashbackGet(): CancelablePromise<FlashbackDTO> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/flashback/',
         });
     }
 

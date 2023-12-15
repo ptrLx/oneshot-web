@@ -6,15 +6,18 @@ from pydantic import BaseModel, validator
 
 
 class DateDTO(BaseModel):
-    date: str
+    date: str | datetime
 
     @validator("date")
     def validate_date_format(cls, v):
-        try:
-            # Check if the input string matches the date format (YYYY-MM-DD). strftime again to add leading zeros.
-            return datetime.strptime(v, "%Y-%m-%d").strftime("%Y-%m-%d")
-        except ValueError:
-            raise InvalidDateFormatException
+        if isinstance(v, datetime):
+            return v.strftime("%Y-%m-%d")
+        else:
+            try:
+                # Check if the input string matches the date format (YYYY-MM-DD). strftime again to add leading zeros.
+                return datetime.strptime(v, "%Y-%m-%d").strftime("%Y-%m-%d")
+            except ValueError:
+                raise InvalidDateFormatException
 
 
 class MonthDTO(BaseModel):

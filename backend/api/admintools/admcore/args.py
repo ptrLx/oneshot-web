@@ -12,11 +12,3 @@ class ArgParser:
         #     default="admin",
         #     help="Create a new user",
         # )
-
-        # self.parser.add_argument(
-        #     "-c",
-        #     "--create-user",
-        #     type=str,
-        #     default="admin",
-        #     help="Create a new user",
-        # )

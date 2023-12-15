@@ -56,3 +56,9 @@ DATABASE_HOST="oneshot-web-db"
 CREATE DATABASE osweb;
 GRANT ALL PRIVILEGES ON DATABASE osweb TO postgres;
 ```
+
+## Start the admintools to create a user
+
+```bash
+docker exec -it os-web-compose-app /bin/bash -c "cd /api && pipenv run python admintools/main.py"
+```
