@@ -1,20 +1,74 @@
 on:
-    push:
-      branches:
-        - main
+  push:
+    branches:
+      - main
 
 permissions:
-    contents: write
-    pull-requests: write
-  
-name: release-please
+  contents: write
+  pull-requests: write
 
+name: release
 
 jobs:
-    release-please:
-      runs-on: ubuntu-latest
-      steps:
-        - uses: google-github-actions/release-please-action@v3
-          with:
-            release-type: node
-            package-name: mypackage
+  release-please:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Release Please
+        id: release
+        uses: google-github-actions/release-please-action@v3
+        with:
+          release-type: node
+          package-name: oneshot-web
+    outputs:
+      release_created: ${{ steps.release.outputs.release_created }}
+      tag_name: ${{ steps.release.outputs.tag_name }}
+
+  docker-image-push:
+    needs: [release-please]
+    if: ${{ needs.release-please.outputs.release_created }}
+    name: Push Docker Image to Docker Hub
+    runs-on: ubuntu-22.04
+    env:
+      tag_name: ${{ needs.release-please.outputs.tag_name }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Compile frontend
+        run: |
+          cd frontend
+          npm install
+          npm run build
+          cd ..
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_HUB_USERNAME }}
+          password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+        with:
+          platforms: linux/amd64,linux/arm64
+
+      - name: Build and push image
+        uses: docker/build-push-action@v3
+        with:
+          platforms: linux/amd64,linux/arm64
+          context: .
+          file: Dockerfile
+          push: true
+          tags: ptrlx/oneshot-web:${{ env.tag_name }}, ptrlx/oneshot-web:latest
+
+      #* Not working, please update README in Docker Hub manually
+      #// - name: Update Docker Hub Readme
+      #//   uses: peter-evans/dockerhub-description@v3
+      #//   with:
+      #//     username: ${{ secrets.DOCKER_HUB_USERNAME }}
+      #//     password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
+      #//     repository: ptrlx/oneshot-web
+      #//     readme-filepath: DEPLOY.md

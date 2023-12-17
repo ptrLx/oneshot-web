@@ -17,7 +17,7 @@ response:
 }
 ```
 
-### /user
+### /user/me
 
 > GET
 
@@ -29,14 +29,14 @@ response:
 
 ```json
 {
-    "profilepic": "url",
+    "profileimg": "url",
     "username": "username",
     "full-name": "name",
-    // "role": "role"
+    "role": "role"
 }
 ```
 
-### /user/profilepic
+### /user/profileimg
 
 > POST
 
@@ -49,12 +49,20 @@ attribute:
 response:
 
 ```json
-{
-    "ok"
-}
+"ok"
 ```
 
-### /user/password
+> GET
+
+attribute:
+
+* token
+
+response:
+
+<!-- image file -->
+
+### /user/chpw
 
 > POST
 
@@ -70,25 +78,7 @@ parameter:
 response:
 
 ```json
-{
-    "ok"
-}
-```
-
-### /user/logout
-
-> POST
-
-attribute:
-
-* token
-
-response:
-
-```json
-{
-    "ok"
-}
+"ok"
 ```
 
 ### /user/preferences
@@ -109,17 +99,12 @@ attribute:
 
 parameter:
 
-* date
-* time
-* happiness?
-* text?
+* oneshot-update (see api-types.md)
 
 response:
 
 ```json
-{
-    "ok"
-}
+"ok"
 ```
 
 ### /image/update
@@ -132,16 +117,12 @@ attribute:
 
 parameter:
 
-* date
-* happiness?
-* text?
+* oneshot (see api-types.md)
 
 response:
 
 ```json
-{
-    "ok"
-}
+"ok"
 ```
 
 ### /image/delete
@@ -159,26 +140,8 @@ parameter:
 response:
 
 ```json
-{
-    "ok"
-}
+"ok"
 ```
-
-### /image/preview
-
-> GET
-
-attribute:
-
-* token
-
-parameter:
-
-* date
-
-response:
-
-<!-- image file -->
 
 ### /image/gallery
 
@@ -271,32 +234,6 @@ response:
         }
     ],
     ...
-}
-```
-
-### calendar/preview
-
-> GET
-
-attribute:
-
-* token
-
-response:
-
-```json
-{
-    [
-        {
-            "date": "date",
-            "happiness_state": "HAPPINESS",
-        },
-        {
-            "date": "date",
-            "happiness_state": "NO_ENTRY",
-        },
-        ... x28 entries
-    ]
 }
 ```
 

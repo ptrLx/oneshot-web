@@ -3,6 +3,10 @@
         "ms-vscode-remote.remote-containers",
         "pkief.material-icon-theme",
         "ms-azuretools.vscode-docker",
-        "formulahendry.auto-rename-tag"
+        "formulahendry.auto-rename-tag",
+        "ms-python.isort",
+        "ms-python.black-formatter",
+        "aaron-bond.better-comments",
+        "ms-python.python",
     ]
 }

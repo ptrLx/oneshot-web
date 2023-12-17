@@ -1,18 +1,36 @@
 # oneshot-web
 
-## Setup
+## Deployment of oneshot-web
 
-1. get docker ready
-1. install recommended extension
-1. reopen in devcontainer
+Please check out the [deployment instructions](DEPLOY.md) if you want to self-host oneshot-web.
 
-### Backend
+## Development Setup
 
-1. `cd backend/api`
-1. `pipenv shell`
-1. `python src/main.py`
+1. clone the repository
+2. open folder in vscode
+3. install recommended extensions
+4. create the required docker network: `docker network create --driver bridge os-web-db`
+5. reopen in container
+6. type `make` to see what you can do (e. g. how to build the docker image from source)
 
-### Frontend
+### Start the backend
+
+1. `make start-api`
+
+### Start the frontend
+
+1. `make start-frontend`
+
+### PWA Dev Setup
 
 1. `cd frontend`
-1. `ionic serve`
+2. Make sure `devOptions { enabled: true }` is set in `vite.config.js`
+3. Run 'npm run build' to generate the service worker and manifest in the `dist` folder (production build) and `dist-dev` (dev build)
+4. Run `npm run dev`\ `npm run preview`, the pwa should now appear as installable in the browser
+
+#### Checking PWA requirements, usability and performance
+
+1. Install Chrome
+2. Install Google Lighthouse extension
+3. Open dev tools (F12) and go to the Lighthouse tab
+4. Run the audit

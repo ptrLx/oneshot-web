@@ -1,0 +1,42 @@
+version: '3.9'
+
+###
+# This compose file uses the Dockerfile to build the app from source.
+# Therefore a build of the frontend is required before (`make compile-frontend`).
+# To use the prebuilt Docker image from docker hub, follow the instructions in the DEPLOY.md.
+###
+
+services:
+  db:
+    container_name: os-web-compose-db
+    image: 'postgres:latest'
+    env_file:
+      - .env
+    networks:
+      - os-web-compose-db
+    volumes:
+      - ./_compose_volume/db/:/var/lib/postgresql/data/:Z
+      - ./container-assets/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    restart: unless-stopped
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: os-web-compose-app
+    ports:
+      - 8080:80
+    env_file:
+      - .env
+    networks:
+      - os-web-compose-db
+    depends_on:
+      db:
+        condition: service_started
+    volumes:
+      - ./_compose_volume/app/:/srv/oneshot
+    restart: unless-stopped
+
+networks:
+  os-web-compose-db:
+    driver: bridge

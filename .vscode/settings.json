@@ -1,0 +1,40 @@
+{
+    "conventionalCommits.scopes": [
+        "frontend",
+        "doc",
+        "api",
+        "deploy",
+        "db",
+        "admtools"
+    ],
+    "cSpell.words": [
+        "admcore",
+        "admintools",
+        "aiofiles",
+        "devcontainer",
+        "fastapi",
+        "gensalt",
+        "hashpw",
+        "nginx",
+        "oneshot",
+        "oneshots",
+        "pipenv",
+        "postgres",
+        "prisma",
+        "uvicorn"
+    ],
+    "[python]": {
+        "editor.defaultFormatter": "ms-python.black-formatter",
+        "editor.formatOnSave": true,
+        "editor.codeActionsOnSave": {
+            "source.organizeImports": "explicit"
+        },
+    },
+    "isort.args": [
+        "--profile",
+        "black"
+    ],
+    "python.analysis.extraPaths": [
+        "./backend/api/src"
+    ],
+}

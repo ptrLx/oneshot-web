@@ -1,0 +1,49 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider             = "prisma-client-py"
+  interface            = "asyncio"
+  recursive_type_depth = 5
+}
+
+enum Role {
+  ADMIN
+  USER
+}
+
+model User {
+  //// id              Int     @id @default(autoincrement())
+  username        String    @id
+  role            Role      @default(USER)
+  disabled        Boolean
+  full_name       String?
+  hashed_password String
+  OneShot         OneShot[]
+}
+
+enum Happiness {
+  VERY_HAPPY
+  HAPPY
+  NEUTRAL
+  SAD
+  VERY_SAD
+}
+
+model OneShot {
+  username  String
+  date      String // YYYY-MM-DD format
+  time      DateTime
+  file_name String
+  happiness Happiness?
+  text      String?
+
+  user User @relation(fields: [username], references: [username])
+
+  @@id([username, date])
+}

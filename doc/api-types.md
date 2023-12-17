@@ -1,5 +1,18 @@
 # API types
 
+## oneshot-update
+
+* date
+* happiness?
+* text?
+
+## oneshot
+
+* date
+* time
+* happiness?
+* text?
+
 ## happiness
 
 * NOT_SPECIFIED
@@ -9,14 +22,15 @@
 * SAD
 * VERY_SAD
 
-## happiness_state
-
-Either a happiness or NO_ENTRY.
-
 ## date
 
-Format: YYYY-MM-YY (2023-10-16)
+Format: YYYY-MM-DD (2023-10-16)
 
 ## month
 
 Format: YYYY-MM
+
+## role
+
+* admin
+* user

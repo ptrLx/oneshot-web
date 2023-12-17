@@ -2,33 +2,74 @@
   <ion-page>
     <ion-header :translucent="true">
       <ion-toolbar>
-        <ion-title>Blank</ion-title>
+        <ion-title>OneShot</ion-title>
+        <ion-title size="small">Remember the happy days!</ion-title>
+
+        <profile-component slot="end"></profile-component>
       </ion-toolbar>
     </ion-header>
 
     <ion-content :fullscreen="true">
-      <ion-header collapse="condense">
-        <ion-toolbar>
-          <ion-title size="large">Blank</ion-title>
-        </ion-toolbar>
-      </ion-header>
 
-      <div id="container">
-        <strong>Ready to create an app?</strong>
-        <p>Start with Ionic <a target="_blank" rel="noopener noreferrer" href="https://ionicframework.com/docs/components">UI Components</a></p>
-      </div>
+      <row-component row-height="70%" sectionHeaderTitle="Gallery" :button-func="() => router.push('/gallery')">
+        <swiper-slide>
+          <card card-title="card2" card-subtitle="card2sub">
+          </card>
+        </swiper-slide>
+      </row-component>
+      <row-component row-height="20%" :enableSectionHeader=false>
+        <swiper-slide>
+          <capture-today-slide></capture-today-slide>
+        </swiper-slide>
+      </row-component>
+      <row-component row-height="50%" sectionHeaderTitle="Calendar">
+        <swiper-slide>
+          <card>
+            <calendar-component></calendar-component>
+          </card>
+        </swiper-slide>
+      </row-component>
+      <row-component row-height="70%" sectionHeaderTitle="Statistics">
+        <swiper-slide>
+          <card>
+            <donut-chart center-text="Happiness Week"></donut-chart>
+          </card>
+        </swiper-slide>
+        <swiper-slide>
+          <card card-title="card2" card-subtitle="card2sub">
+          </card>
+        </swiper-slide>
+        <swiper-slide>
+          <card card-title="card3" card-subtitle="card3sub">
+          </card>
+        </swiper-slide>
+      </row-component>
+
+
     </ion-content>
   </ion-page>
 </template>
 
 <script setup lang="ts">
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar } from '@ionic/vue';
+import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonButton } from '@ionic/vue';
+import { SwiperSlide } from 'swiper/vue';
+import RowComponent from '@/components/RowComponent.vue';
+import ProfileComponent from '@/components/ProfileComponent.vue';
+import Card from '@/components/Card.vue';
+import CaptureTodaySlide from '@/components/CaptureTodaySlide.vue';
+import DonutChart from '@/components/DonutChart.vue';
+import CalendarComponent from '@/components/CalendarComponent.vue';
+import { useRouter } from 'vue-router';
+
+
+const router = useRouter();
+
 </script>
 
 <style scoped>
 #container {
   text-align: center;
-  
+
   position: absolute;
   left: 0;
   right: 0;
@@ -44,9 +85,9 @@ import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar } from '@ionic/vue
 #container p {
   font-size: 16px;
   line-height: 22px;
-  
+
   color: #8c8c8c;
-  
+
   margin: 0;
 }
 
