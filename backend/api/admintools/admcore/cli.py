@@ -6,15 +6,16 @@ logger = logging.getLogger(__name__)
 
 import bcrypt
 from admcore.config import commands, welcome_msg
+from admcore.exception import CLICoreException, NoUserCreatedException
+from admdata.user_table import ADMUserDB, DBUser
 from core import config
-from data.user_table import UserDB
 from InquirerPy import inquirer
 from model.user import UserRoleDTO
 from prisma.engine.errors import EngineConnectionError
-from prisma.errors import UniqueViolationError
+from prisma.errors import ForeignKeyViolationError, UniqueViolationError
 
 app_config = config.get_config()
-user_db = UserDB()
+user_db = ADMUserDB()
 
 
 class CLI:
@@ -48,14 +49,30 @@ class CLI:
                     print("👋 Bye bye.")
                     break
 
-                print()
-
             except KeyboardInterrupt:
                 print("❌ Aborted.")
                 sys.exit(0)
             except EngineConnectionError:
                 print("🔃 Couldn't connect to database.")
-                continue
+            except CLICoreException as e:
+                print(f"❌ {e.detail}")
+
+            print()
+
+    async def __choose_user(self) -> DBUser:
+        users = await user_db.get_users()
+
+        if not len(users):
+            raise NoUserCreatedException
+
+        username = await inquirer.select(
+            message="Choose an user:",
+            choices=[user.username for user in users],
+        ).execute_async()
+
+        for user in users:
+            if user.username == username:
+                return user
 
     async def __handle_user_create(self) -> None:
         username = await inquirer.text(message="Username:").execute_async()
@@ -104,66 +121,59 @@ class CLI:
         print("\n🪄  User created.")
 
     async def __handle_user_delete(self) -> None:
-        username = await inquirer.text(message="username:").execute_async()
-
-        user = await user_db.get_user(username)
-
-        if user is None:
-            print("❌ User doesn't exist.")
-            return
+        user = await self.__choose_user()
 
         confirmation = await inquirer.confirm(
-            message=f"Do you really want to delete user {user.full_name} ({username})?",
+            message=f"Do you really want to delete user {user.full_name} ({user.username})?",
         ).execute_async()
 
         if confirmation:
-            await user_db.delete_user(username)
             # todo delete files?
-            # todo delete all db entries?
-            print("\n🗑  User deleted.")
+            # todo delete oneshots from db?
+            try:
+                await user_db.delete_user(user.username)
+                print("\n🗑  User deleted.")
+            except ForeignKeyViolationError:
+                print(
+                    "❌ This user has existing OneShots in the database and cannot be deleted (a feature to delete all Oneshots first is currently not implemented)."
+                )
         else:
             print("❌ Aborted.")
 
     async def __handle_import(self) -> None:
+        user = await self.__choose_user()
         logger.error("Not implemented yet.")
 
     async def __handle_export(self) -> None:
+        user = await self.__choose_user()
         logger.error("Not implemented yet.")
 
     async def __handle_disable_user(self) -> None:
-        username = await inquirer.text(message="Username:").execute_async()
-
-        user = await user_db.get_user(username)
-
-        if user is None:
-            print("❌ User doesn't exist.")
-            return
+        user = await self.__choose_user()
 
         confirmation = await inquirer.confirm(
-            message=f"Do you really want to disable user {user.full_name} ({username})?",
+            message=f"Do you really want to disable user {user.full_name} ({user.username})?",
         ).execute_async()
 
         if confirmation:
-            await user_db.disable_user(username)
+            await user_db.disable_user(user.username)
             print("\n🙅 User disabled.")
         else:
             print("❌ Aborted.")
 
     async def __handle_enable_user(self) -> None:
-        username = await inquirer.text(message="Username:").execute_async()
-
-        user = await user_db.get_user(username)
+        user = await self.__choose_user()
 
         if user is None:
             print("❌ User doesn't exist.")
             return
 
         confirmation = await inquirer.confirm(
-            message=f"Do you really want to enable user {user.full_name} ({username})?",
+            message=f"Do you really want to enable user {user.full_name} ({user.username})?",
         ).execute_async()
 
         if confirmation:
-            await user_db.enable_user(username)
+            await user_db.enable_user(user.username)
             print("\n💁 User enabled.")
         else:
             print("❌ Aborted.")
@@ -176,9 +186,7 @@ class CLI:
             print("No user exists. Try to create one.")
 
     async def __handle_reset_user_password(self) -> None:
-        username = await inquirer.text(message="username:").execute_async()
-
-        user = await user_db.get_user(username)
+        user = await self.__choose_user()
 
         if user is None:
             print("❌ User doesn't exist.")
@@ -190,16 +198,17 @@ class CLI:
         ).execute_async()
 
         if password_1 != password_2:
-            print(f"❌ Passwords do not match.")
+            print(f"\n❌ Passwords do not match.")
             return
 
         confirmation = await inquirer.confirm(
-            message=f"Do you really want to reset password of {user.full_name} ({username})?",
+            message=f"Do you really want to reset password of {user.full_name} ({user.username})?",
         ).execute_async()
 
         if confirmation:
             await user_db.change_password(
-                username, bcrypt.hashpw(password_1.encode(), bcrypt.gensalt()).decode()
+                user.username,
+                bcrypt.hashpw(password_1.encode(), bcrypt.gensalt()).decode(),
             )
             print("\n↩️  Password changed.")
         else:
