@@ -86,7 +86,7 @@ export default defineComponent({
         })
 
 
-        downloadGalleryImg(id).then((blob) => {
+        downloadGalleryImg(id, false).then((blob) => {
             imgSrc.value = URL.createObjectURL(blob)
         })
 

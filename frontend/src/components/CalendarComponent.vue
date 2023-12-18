@@ -84,8 +84,11 @@ export default defineComponent({
                     case HappinessDTO.VERY_SAD:
                         bgColor = 'var(--color-very-sad)';
                         break;
-                    default:
+                    case null: // Unspecified happiness
                         bgColor = 'var(--color-unspecified)';
+                        break;
+                    default:
+                        bgColor = 'var(--color-none)';
                         break;
                 }
 
@@ -127,11 +130,16 @@ ion-datetime {
     --background: var(--ion-color-light);
 }
 
+ion-datetime::part(calendar-day today) {
+    box-shadow: 0px 0px 0px 5px color-mix(in srgb, var(--ion-color-primary), transparent 66%);
+}
+
 ion-datetime::part(calendar-day active),
 ion-datetime::part(calendar-day):focus {
     background: color-mix(in srgb, var(--ion-color-primary), transparent 66%);
     box-shadow: 0px 0px 0px 4px color-mix(in srgb, var(--ion-color-primary), transparent 66%);
 }
+
 
 /* 
   ion-datetime::part(calendar-day) {

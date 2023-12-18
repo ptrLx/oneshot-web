@@ -22,16 +22,6 @@
             </ion-row>
             <ion-row>
                 <ion-col size="12">
-                    <ion-button shape="round">Export database</ion-button>
-                </ion-col>
-            </ion-row>
-            <ion-row>
-                <ion-col size="12">
-                    <ion-button shape="round">Import database</ion-button>
-                </ion-col>
-            </ion-row>
-            <ion-row>
-                <ion-col size="12">
                     <ion-button shape="round" @click="$router.push('/change-password')">Change password</ion-button>
                 </ion-col>
             </ion-row>
@@ -57,13 +47,12 @@
 <script lang="ts">
 import { IonAvatar, IonButton, IonGrid, IonRow, IonCol, IonIcon, IonTitle, useIonRouter, IonImg, IonActionSheet } from '@ionic/vue';
 import { OneShotService, UserService, OpenAPI, ApiError } from '@/_generated/api-client';
-import { cameraOutline, chatboxEllipsesOutline, constructOutline, image } from 'ionicons/icons';
+import { cameraOutline, chatboxEllipsesOutline, constructOutline, image, toggle } from 'ionicons/icons';
 import { computed, defineComponent, onMounted, ref } from 'vue';
 import { useCookies } from 'vue3-cookies'
 import { useCameraService } from '@/composables/cameraService';
 import { useImageService } from '@/composables/imageService';
-
-
+import { store } from '@/composables/store';
 
 export default defineComponent({
     components: {
@@ -78,6 +67,8 @@ export default defineComponent({
         IonActionSheet
     },
     setup() {
+        // set @media (prefers-color-scheme: dark)  to light
+        document.body.classList.toggle('dark');
 
         const router = useIonRouter();
         const { cookies } = useCookies();
@@ -96,6 +87,7 @@ export default defineComponent({
                     takePhoto().then(() => {
                         blobUrl.value = photos.value[0]?.webviewPath || '';
                         uploadProfileImg(blobUrl.value);
+                        store.notifyProfilePicUpdate();
                     });
                 }
             },
@@ -106,6 +98,7 @@ export default defineComponent({
                     pickPhoto().then(() => {
                         blobUrl.value = photos.value[0]?.webviewPath || '';
                         uploadProfileImg(blobUrl.value);
+                        store.notifyProfilePicUpdate();
                     });
                 }
             },

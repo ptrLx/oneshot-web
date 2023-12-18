@@ -69,7 +69,7 @@ export default defineComponent({
         const uploadedImage = ref<string>("");
         const description = ref<string>("");
 
-        let selectedHappiness = HappinessDTO.NEUTRAL // Default value
+        let selectedHappiness: HappinessDTO | null = null // Default value
 
         switch (route.query.action) {
             case 'capture':

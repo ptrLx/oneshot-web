@@ -8,12 +8,12 @@
 </template>
 
 <script lang="ts">
-import { IonAvatar, IonImg } from '@ionic/vue';
-import { defineComponent, ref, onMounted } from 'vue';
+import { IonAvatar, IonImg, onIonViewDidEnter } from '@ionic/vue';
+import { defineComponent, ref, onMounted, watch } from 'vue';
 import axios, { AxiosRequestConfig } from 'axios';
 import { OpenAPI } from '@/_generated/api-client'
 import { useImageService } from '@/composables/imageService';
-
+import { store } from '@/composables/store';
 
 export default defineComponent({
   components: {
@@ -25,12 +25,19 @@ export default defineComponent({
     const blobUrl = ref<string>("");
     const { loadImg } = useImageService();
 
-    onMounted(async () => {
+    const updateProfilePic = () => {
       const queryString = OpenAPI.BASE + "/user/profileimg";
       loadImg(queryString).then(blob => {
-
         blobUrl.value = URL.createObjectURL(blob);
       })
+    }
+
+    onMounted(async () => {
+      updateProfilePic();
+    });
+
+    watch(() => store.profilePicUpdate, () => {
+      updateProfilePic();
     });
 
     return { blobUrl };
