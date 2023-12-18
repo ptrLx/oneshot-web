@@ -16,7 +16,12 @@ from fastapi.datastructures import UploadFile
 from fastapi.responses import FileResponse
 from model.date import DateDTO
 from model.flashback import FlashbackDTO
-from model.oneshot import OneShotDTO, OneShotFileNameDTO, OneShotRespDTO
+from model.oneshot import (
+    OneShotDTO,
+    OneShotFileNameDTO,
+    OneShotRespDTO,
+    UpdateOneShotDTO,
+)
 from model.user import UserDTO
 from PIL import Image
 
@@ -27,7 +32,7 @@ os_db = OneShotDB()
 class ImageService:
     async def upload_image(
         self, user: UserDTO, oneshot: OneShotDTO, file: UploadFile
-    ) -> str:
+    ) -> OneShotRespDTO:
         file_extension = (
             file.filename[file.filename.rfind(".") + 1 :].lower()
             if "." in file.filename
@@ -70,7 +75,7 @@ class ImageService:
         )
         await os_db.create_oneshot(db_oneshot)
 
-        return file_name
+        return OneShotRespDTO.from_db_oneshot(db_oneshot)
 
     async def __create_preview(self, folder_path, file_name):
         # todo make this async. It is blocking.
@@ -85,6 +90,29 @@ class ImageService:
             )
         except:
             raise UnprocessableImageException()
+
+    async def update_metadata(
+        self, user: UserDTO, oneshot: UpdateOneShotDTO
+    ) -> OneShotRespDTO:
+        old_oneshot = await os_db.get_oneshot(
+            username=user.username, date=DateDTO(date=oneshot.date)
+        )
+
+        if old_oneshot is None:
+            raise NoOneShotInDBFoundException
+
+        db_oneshot = DBOneShot(
+            username=user.username,
+            date=oneshot.date,
+            time=old_oneshot.time if oneshot.time is None else oneshot.time,
+            file_name=old_oneshot.file_name,
+            happiness=oneshot.happiness,
+            text=oneshot.text,
+        )
+
+        await os_db.create_oneshot(db_oneshot)
+
+        return OneShotRespDTO.from_db_oneshot(db_oneshot)
 
     async def download_image_by_date(
         self, user: UserDTO, date: DateDTO, is_preview=False

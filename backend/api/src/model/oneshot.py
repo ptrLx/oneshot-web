@@ -29,7 +29,9 @@ class OneShotDTO(BaseModel):
 
     @validator("time")
     def validate_unix_timestamp(cls, v):
-        if v < 0:
+        if cls is UpdateOneShotDTO and v is None:
+            pass
+        elif v < 0:
             from fastapi import HTTPException
             from starlette import status
 
@@ -46,6 +48,10 @@ class OneShotDTO(BaseModel):
         file_naming_number = dt_object.strftime("%Y%m%d%H%M%S")
 
         return "OneShot_" + str(file_naming_number)
+
+
+class UpdateOneShotDTO(OneShotDTO):
+    time: int | None = None
 
 
 class OneShotRespDTO(OneShotDTO):

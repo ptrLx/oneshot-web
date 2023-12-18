@@ -20,7 +20,7 @@ export class OneShotService {
      * @param formData
      * @param happiness
      * @param text
-     * @returns string Successful Response
+     * @returns OneShotRespDTO Successful Response
      * @throws ApiError
      */
     public static uploadImageImageUploadPost(
@@ -29,7 +29,7 @@ export class OneShotService {
         formData: Body_upload_image_image_upload_post,
         happiness?: (HappinessDTO | null),
         text?: (string | null),
-    ): CancelablePromise<string> {
+    ): CancelablePromise<OneShotRespDTO> {
         return __request(OpenAPI, {
             method: 'POST',
             url: '/image/upload',
@@ -133,6 +133,36 @@ export class OneShotService {
             url: '/metadata/',
             query: {
                 'date': date,
+            },
+            errors: {
+                422: `Validation Error`,
+            },
+        });
+    }
+
+    /**
+     * Update Metadata
+     * @param date
+     * @param time
+     * @param happiness
+     * @param text
+     * @returns OneShotRespDTO Successful Response
+     * @throws ApiError
+     */
+    public static updateMetadataMetadataUpdatePost(
+        date: string,
+        time: number,
+        happiness?: (HappinessDTO | null),
+        text?: (string | null),
+    ): CancelablePromise<OneShotRespDTO> {
+        return __request(OpenAPI, {
+            method: 'POST',
+            url: '/metadata/update',
+            query: {
+                'date': date,
+                'time': time,
+                'happiness': happiness,
+                'text': text,
             },
             errors: {
                 422: `Validation Error`,
