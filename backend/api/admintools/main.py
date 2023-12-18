@@ -11,7 +11,6 @@ from admcore.cli import CLI
 
 if __name__ == "__main__":
     args = ArgParser()
-    # todo evaluate args
 
     cli = CLI()
     asyncio.run(cli.start())

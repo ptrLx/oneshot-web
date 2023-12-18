@@ -8,6 +8,7 @@ import bcrypt
 from admcore.config import commands, welcome_msg
 from admcore.exception import CLICoreException, NoUserCreatedException
 from admdata.user_table import ADMUserDB, DBUser
+from admservice.importer.handler import start_importer_cli
 from core import config
 from InquirerPy import inquirer
 from model.user import UserRoleDTO
@@ -142,7 +143,8 @@ class CLI:
 
     async def __handle_import(self) -> None:
         user = await self.__choose_user()
-        logger.error("Not implemented yet.")
+
+        await start_importer_cli(user)
 
     async def __handle_export(self) -> None:
         user = await self.__choose_user()
