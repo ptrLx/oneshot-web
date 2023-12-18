@@ -10,10 +10,10 @@
     </ion-header>
 
     <ion-content :fullscreen="true">
-
       <row-component row-height="70%" sectionHeaderTitle="Gallery" :button-func="() => router.push('/gallery')">
-        <swiper-slide>
-          <card card-title="card2" card-subtitle="card2sub">
+        <swiper-slide v-for="(img, key) in flashbackImgs" :key="key">
+          <card :card-title="key.toString()">
+            <ion-img :src="img"></ion-img>
           </card>
         </swiper-slide>
       </row-component>
@@ -51,7 +51,7 @@
 </template>
 
 <script setup lang="ts">
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonButton } from '@ionic/vue';
+import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonImg } from '@ionic/vue';
 import { SwiperSlide } from 'swiper/vue';
 import RowComponent from '@/components/RowComponent.vue';
 import ProfileComponent from '@/components/ProfileComponent.vue';
@@ -60,9 +60,24 @@ import CaptureTodaySlide from '@/components/CaptureTodaySlide.vue';
 import DonutChart from '@/components/DonutChart.vue';
 import CalendarComponent from '@/components/CalendarComponent.vue';
 import { useRouter } from 'vue-router';
+import { ApiError, FlashbackDTO, OneShotRespDTO, OneShotService } from '@/_generated/api-client';
+import { onMounted, ref } from 'vue';
+import { useFlashbackService } from '@/composables/flashbackService';
 
 
 const router = useRouter();
+const { getFlashbacks } = useFlashbackService();
+
+const randomFlashbackImg = ref<string>('');
+const lastVeryHappyDayImg = ref<string>('');
+const sameDayLastMonthImg = ref<string>('');
+const sameDayLastYearImg = ref<string>('');
+
+const flashbackImgs = ref<{ [key: string]: string }>({});
+
+onMounted(async () => {
+  flashbackImgs.value = await getFlashbacks();
+});
 
 </script>
 
@@ -95,3 +110,4 @@ const router = useRouter();
   text-decoration: none;
 }
 </style>
+                      
