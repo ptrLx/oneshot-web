@@ -6,17 +6,27 @@ logger = logging.getLogger(__name__)
 
 import bcrypt
 from admcore.config import commands, welcome_msg
-from admcore.exception import CLICoreException, NoUserCreatedException
+from admcore.exception import (
+    CLICoreException,
+    NoDisabledUserException,
+    NoOneShotCreatedException,
+    NoUserCreatedException,
+    NoUserEnabledUserException,
+)
+from admdata.oneshot_table import ADMOneShotDB, DBOneShot
 from admdata.user_table import ADMUserDB, DBUser
 from admservice.importer.handler import start_importer_cli
 from core import config
+from core.exception import HTTPException
 from InquirerPy import inquirer
+from model.date import DateDTO
 from model.user import UserRoleDTO
 from prisma.engine.errors import EngineConnectionError
 from prisma.errors import ForeignKeyViolationError, UniqueViolationError
 
 app_config = config.get_config()
 user_db = ADMUserDB()
+os_db = ADMOneShotDB()
 
 
 class CLI:
@@ -46,25 +56,39 @@ class CLI:
                     await self.__handle_enable_user()
                 elif result == commands["CMD_RESET_USER_PASSWORD"]:
                     await self.__handle_reset_user_password()
+                elif result == commands["CMD_MODIFY"]:
+                    await self.__handle_modify_oneshot_date()
                 else:  # CMD_EXIT
-                    print("👋 Bye bye.")
+                    print("\n👋 Bye bye.\n")
                     break
 
             except KeyboardInterrupt:
-                print("❌ Aborted.")
+                print("\n❌ Aborted.\n")
                 sys.exit(0)
             except EngineConnectionError:
-                print("🔃 Couldn't connect to database.")
-            except CLICoreException as e:
-                print(f"❌ {e.detail}")
+                print("\n🔃 Couldn't connect to database.")
+            except (CLICoreException, HTTPException) as e:
+                print(f"\n❌ {e.detail}")
 
             print()
 
-    async def __choose_user(self) -> DBUser:
-        users = await user_db.get_users()
+    async def __choose_user(
+        self, only_enabled: bool = False, only_disabled: bool = False
+    ) -> DBUser:
+        assert not (only_disabled and only_enabled)
 
-        if not len(users):
-            raise NoUserCreatedException
+        if only_enabled:
+            users = await user_db.get_enabled_users()
+            if not len(users):
+                raise NoUserEnabledUserException
+        elif only_disabled:
+            users = await user_db.get_disabled_users()
+            if not len(users):
+                raise NoDisabledUserException
+        else:
+            users = await user_db.get_users()
+            if not len(users):
+                raise NoUserCreatedException
 
         username = await inquirer.select(
             message="Choose an user:",
@@ -75,20 +99,37 @@ class CLI:
             if user.username == username:
                 return user
 
+    async def __choose_oneshot(self, username: str) -> DBOneShot:
+        oneshots = await os_db.get_gallery_page(
+            username=username, page=0, max_page_size=100
+        )
+
+        if not len(oneshots):
+            raise NoOneShotCreatedException
+
+        date = await inquirer.select(
+            message="Choose an OneShot:",
+            choices=[oneshot.date for oneshot in oneshots],
+        ).execute_async()
+
+        for oneshot in oneshots:
+            if oneshot.date == date:
+                return oneshot
+
     async def __handle_user_create(self) -> None:
         username = await inquirer.text(message="Username:").execute_async()
 
         user = await user_db.get_user(username)
 
         if user is not None:
-            print("❌ User {username} already exists.")
+            print("\n❌ User {username} already exists.")
             return
 
         password_1 = await inquirer.secret(message="Password:").execute_async()
         password_2 = await inquirer.secret(message="Retype password:").execute_async()
 
         if password_1 != password_2:
-            print(f"❌ Passwords do not match.")
+            print(f"\n❌ Passwords do not match.")
             return
 
         full_name = await inquirer.text(message="Full name:").execute_async()
@@ -106,7 +147,7 @@ class CLI:
                 ).decode(),
             )
         except UniqueViolationError:
-            print(f"❌ User {username} already exists.")
+            print(f"\n❌ User {username} already exists.")
             return
 
         try:
@@ -136,10 +177,10 @@ class CLI:
                 print("\n🗑  User deleted.")
             except ForeignKeyViolationError:
                 print(
-                    "❌ This user has existing OneShots in the database and cannot be deleted (a feature to delete all Oneshots first is currently not implemented)."
+                    "\n❌ This user has existing OneShots in the database and cannot be deleted (a feature to delete all Oneshots first is currently not implemented)."
                 )
         else:
-            print("❌ Aborted.")
+            print("\n❌ Aborted.")
 
     async def __handle_import(self) -> None:
         user = await self.__choose_user()
@@ -151,7 +192,7 @@ class CLI:
         logger.error("Not implemented yet.")
 
     async def __handle_disable_user(self) -> None:
-        user = await self.__choose_user()
+        user = await self.__choose_user(only_enabled=True)
 
         confirmation = await inquirer.confirm(
             message=f"Do you really want to disable user {user.full_name} ({user.username})?",
@@ -161,13 +202,13 @@ class CLI:
             await user_db.disable_user(user.username)
             print("\n🙅 User disabled.")
         else:
-            print("❌ Aborted.")
+            print("\n❌ Aborted.")
 
     async def __handle_enable_user(self) -> None:
-        user = await self.__choose_user()
+        user = await self.__choose_user(only_disabled=True)
 
         if user is None:
-            print("❌ User doesn't exist.")
+            print("\n❌ User doesn't exist.")
             return
 
         confirmation = await inquirer.confirm(
@@ -178,11 +219,12 @@ class CLI:
             await user_db.enable_user(user.username)
             print("\n💁 User enabled.")
         else:
-            print("❌ Aborted.")
+            print("\n❌ Aborted.")
 
     async def __handle_list_users(self) -> None:
         users = await user_db.get_users()
         if len(users):
+            print()
             [print(user) for user in users]
         else:
             print("No user exists. Try to create one.")
@@ -214,4 +256,18 @@ class CLI:
             )
             print("\n↩️  Password changed.")
         else:
-            print("❌ Aborted.")
+            print("\n❌ Aborted.")
+
+    async def __handle_modify_oneshot_date(self) -> None:
+        user = await self.__choose_user()
+
+        oneshot = await self.__choose_oneshot(user.username)
+
+        new_date = await inquirer.text("New date:").execute_async()
+
+        # Validate date
+        DateDTO(date=new_date)
+
+        await os_db.update_date(oneshot, new_date)
+
+        print("\n↩️  Updated.")

@@ -11,5 +11,6 @@ commands = {
     "CMD_RESET_USER_PASSWORD": "↩️  Reset an user's password",
     "CMD_IMPORT": "⬆️  Import OneShots",
     "CMD_EXPORT": "⬇️  Export database",
+    "CMD_MODIFY": "🔀 Modify date of OneShot",
     "CMD_EXIT": "🚪 Exit the admin tool",
 }

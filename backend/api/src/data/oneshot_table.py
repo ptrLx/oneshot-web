@@ -9,6 +9,7 @@ app_config = config.get_config()
 class OneShotDB:
     async def create_oneshot(self, oneshot: DBOneShot) -> None:
         prisma = await app_config.get_prisma_conn()
+
         await prisma.oneshot.upsert(
             where={
                 "username_date": {

@@ -15,4 +15,4 @@ class MetadataImporter:
             "Specify a folder where the images that should be imported are stored:"
         ).execute_async()
 
-    logger.error("Not implemented yet.")
+        logger.error("Not implemented yet.")

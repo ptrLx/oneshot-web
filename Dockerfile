@@ -2,8 +2,8 @@ FROM python:3.11-bullseye
 
 # --- general --- #
 
-RUN apt-get update && apt-get install -y supervisor nginx && rm -rf /var/lib/apt/lists/*
-RUN pip install pipenv
+RUN apt-get update && apt-get install --no-install-recommends -y supervisor nginx && rm -rf /var/lib/apt/lists/*
+RUN pip install --no-cache-dir pipenv
 
 # --- api --- #
 
