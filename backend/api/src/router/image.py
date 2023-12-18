@@ -20,7 +20,7 @@ async def upload_image(
     current_user: Annotated[UserDTO, Depends(get_current_active_user)],
     oneshot: OneShotDTO = Depends(),
     file: UploadFile = File(...),
-) -> str:
+) -> OneShotRespDTO:
     return await image_service.upload_image(current_user, oneshot, file)
 
 
