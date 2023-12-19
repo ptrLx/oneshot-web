@@ -1,13 +1,22 @@
 import { ApiError, FlashbackDTO, OneShotRespDTO, OneShotService } from '@/_generated/api-client';
 import { useImageService } from '@/composables/imageService';
 
+/**
+ * Type which contains the url to the image blob and the meta data of the flashback
+ */
+export interface FlashbackUrlAndMeta {
+    url: string;
+    meta: OneShotRespDTO
+}
+
 export const useFlashbackService = () => {
 
     const { downloadGalleryImg } = useImageService();
 
-    const getFlashbacks = async (): Promise<{ [key: string]: string }> =>  {
+    // key: string is the category of the flashback, e.g. "random_happy", "last_very_happy_day" etc.
+    const getFlashbacks = async (): Promise<{ [key: string]: FlashbackUrlAndMeta }> =>  {
 
-        const flashbackImgs : { [key: string]: string } = {};
+        const flashbackImgs : { [key: string]: FlashbackUrlAndMeta } = {};
 
         await OneShotService.getFlashbacksFlashbackGet().then( async (res) => {
 
@@ -52,18 +61,24 @@ export const useFlashbackService = () => {
         
                 if (Array.isArray(flashback)) {
         
-                // Handly array type
-                for (const item of flashback) {
-                    const blob = await downloadGalleryImg(item.date);
-                    const img = URL.createObjectURL(blob);
-                    flashbackImgs[key] = img;
-                }
+                    // Handly array type
+                    for (const item of flashback) {
+                        const blob = await downloadGalleryImg(item.date);
+                        const img = URL.createObjectURL(blob);
+                        flashbackImgs[key] = {
+                            url: img,
+                            meta: item as OneShotRespDTO
+                        };
+                    }
                 }
                 else {
-                // Handle single OneShotRespDTO type
-                const blob = await downloadGalleryImg(flashback?.date ?? '');
-                const img = URL.createObjectURL(blob);
-                flashbackImgs[key] = img;
+                    // Handle single OneShotRespDTO type
+                    const blob = await downloadGalleryImg(flashback?.date ?? '');
+                    const img = URL.createObjectURL(blob);
+                    flashbackImgs[key] = {
+                        url: img,
+                        meta: flashback as OneShotRespDTO
+                    };
                 }
             }
                 

@@ -11,9 +11,11 @@
 
     <ion-content :fullscreen="true">
       <row-component row-height="70%" sectionHeaderTitle="Gallery" :button-func="() => router.push('/gallery')">
-        <swiper-slide v-for="(img, key) in flashbackImgs" :key="key">
-          <card :card-title="key.toString()">
-            <ion-img :src="img"></ion-img>
+        <swiper-slide v-for="(content, category) in flashbackImgs" :key="category">
+          <card :card-title="category.toString()">
+            <router-link :to="`/image/${content.meta.date}`">
+              <ion-img :src="content.url"></ion-img>
+            </router-link>
           </card>
         </swiper-slide>
       </row-component>
@@ -62,18 +64,15 @@ import CalendarComponent from '@/components/CalendarComponent.vue';
 import { useRouter } from 'vue-router';
 import { ApiError, FlashbackDTO, OneShotRespDTO, OneShotService } from '@/_generated/api-client';
 import { onMounted, ref } from 'vue';
-import { useFlashbackService } from '@/composables/flashbackService';
+import { useFlashbackService, FlashbackUrlAndMeta } from '@/composables/flashbackService';
 
 
 const router = useRouter();
 const { getFlashbacks } = useFlashbackService();
 
-const randomFlashbackImg = ref<string>('');
-const lastVeryHappyDayImg = ref<string>('');
-const sameDayLastMonthImg = ref<string>('');
-const sameDayLastYearImg = ref<string>('');
 
-const flashbackImgs = ref<{ [key: string]: string }>({});
+
+const flashbackImgs = ref<{ [key: string]: FlashbackUrlAndMeta }>({});
 
 onMounted(async () => {
   flashbackImgs.value = await getFlashbacks();
