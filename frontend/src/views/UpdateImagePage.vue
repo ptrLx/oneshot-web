@@ -13,7 +13,8 @@
             </ion-row>
             <ion-row>
                 <ion-col size="12">
-                    <happiness-selector class="selector" @update:selectedHappiness="handleNewHappiness">
+                    <happiness-selector class="selector" :default-happiness="selectedHappiness?.toString()"
+                        @update:selectedHappiness="handleNewHappiness">
                     </happiness-selector>
                 </ion-col>
             </ion-row>
@@ -26,7 +27,7 @@
             </ion-row>
             <ion-row>
                 <ion-col size="12">
-                    <ion-button shape="round" @click="handleUpload">Upload</ion-button>
+                    <ion-button shape="round" @click="handleUpdate">Update</ion-button>
                 </ion-col>
             </ion-row>
         </ion-grid>
@@ -43,7 +44,8 @@ import { useCameraService } from '@/composables/cameraService';
 import { useImageService } from '@/composables/imageService';
 import HappinessSelector from '@/components/HappinessSelector.vue';
 import { HappinessDTO } from '@/_generated/api-client';
-import { OneShotUpdate } from '@/types/OneShotUpdate';
+import { OneShotRespDTO } from '@/_generated/api-client';
+import { blobStore, metadataStore } from '@/composables/store';
 
 export default defineComponent({
     components: {
@@ -63,13 +65,13 @@ export default defineComponent({
         const route = useRoute();
         const router = useIonRouter();
         const { takePhoto, pickPhoto, photos } = useCameraService();
-        const { uploadGalleryImg } = useImageService();
 
         const imgDate = ref<string>(route.params.id as string);
-        const uploadedImage = ref<string>("");
-        const description = ref<string>("");
-
-        let selectedHappiness = HappinessDTO.NEUTRAL // Default value
+        const imgSrc = ref<string>(URL.createObjectURL(blobStore.getBlob()));
+        const metadata = metadataStore.getMetadata();
+        const uploadedImage = ref<string>(imgSrc.value);
+        const description = ref<string>(metadata?.text || '');
+        const selectedHappiness = ref<HappinessDTO | null>(metadata?.happiness || null);
 
         switch (route.query.action) {
             case 'capture':
@@ -90,24 +92,19 @@ export default defineComponent({
         }
 
         const handleNewHappiness = (newHappiness: HappinessDTO) => {
-            selectedHappiness = newHappiness;
+            selectedHappiness.value = newHappiness;
         }
 
-        const handleUpload = () => {
+        const handleUpdate = () => {
 
-            const oneShotUpdate: OneShotUpdate = {
-                date: imgDate.value,
-                time: Date.now() / 1000, //TODO: read from image exif data instead
-                happiness: selectedHappiness,
-                text: description.value,
-            };
-
-            uploadGalleryImg(uploadedImage.value, oneShotUpdate).then((respose) => {
+            OneShotService.updateMetadataMetadataUpdatePost(
+                imgDate.value,
+                metadata?.time || 0,
+                selectedHappiness.value,
+                description.value,
+            ).then((response) => {
                 router.push('/home');
-            }).catch((error) => {
-                console.log(error);
-                //TODO: show error message to user
-            });
+            })
         }
 
         return {
@@ -115,7 +112,8 @@ export default defineComponent({
             imgDate,
             description,
             handleNewHappiness,
-            handleUpload
+            handleUpdate,
+            selectedHappiness,
         };
     },
 });
