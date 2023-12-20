@@ -1,6 +1,7 @@
 from core import config
 from core.exception import NoOneShotInDBFoundException
 from model.date import DateDTO, MonthDTO
+from prisma.enums import Happiness
 from prisma.models import OneShot as DBOneShot
 
 app_config = config.get_config()
@@ -60,6 +61,51 @@ class OneShotDB:
             skip=max_page_size * page,
             order={"date": "desc"},
             where={"username": username},
+        )
+
+    async def get_last_ten_happy(self, username) -> list[DBOneShot]:
+        prisma = await app_config.get_prisma_conn()
+
+        username = username.lower()
+
+        return await prisma.oneshot.find_many(
+            take=10,
+            order={"date": "desc"},
+            where={
+                "AND": [
+                    {"username": username},
+                    {
+                        "OR": [
+                            {"happiness": Happiness.HAPPY},
+                            {"happiness": Happiness.VERY_HAPPY},
+                        ]
+                    },
+                ]
+            },
+        )
+
+    async def get_last_very_happy(self, username) -> DBOneShot:
+        prisma = await app_config.get_prisma_conn()
+
+        username = username.lower()
+
+        return await prisma.oneshot.find_first(
+            order={"date": "desc"},
+            where={
+                "AND": [{"username": username}, {"happiness": Happiness.VERY_HAPPY}]
+            },
+        )
+
+    async def get_same_day_last_years(
+        self, username, month_day: str
+    ) -> list[DBOneShot]:
+        prisma = await app_config.get_prisma_conn()
+
+        username = username.lower()
+
+        return await prisma.oneshot.find_many(
+            order={"date": "desc"},
+            where={"AND": [{"username": username}, {"date": {"endswith": month_day}}]},
         )
 
     async def get_calendar_month(

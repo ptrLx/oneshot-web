@@ -1,4 +1,5 @@
 import os
+import random
 from datetime import datetime, timedelta
 
 import aiofiles
@@ -176,10 +177,21 @@ class ImageService:
         today_t = datetime.now()
 
         async def get_random_happy() -> OneShotRespDTO:
-            return None  # todo
+            # todo exclude last very happy
+            last_ten_happy = await os_db.get_last_ten_happy(user.username)
+            if len(last_ten_happy):
+                choice = random.choice(last_ten_happy)
+                return OneShotRespDTO.from_db_oneshot(choice)
+            else:
+                return None
 
         async def get_last_very_happy_day() -> OneShotRespDTO:
-            return None  # todo
+            last_very_happy = await os_db.get_last_very_happy(user.username)
+            return (
+                None
+                if last_very_happy is None
+                else OneShotRespDTO.from_db_oneshot(last_very_happy)
+            )
 
         async def get_same_day_last_month() -> OneShotRespDTO:
             first_day_of_current_month_d = today_t.replace(day=1)
@@ -208,7 +220,12 @@ class ImageService:
             )
 
         async def get_same_day_last_years() -> list[OneShotRespDTO]:
-            return []  # todo
+            return [
+                OneShotRespDTO.from_db_oneshot(oneshot)
+                for oneshot in await os_db.get_same_day_last_years(
+                    user.username, today_t.strftime("%m-%d")
+                )
+            ]
 
         return FlashbackDTO(
             random_happy=await get_random_happy(),
