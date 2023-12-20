@@ -7,11 +7,17 @@ logger = logging.getLogger(__name__)
 import bcrypt
 from admcore.config import commands, welcome_msg
 from admcore.exception import (
+    AbortedException,
     CLICoreException,
+    DateExistsInDBException,
     NoDisabledUserException,
     NoOneShotCreatedException,
     NoUserCreatedException,
     NoUserEnabledUserException,
+    PasswordsNotMatchException,
+    UserExistsInDBException,
+    UserHasOneShotsException,
+    UserNotExistsException,
 )
 from admdata.oneshot_table import ADMOneShotDB, DBOneShot
 from admdata.user_table import ADMUserDB, DBUser
@@ -122,15 +128,13 @@ class CLI:
         user = await user_db.get_user(username)
 
         if user is not None:
-            print("\n❌ User {username} already exists.")
-            return
+            raise UserExistsInDBException
 
         password_1 = await inquirer.secret(message="Password:").execute_async()
         password_2 = await inquirer.secret(message="Retype password:").execute_async()
 
         if password_1 != password_2:
-            print(f"\n❌ Passwords do not match.")
-            return
+            raise PasswordsNotMatchException
 
         full_name = await inquirer.text(message="Full name:").execute_async()
         role = await inquirer.select(
@@ -147,8 +151,7 @@ class CLI:
                 ).decode(),
             )
         except UniqueViolationError:
-            print(f"\n❌ User {username} already exists.")
-            return
+            raise UserExistsInDBException
 
         try:
             os.makedirs(
@@ -176,11 +179,9 @@ class CLI:
                 await user_db.delete_user(user.username)
                 print("\n🗑  User deleted.")
             except ForeignKeyViolationError:
-                print(
-                    "\n❌ This user has existing OneShots in the database and cannot be deleted (a feature to delete all Oneshots first is currently not implemented)."
-                )
+                raise UserHasOneShotsException
         else:
-            print("\n❌ Aborted.")
+            raise AbortedException
 
     async def __handle_import(self) -> None:
         user = await self.__choose_user()
@@ -202,14 +203,13 @@ class CLI:
             await user_db.disable_user(user.username)
             print("\n🙅 User disabled.")
         else:
-            print("\n❌ Aborted.")
+            raise AbortedException
 
     async def __handle_enable_user(self) -> None:
         user = await self.__choose_user(only_disabled=True)
 
         if user is None:
-            print("\n❌ User doesn't exist.")
-            return
+            raise UserNotExistsException
 
         confirmation = await inquirer.confirm(
             message=f"Do you really want to enable user {user.full_name} ({user.username})?",
@@ -219,7 +219,7 @@ class CLI:
             await user_db.enable_user(user.username)
             print("\n💁 User enabled.")
         else:
-            print("\n❌ Aborted.")
+            raise AbortedException
 
     async def __handle_list_users(self) -> None:
         users = await user_db.get_users()
@@ -233,8 +233,7 @@ class CLI:
         user = await self.__choose_user()
 
         if user is None:
-            print("❌ User doesn't exist.")
-            return
+            raise UserNotExistsException
 
         password_1 = await inquirer.secret(message="New password:").execute_async()
         password_2 = await inquirer.secret(
@@ -242,8 +241,7 @@ class CLI:
         ).execute_async()
 
         if password_1 != password_2:
-            print(f"\n❌ Passwords do not match.")
-            return
+            raise PasswordsNotMatchException
 
         confirmation = await inquirer.confirm(
             message=f"Do you really want to reset password of {user.full_name} ({user.username})?",
@@ -256,7 +254,7 @@ class CLI:
             )
             print("\n↩️  Password changed.")
         else:
-            print("\n❌ Aborted.")
+            raise AbortedException
 
     async def __handle_modify_oneshot_date(self) -> None:
         user = await self.__choose_user()
@@ -268,6 +266,9 @@ class CLI:
         # Validate date
         DateDTO(date=new_date)
 
-        await os_db.update_date(oneshot, new_date)
+        try:
+            await os_db.update_date(oneshot, new_date)
+        except UniqueViolationError:
+            raise DateExistsInDBException
 
         print("\n↩️  Updated.")
