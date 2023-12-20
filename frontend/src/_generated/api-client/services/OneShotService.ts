@@ -151,7 +151,7 @@ export class OneShotService {
      */
     public static updateMetadataMetadataUpdatePost(
         date: string,
-        time: number,
+        time?: (number | null),
         happiness?: (HappinessDTO | null),
         text?: (string | null),
     ): CancelablePromise<OneShotRespDTO> {

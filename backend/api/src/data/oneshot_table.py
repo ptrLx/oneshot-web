@@ -1,6 +1,7 @@
 from core import config
 from core.exception import NoOneShotInDBFoundException
 from model.date import DateDTO, MonthDTO
+from model.statistic import HappinessPercentage
 from prisma.enums import Happiness
 from prisma.models import OneShot as DBOneShot
 
@@ -139,3 +140,47 @@ class OneShotDB:
 
         if deleted_oneshot is None:
             raise NoOneShotInDBFoundException
+
+    async def get_happiness_statistic(
+        self, username: str, days: list[str] = None, month: str = None, year: str = None
+    ) -> HappinessPercentage:
+        prisma = await app_config.get_prisma_conn()
+
+        username = username.lower()
+
+        if days is not None and month is None and year is None:
+            date_criteria = {"in": days}
+        elif days is None and month is not None and year is None:
+            date_criteria = {"startswith": month}
+        elif days is None and month is None and year is not None:
+            date_criteria = {"startswith": year}
+        else:
+            raise ValueError
+
+        happinesses = [
+            user.happiness
+            for user in await prisma.oneshot.find_many(
+                where={"AND": [{"username": username}, {"date": date_criteria}]}
+            )
+        ]  # todo select happiness in query
+
+        happiness_count = {
+            "VERY_HAPPY": 0,
+            "HAPPY": 0,
+            "NEUTRAL": 0,
+            "SAD": 0,
+            "VERY_SAD": 0,
+            "NOT_SPECIFIED": 0,
+        }
+        total_count = len(happinesses)
+        if total_count:
+            for i in happinesses:
+                happiness_count[i] += 1
+            happiness_percentage = {
+                category: int(count * 100 / total_count)
+                for category, count in happiness_count.items()
+            }
+        else:
+            happiness_percentage = happiness_count
+
+        return HappinessPercentage.model_validate(happiness_percentage)
