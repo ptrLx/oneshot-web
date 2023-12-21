@@ -10,28 +10,51 @@
     </ion-header>
 
     <ion-content :fullscreen="true">
-      <row-component row-height="70%" sectionHeaderTitle="Gallery" :button-func="() => router.push('/gallery')">
-        <swiper-slide v-for="(content, category) in flashbackImgs" :key="category">
-          <card :card-title="category.toString()">
-            <router-link :to="`/image/${content.meta.date}`">
-              <ion-img :src="content.url"></ion-img>
+      <row-component row-height="360px" sectionHeaderTitle="Gallery" :button-func="() => router.push('/gallery')"
+        v-if="Object.keys(flashbackImgs).length > 0">
+        <swiper-slide v-if="hasImage('random_happy')">
+          <card card-title="Random Happy Day">
+            <router-link :to="`/image/${flashbackImgs['random_happy']?.meta.date}`">
+              <ion-img :src="flashbackImgs['random_happy']?.url">
+              </ion-img>
+            </router-link>
+          </card>
+        </swiper-slide>
+        <swiper-slide v-if="hasImage('last_very_happy_day')">
+          <card card-title="Last Very Happy Day">
+            <router-link :to="`/image/${flashbackImgs['last_very_happy_day']?.meta.date}`">
+              <ion-img :src="flashbackImgs['last_very_happy_day']?.url"></ion-img>
+            </router-link>
+          </card>
+        </swiper-slide>
+        <swiper-slide v-if="hasImage('same_day_last_month')">
+          <card card-title="Same Day Last Month">
+            <router-link :to="`/image/${flashbackImgs['same_day_last_month']?.meta.date}`">
+              <ion-img :src="flashbackImgs['same_day_last_month']?.url"></ion-img>
+            </router-link>
+          </card>
+        </swiper-slide>
+        <swiper-slide v-for="(image, index) in getSameDateLastYearsImages(flashbackImgs)" :key="index">
+          <card :card-title=getCardTitle(image.meta.date)>
+            <router-link :to="`/image/${image.meta.date}`">
+              <ion-img :src="image.url"></ion-img>
             </router-link>
           </card>
         </swiper-slide>
       </row-component>
-      <row-component row-height="20%" :enableSectionHeader=false>
+      <row-component row-height="150px" :enableSectionHeader=false>
         <swiper-slide>
           <capture-today-slide></capture-today-slide>
         </swiper-slide>
       </row-component>
-      <row-component row-height="50%" sectionHeaderTitle="Calendar">
+      <row-component row-height="360px" sectionHeaderTitle="Calendar">
         <swiper-slide>
           <card>
             <calendar-component></calendar-component>
           </card>
         </swiper-slide>
       </row-component>
-      <row-component row-height="70%" sectionHeaderTitle="Statistics">
+      <row-component row-height="360px" sectionHeaderTitle="Statistics">
         <swiper-slide>
           <card>
             <donut-chart center-text="Happiness Week"></donut-chart>
@@ -70,13 +93,41 @@ import { useFlashbackService, FlashbackUrlAndMeta } from '@/composables/flashbac
 const router = useRouter();
 const { getFlashbacks } = useFlashbackService();
 
-
-
 const flashbackImgs = ref<{ [key: string]: FlashbackUrlAndMeta }>({});
 
-onMounted(async () => {
-  flashbackImgs.value = await getFlashbacks();
+onMounted(() => {
+  getFlashbacks().then((flashbacks) => {
+    flashbackImgs.value = flashbacks;
+  }).catch((err: ApiError) => {
+    console.log("Could not retrieve flashbacks");
+  });
 });
+
+const getSameDateLastYearsImages = (flashbackImgs: { [key: string]: FlashbackUrlAndMeta }) => {
+  return Object.keys(flashbackImgs)
+    .filter(key => key.startsWith('same_date_last_years_'))
+    .map(key => flashbackImgs[key]);
+}
+
+const getCardTitle = (flashbackDate: string) => {
+  const currentDate = new Date();
+  const flashbackYear = new Date(flashbackDate).getFullYear();
+  const currentYear = currentDate.getFullYear();
+  const differenceInYears = currentYear - flashbackYear;
+
+  const toWords = (number: number) => {
+    const words = [
+      'One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine', 'Ten', 'Eleven', 'Twelve'
+    ];
+    return words[number] || number.toString();
+  }
+
+  return `${toWords(differenceInYears)} Years Ago`;
+}
+
+const hasImage = (key: string) => {
+  return flashbackImgs.value[key]?.url;
+};
 
 </script>
 

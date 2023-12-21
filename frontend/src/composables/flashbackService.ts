@@ -16,44 +16,44 @@ export const useFlashbackService = () => {
     // key: string is the category of the flashback, e.g. "random_happy", "last_very_happy_day" etc.
     const getFlashbacks = async (): Promise<{ [key: string]: FlashbackUrlAndMeta }> =>  {
 
+        const isPreview = true;
         const flashbackImgs : { [key: string]: FlashbackUrlAndMeta } = {};
 
         await OneShotService.getFlashbacksFlashbackGet().then( async (res) => {
 
-            // Dummy data, replace with next line when backend is implemented
-            // const flashbacks = res;
-            const flashbacks = {
-                "random_happy": {
-                "date": "2023-12-03",
-                "time": 0,
-                "happiness": "VERY_HAPPY",
-                "text": "string",
-                "file_name": "string"
-                },
-                "last_very_happy_day": {
-                "date": "2023-12-04",
-                "time": 0,
-                "happiness": "VERY_HAPPY",
-                "text": "string",
-                "file_name": "string"
-                },
-                "same_day_last_month": {
-                "date": "2023-12-05",
-                "time": 0,
-                "happiness": "VERY_HAPPY",
-                "text": "string",
-                "file_name": "string"
-                },
-                "same_date_last_years": [
-                {
-                    "date": "2023-12-06",
-                    "time": 0,
-                    "happiness": "VERY_HAPPY",
-                    "text": "string",
-                    "file_name": "string"
-                }
-                ]
-            };
+            const flashbacks = res;
+            // const flashbacks = {
+            //     "random_happy": {
+            //     "date": "2023-12-03",
+            //     "time": 0,
+            //     "happiness": "VERY_HAPPY",
+            //     "text": "string",
+            //     "file_name": "string"
+            //     },
+            //     "last_very_happy_day": {
+            //     "date": "2023-12-04",
+            //     "time": 0,
+            //     "happiness": "VERY_HAPPY",
+            //     "text": "string",
+            //     "file_name": "string"
+            //     },
+            //     "same_day_last_month": {
+            //     "date": "2023-12-05",
+            //     "time": 0,
+            //     "happiness": "VERY_HAPPY",
+            //     "text": "string",
+            //     "file_name": "string"
+            //     },
+            //     "same_date_last_years": [
+            //     {
+            //         "date": "2023-12-06",
+            //         "time": 0,
+            //         "happiness": "VERY_HAPPY",
+            //         "text": "string",
+            //         "file_name": "string"
+            //     }
+            //     ]
+            // };
         
             // loop through all flashbacks and download the images
             for (const key of Object.keys(flashbacks)) {
@@ -63,30 +63,39 @@ export const useFlashbackService = () => {
         
                     // Handly array type
                     for (const item of flashback) {
-                        const blob = await downloadGalleryImg(item.date);
-                        const img = URL.createObjectURL(blob);
-                        flashbackImgs[key] = {
-                            url: img,
-                            meta: item as OneShotRespDTO
-                        };
+                        await downloadGalleryImg(item.date, isPreview).then((blob) => {
+                            const img = URL.createObjectURL(blob);
+                            // create new key for each item in the array <key>_0, <key>_1, ...
+                            // and add the image url and meta data to the object
+                            const newKey = `${key}_${flashback.indexOf(item)}`;
+                            flashbackImgs[newKey] = {
+                                url: img,
+                                meta: item as OneShotRespDTO
+                            };
+                        }, (e: ApiError) => {
+                            return; // Skip this item if it can't be downloaded
+                        });
                     }
                 }
                 else {
                     // Handle single OneShotRespDTO type
-                    const blob = await downloadGalleryImg(flashback?.date ?? '');
+                    await downloadGalleryImg(flashback?.date ?? '', isPreview).then((blob) => {
                     const img = URL.createObjectURL(blob);
                     flashbackImgs[key] = {
                         url: img,
                         meta: flashback as OneShotRespDTO
                     };
+                    }, (e: ApiError) => {
+                        return; // Skip this item if it can't be downloaded
+                    });
                 }
             }
-                
+
             }, (e: ApiError) => {
                 console.log("Error retrieving flashbacks");
-            });
+        });
 
-            return flashbackImgs;
+        return flashbackImgs;
     }
 
     

@@ -1,7 +1,14 @@
 <template>
     <base-layout page-title="Edit Image" :hide-back-button=false>
 
-
+        <template #custom-buttons>
+            <ion-button id="presentDelete">
+                <ion-icon :icon="trashOutline"></ion-icon>
+            </ion-button>
+            <ion-alert trigger="presentDelete" header="Are you sure you want to delete this OneShot?"
+                :buttons="alertButtons" class="delete-alert">
+            </ion-alert>
+        </template>
         <ion-grid class="ion-text-center">
             <ion-row>
                 <ion-title>{{ imgDate }}</ion-title>
@@ -35,8 +42,8 @@
 </template>
   
 <script lang="ts">
-import { IonAvatar, IonButton, IonGrid, IonRow, IonCol, IonIcon, IonTextarea, useIonRouter, IonToast, toastController, IonTitle, IonImg } from '@ionic/vue';
-
+import { IonAvatar, IonButton, IonGrid, IonRow, IonCol, IonIcon, IonTextarea, useIonRouter, IonAlert, toastController, IonTitle, IonImg } from '@ionic/vue';
+import { trashOutline } from 'ionicons/icons';
 import { defineComponent, ref } from 'vue';
 import { OneShotService, UserService, OpenAPI, ApiError } from '@/_generated/api-client';
 import { routerKey, useRoute } from 'vue-router';
@@ -58,7 +65,8 @@ export default defineComponent({
         IonTextarea,
         IonTitle,
         IonImg,
-        HappinessSelector
+        HappinessSelector,
+        IonAlert,
     },
     setup() {
 
@@ -107,6 +115,27 @@ export default defineComponent({
             })
         }
 
+        const handleDelete = () => {
+            OneShotService.deleteImageImageDeletePost(imgDate.value).then((response) => {
+                router.push('/home');
+            }, (error: ApiError) => {
+                console.log("An error occurred while deleting the image");
+            })
+        }
+
+        const alertButtons = [
+            {
+                text: 'Delete',
+                //cssClass: 'alertButtonDelete', // Styling not working here
+                handler: handleDelete,
+            },
+            {
+                text: 'Cancel',
+                role: 'cancel',
+            },
+        ];
+
+
         return {
             uploadedImage,
             imgDate,
@@ -114,6 +143,8 @@ export default defineComponent({
             handleNewHappiness,
             handleUpdate,
             selectedHappiness,
+            trashOutline,
+            alertButtons,
         };
     },
 });
@@ -159,6 +190,10 @@ ion-img::part(image) {
     margin-bottom: 5px;
     margin-left: 10%;
     margin-right: 10%;
+}
+
+ion-alert.delete-alert {
+    --backdrop-opacity: 0.7;
 }
 </style>
 
