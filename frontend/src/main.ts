@@ -29,6 +29,9 @@ import { globalCookiesConfig } from 'vue3-cookies';
 import { OpenAPI } from '@/_generated/api-client';
 import { isPlatform } from '@ionic/vue';
 import { createHead } from '@vueuse/head'
+import { defineCustomElements } from '@ionic/pwa-elements/loader';
+
+defineCustomElements(window);
 
 
 globalCookiesConfig({
