@@ -10,6 +10,10 @@
     </ion-header>
 
     <ion-content :fullscreen="true">
+      <ion-refresher slot="fixed" @ionRefresh="handleRefresh($event)">
+        <ion-refresher-content refreshing-spinner="crescent">
+        </ion-refresher-content>
+      </ion-refresher>
       <row-component row-height="360px" sectionHeaderTitle="Gallery" :button-func="() => router.push('/gallery')"
         v-if="Object.keys(flashbackImgs).length > 0">
         <swiper-slide v-if="hasImage('random_happy')">
@@ -76,7 +80,7 @@
 </template>
 
 <script setup lang="ts">
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonImg } from '@ionic/vue';
+import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonImg, IonRefresher, IonRefresherContent } from '@ionic/vue';
 import { SwiperSlide } from 'swiper/vue';
 import RowComponent from '@/components/RowComponent.vue';
 import ProfileComponent from '@/components/ProfileComponent.vue';
@@ -128,6 +132,16 @@ const getCardTitle = (flashbackDate: string) => {
 const hasImage = (key: string) => {
   return flashbackImgs.value[key]?.url;
 };
+
+const handleRefresh = (event: CustomEvent) => {
+  getFlashbacks().then((flashbacks) => {
+    flashbackImgs.value = flashbacks;
+    event.detail.complete();
+  }).catch((err: ApiError) => {
+    console.log("Could not retrieve flashbacks");
+    event.detail.complete();
+  });
+}
 
 </script>
 
