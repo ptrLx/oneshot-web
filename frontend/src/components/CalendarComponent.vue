@@ -1,11 +1,14 @@
 <template>
     <ion-datetime ref="datetime" id="calendar" class="datetime" presentation="date" display-format="DDDD MMMM D, YYYY"
         picker-format="DDDD MMMM D, YYYY" placeholder="Select Date" size="cover" :highlightedDates="highlightedDates"
-        v-model="selectedDate" @ion-change="handleSelection"></ion-datetime>
+        v-model="selectedDate"></ion-datetime>
+    <ion-button shape="round" @click="handleSelection">
+        Select
+    </ion-button>
 </template>
   
 <script lang="ts">
-import { IonDatetime, onIonViewDidEnter } from '@ionic/vue';
+import { IonDatetime, IonButton } from '@ionic/vue';
 import { defineComponent, ref, onMounted, watch, nextTick, Ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { ApiError, CalendarService } from '@/_generated/api-client';
@@ -16,6 +19,7 @@ import { OneShotService } from '@/_generated/api-client';
 export default defineComponent({
     components: {
         IonDatetime,
+        IonButton,
     },
     setup() {
 
@@ -138,6 +142,13 @@ ion-datetime::part(calendar-day active),
 ion-datetime::part(calendar-day):focus {
     background: color-mix(in srgb, var(--ion-color-primary), transparent 66%);
     box-shadow: 0px 0px 0px 4px color-mix(in srgb, var(--ion-color-primary), transparent 66%);
+}
+
+ion-button {
+    /* always on top */
+    position: absolute;
+    top: 84%;
+    right: 4%;
 }
 
 

@@ -47,14 +47,14 @@
           <capture-today-slide></capture-today-slide>
         </swiper-slide>
       </row-component>
-      <row-component row-height="360px" sectionHeaderTitle="Calendar">
+      <row-component row-height="400px" sectionHeaderTitle="Calendar" :enable-button=false>
         <swiper-slide>
           <card>
             <calendar-component></calendar-component>
           </card>
         </swiper-slide>
       </row-component>
-      <row-component row-height="360px" sectionHeaderTitle="Statistics">
+      <row-component row-height="360px" sectionHeaderTitle="Statistics" :enable-button=false>
         <swiper-slide>
           <card>
             <donut-chart center-text="Happiness Week"></donut-chart>
