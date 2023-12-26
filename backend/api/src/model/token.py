@@ -7,4 +7,5 @@ class TokenDTO(BaseModel):
 
 
 class TokenDataDTO(BaseModel):
-    username: str | None = None
+    username: str
+    exp: int

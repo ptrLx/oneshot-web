@@ -90,3 +90,8 @@ start-docker-compose-stack: build-docker-image-no-compile  ## Start the docker i
 pull-and-start-docker-image:  ## Start the docker image from Docker Hub.
 	# mkdir -p ./_local_volume/api
 	docker run --rm -e TZ="Europe/Berlin" -e HOST_URL="localhost:8080" -e STAGE="prod" -p 8080:80 ptrlx/oneshot-web # --volume=./_local_volume/api/:/srv/oneshot 
+
+
+.PHONY: lint-local
+lint-local:  ## Lint the codebase with super-linter
+	docker run --rm -e RUN_LOCAL=true --env-file ".github/super-linter.env" -v "$PWD":/tmp/lint github/super-linter

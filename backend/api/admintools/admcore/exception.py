@@ -22,7 +22,7 @@ class NoDisabledUserException(CLICoreException):
         self.detail = "No disabled user was found."
 
 
-class NoUserEnabledUserException(CLICoreException):
+class NoEnabledUserException(CLICoreException):
     def __init__(self, *args: object) -> None:
         super().__init__(*args)
         self.detail = "No enabled user was found."

@@ -11,9 +11,9 @@ from admcore.exception import (
     CLICoreException,
     DateExistsInDBException,
     NoDisabledUserException,
+    NoEnabledUserException,
     NoOneShotCreatedException,
     NoUserCreatedException,
-    NoUserEnabledUserException,
     PasswordsNotMatchException,
     UserExistsInDBException,
     UserHasOneShotsException,
@@ -86,7 +86,7 @@ class CLI:
         if only_enabled:
             users = await user_db.get_enabled_users()
             if not len(users):
-                raise NoUserEnabledUserException
+                raise NoEnabledUserException
         elif only_disabled:
             users = await user_db.get_disabled_users()
             if not len(users):
@@ -97,7 +97,7 @@ class CLI:
                 raise NoUserCreatedException
 
         username = await inquirer.select(
-            message="Choose an user:",
+            message="Choose a user:",
             choices=[user.username for user in users],
         ).execute_async()
 
@@ -227,7 +227,7 @@ class CLI:
             print()
             [print(user) for user in users]
         else:
-            print("No user exists. Try to create one.")
+            raise NoUserCreatedException
 
     async def __handle_reset_user_password(self) -> None:
         user = await self.__choose_user()
