@@ -21,7 +21,8 @@ async def __get_current_user(token: Annotated[str, Depends(__oauth2_scheme)]) ->
         payload = jwt.decode(
             token, app_config.SECRET_KEY, algorithms=[app_config.ALGORITHM]
         )
-        token_data = TokenDataDTO(username=payload.get("sub"))
+        # todo validate exp
+        token_data = TokenDataDTO(username=payload.get("sub"), exp=payload.get("exp"))
     except:
         raise CredentialValidationException
 
