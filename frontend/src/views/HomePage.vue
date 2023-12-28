@@ -61,19 +61,20 @@
       <row-component row-height="360px" sectionHeaderTitle="Statistics" :enable-button=false>
         <swiper-slide>
           <card>
-            <donut-chart center-text="Happiness Week"></donut-chart>
+            <donut-chart center-text="Happiness Week" :data="stats?.happiness_current_week"></donut-chart>
           </card>
         </swiper-slide>
         <swiper-slide>
-          <card card-title="card2" card-subtitle="card2sub">
+          <card>
+            <donut-chart center-text="Happiness Month" :data="stats?.happiness_current_month"></donut-chart>
           </card>
         </swiper-slide>
         <swiper-slide>
-          <card card-title="card3" card-subtitle="card3sub">
+          <card>
+            <donut-chart center-text="Happiness Year" :data="stats?.happiness_current_year"></donut-chart>
           </card>
         </swiper-slide>
       </row-component>
-
 
     </ion-content>
   </ion-page>
@@ -89,7 +90,7 @@ import CaptureTodaySlide from '@/components/CaptureTodaySlide.vue';
 import DonutChart from '@/components/DonutChart.vue';
 import CalendarComponent from '@/components/CalendarComponent.vue';
 import { useRouter } from 'vue-router';
-import { ApiError, FlashbackDTO, OneShotRespDTO, OneShotService } from '@/_generated/api-client';
+import { ApiError, StatisticsService, StatisticDTO } from '@/_generated/api-client';
 import { onMounted, ref } from 'vue';
 import { useFlashbackService, FlashbackUrlAndMeta } from '@/composables/flashbackService';
 
@@ -99,13 +100,16 @@ const { getFlashbacks } = useFlashbackService();
 
 const flashbackImgs = ref<{ [key: string]: FlashbackUrlAndMeta }>({});
 
+const stats = ref<StatisticDTO | null>(null);
+
+
 onMounted(() => {
-  getFlashbacks().then((flashbacks) => {
-    flashbackImgs.value = flashbacks;
-  }).catch((err: ApiError) => {
-    console.log("Could not retrieve flashbacks");
-  });
+  updateActions();
 });
+
+const handleRefresh = (event: CustomEvent) => {
+  updateActions(event);
+}
 
 const getSameDateLastYearsImages = (flashbackImgs: { [key: string]: FlashbackUrlAndMeta }) => {
   return Object.keys(flashbackImgs)
@@ -133,13 +137,20 @@ const hasImage = (key: string) => {
   return flashbackImgs.value[key]?.url;
 };
 
-const handleRefresh = (event: CustomEvent) => {
+const updateActions = (event: CustomEvent = { detail: { complete: () => { } } } as CustomEvent) => {
   getFlashbacks().then((flashbacks) => {
     flashbackImgs.value = flashbacks;
     event.detail.complete();
   }).catch((err: ApiError) => {
     console.log("Could not retrieve flashbacks");
     event.detail.complete();
+  });
+
+  StatisticsService.getStatisticsStatsGet().then((response) => {
+    stats.value = response;
+    console.log(stats.value.happiness_current_week);
+  }).catch((err: ApiError) => {
+    console.log("Could not retrieve stats");
   });
 }
 
