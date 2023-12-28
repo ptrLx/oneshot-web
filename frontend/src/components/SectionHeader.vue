@@ -7,7 +7,7 @@
                 <ion-title class="title">{{ title }}</ion-title>
             </ion-col>
             <ion-col size="5" class="ion-text-end">
-                <ion-button class="button" aria-label="See all" @click="handleButtonClick">
+                <ion-button v-if="enableButton" class="button" aria-label="See all" @click="handleButtonClick">
                     <ion-icon slot="icon-only" :icon="arrowForwardOutline"></ion-icon>
                 </ion-button>
             </ion-col>
@@ -40,6 +40,10 @@ export default defineComponent({
         buttonFunc: {
             type: Function,
             default: () => { }
+        },
+        enableButton: {
+            type: Boolean,
+            default: true
         }
     },
     setup(props) {
@@ -81,5 +85,15 @@ export default defineComponent({
 .button {
     font-size: 0.5rem;
     --background: transparent;
+    --color: var(--ion-color-primary);
+    --box-shadow: none;
+}
+
+.button:hover {
+    --background: transparent;
+    --color: var(--ion-color-primary);
+    --box-shadow: none;
+    /* slightly scale up */
+    transform: scale(1.4);
 }
 </style>

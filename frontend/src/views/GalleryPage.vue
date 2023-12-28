@@ -30,6 +30,7 @@ import { OneShotService } from '@/_generated/api-client';
 import { useImageService } from '@/composables/imageService';
 import GalleryImage from '@/components/GalleryImage.vue';
 import { images } from 'ionicons/icons';
+import { useThemeService } from '@/composables/themeService';
 
 export default defineComponent({
     components: {
@@ -41,6 +42,8 @@ export default defineComponent({
         GalleryImage
     },
     setup() {
+        useThemeService(true) // Set theme to media preference
+
         const { downloadGalleryImg } = useImageService();
         const galleryRows = ref<{ date: string; url: string; happiness: string }[][]>([]);
         let imgPage = 0;

@@ -11,7 +11,7 @@ services:
     container_name: os-web-compose-db
     image: 'postgres:latest'
     env_file:
-      - .env
+      - qa.env
     networks:
       - os-web-compose-db
     volumes:
@@ -27,7 +27,7 @@ services:
     ports:
       - 8080:80
     env_file:
-      - .env
+      - qa.env
     networks:
       - os-web-compose-db
     depends_on:

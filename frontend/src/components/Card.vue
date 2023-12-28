@@ -1,10 +1,11 @@
 <template>
     <ion-card class="full-width-card">
-        <slot></slot>
+
         <ion-card-header v-if="cardTitle || cardSubtitle">
             <ion-card-title> {{ cardTitle }} </ion-card-title>
             <ion-card-subtitle> {{ cardSubtitle }}</ion-card-subtitle>
         </ion-card-header>
+        <slot></slot>
     </ion-card>
 </template>
   
@@ -39,7 +40,7 @@ export default defineComponent({
 .full-width-card {
     width: 100%;
     height: 95%;
-    background-color: var(--ion-color-light-shade);
+    background-color: var(--ion-color-light);
     border-radius: 20px;
 }
 </style>

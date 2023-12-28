@@ -10,48 +10,78 @@
     </ion-header>
 
     <ion-content :fullscreen="true">
-
-      <row-component row-height="70%" sectionHeaderTitle="Gallery" :button-func="() => router.push('/gallery')">
-        <swiper-slide>
-          <card card-title="card2" card-subtitle="card2sub">
+      <ion-refresher slot="fixed" @ionRefresh="handleRefresh($event)">
+        <ion-refresher-content refreshing-spinner="crescent">
+        </ion-refresher-content>
+      </ion-refresher>
+      <row-component row-height="360px" sectionHeaderTitle="Gallery" :button-func="() => router.push('/gallery')"
+        v-if="Object.keys(flashbackImgs).length > 0">
+        <swiper-slide v-if="hasImage('random_happy')">
+          <card card-title="Random Happy Day">
+            <router-link :to="`/image/${flashbackImgs['random_happy']?.meta.date}`">
+              <ion-img :src="flashbackImgs['random_happy']?.url">
+              </ion-img>
+            </router-link>
+          </card>
+        </swiper-slide>
+        <swiper-slide v-if="hasImage('last_very_happy_day')">
+          <card card-title="Last Very Happy Day">
+            <router-link :to="`/image/${flashbackImgs['last_very_happy_day']?.meta.date}`">
+              <ion-img :src="flashbackImgs['last_very_happy_day']?.url"></ion-img>
+            </router-link>
+          </card>
+        </swiper-slide>
+        <swiper-slide v-if="hasImage('same_day_last_month')">
+          <card card-title="Same Day Last Month">
+            <router-link :to="`/image/${flashbackImgs['same_day_last_month']?.meta.date}`">
+              <ion-img :src="flashbackImgs['same_day_last_month']?.url"></ion-img>
+            </router-link>
+          </card>
+        </swiper-slide>
+        <swiper-slide v-for="(image, index) in getSameDateLastYearsImages(flashbackImgs)" :key="index">
+          <card :card-title=getCardTitle(image.meta.date)>
+            <router-link :to="`/image/${image.meta.date}`">
+              <ion-img :src="image.url"></ion-img>
+            </router-link>
           </card>
         </swiper-slide>
       </row-component>
-      <row-component row-height="20%" :enableSectionHeader=false>
+      <row-component row-height="150px" :enableSectionHeader=false>
         <swiper-slide>
           <capture-today-slide></capture-today-slide>
         </swiper-slide>
       </row-component>
-      <row-component row-height="50%" sectionHeaderTitle="Calendar">
+      <row-component row-height="400px" sectionHeaderTitle="Calendar" :enable-button=false>
         <swiper-slide>
           <card>
             <calendar-component></calendar-component>
           </card>
         </swiper-slide>
       </row-component>
-      <row-component row-height="70%" sectionHeaderTitle="Statistics">
+      <row-component row-height="360px" sectionHeaderTitle="Statistics" :enable-button=false>
         <swiper-slide>
           <card>
-            <donut-chart center-text="Happiness Week"></donut-chart>
+            <donut-chart center-text="Happiness Week" :data="stats?.happiness_current_week"></donut-chart>
           </card>
         </swiper-slide>
         <swiper-slide>
-          <card card-title="card2" card-subtitle="card2sub">
+          <card>
+            <donut-chart center-text="Happiness Month" :data="stats?.happiness_current_month"></donut-chart>
           </card>
         </swiper-slide>
         <swiper-slide>
-          <card card-title="card3" card-subtitle="card3sub">
+          <card>
+            <donut-chart center-text="Happiness Year" :data="stats?.happiness_current_year"></donut-chart>
           </card>
         </swiper-slide>
       </row-component>
-
 
     </ion-content>
   </ion-page>
 </template>
 
 <script setup lang="ts">
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonButton } from '@ionic/vue';
+import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonImg, IonRefresher, IonRefresherContent } from '@ionic/vue';
 import { SwiperSlide } from 'swiper/vue';
 import RowComponent from '@/components/RowComponent.vue';
 import ProfileComponent from '@/components/ProfileComponent.vue';
@@ -60,9 +90,71 @@ import CaptureTodaySlide from '@/components/CaptureTodaySlide.vue';
 import DonutChart from '@/components/DonutChart.vue';
 import CalendarComponent from '@/components/CalendarComponent.vue';
 import { useRouter } from 'vue-router';
+import { ApiError, StatisticsService, StatisticDTO } from '@/_generated/api-client';
+import { onMounted, ref } from 'vue';
+import { useFlashbackService, FlashbackUrlAndMeta } from '@/composables/flashbackService';
+import { useThemeService } from '@/composables/themeService';
 
+useThemeService(true) // Set theme to media preference
 
 const router = useRouter();
+const { getFlashbacks } = useFlashbackService();
+
+const flashbackImgs = ref<{ [key: string]: FlashbackUrlAndMeta }>({});
+
+const stats = ref<StatisticDTO | null>(null);
+
+
+onMounted(() => {
+  updateActions();
+});
+
+const handleRefresh = (event: CustomEvent) => {
+  updateActions(event);
+}
+
+const getSameDateLastYearsImages = (flashbackImgs: { [key: string]: FlashbackUrlAndMeta }) => {
+  return Object.keys(flashbackImgs)
+    .filter(key => key.startsWith('same_date_last_years_'))
+    .map(key => flashbackImgs[key]);
+}
+
+const getCardTitle = (flashbackDate: string) => {
+  const currentDate = new Date();
+  const flashbackYear = new Date(flashbackDate).getFullYear();
+  const currentYear = currentDate.getFullYear();
+  const differenceInYears = currentYear - flashbackYear;
+
+  const toWords = (number: number) => {
+    const words = [
+      'One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine', 'Ten', 'Eleven', 'Twelve'
+    ];
+    return words[number] || number.toString();
+  }
+
+  return `${toWords(differenceInYears)} Years Ago`;
+}
+
+const hasImage = (key: string) => {
+  return flashbackImgs.value[key]?.url;
+};
+
+const updateActions = (event: CustomEvent = { detail: { complete: () => { } } } as CustomEvent) => {
+  getFlashbacks().then((flashbacks) => {
+    flashbackImgs.value = flashbacks;
+    event.detail.complete();
+  }).catch((err: ApiError) => {
+    console.log("Could not retrieve flashbacks");
+    event.detail.complete();
+  });
+
+  StatisticsService.getStatisticsStatsGet().then((response) => {
+    stats.value = response;
+    console.log(stats.value.happiness_current_week);
+  }).catch((err: ApiError) => {
+    console.log("Could not retrieve stats");
+  });
+}
 
 </script>
 
@@ -95,3 +187,4 @@ const router = useRouter();
   text-decoration: none;
 }
 </style>
+                      

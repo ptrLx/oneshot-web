@@ -13,8 +13,10 @@ export type { Body_upload_user_profile_img_user_profileimg_post } from './models
 export type { CalendarEntryRespDTO } from './models/CalendarEntryRespDTO';
 export type { FlashbackDTO } from './models/FlashbackDTO';
 export { HappinessDTO } from './models/HappinessDTO';
+export type { HappinessPercentage } from './models/HappinessPercentage';
 export type { HTTPValidationError } from './models/HTTPValidationError';
 export type { OneShotRespDTO } from './models/OneShotRespDTO';
+export type { StatisticDTO } from './models/StatisticDTO';
 export type { TokenDTO } from './models/TokenDTO';
 export type { UserDTO } from './models/UserDTO';
 export { UserRoleDTO } from './models/UserRoleDTO';
@@ -22,5 +24,6 @@ export type { ValidationError } from './models/ValidationError';
 
 export { CalendarService } from './services/CalendarService';
 export { OneShotService } from './services/OneShotService';
+export { StatisticsService } from './services/StatisticsService';
 export { StatusService } from './services/StatusService';
 export { UserService } from './services/UserService';

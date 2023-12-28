@@ -1,4 +1,5 @@
 import os
+import random
 from datetime import datetime, timedelta
 
 import aiofiles
@@ -14,7 +15,7 @@ from core.exception import (
 from data.oneshot_table import DBOneShot, OneShotDB
 from fastapi.datastructures import UploadFile
 from fastapi.responses import FileResponse
-from model.date import DateDTO
+from model.date import CalendarEntryRespDTO, DateDTO, MonthDTO
 from model.flashback import FlashbackDTO
 from model.oneshot import (
     OneShotDTO,
@@ -22,6 +23,7 @@ from model.oneshot import (
     OneShotRespDTO,
     UpdateOneShotDTO,
 )
+from model.statistic import StatisticDTO
 from model.user import UserDTO
 from PIL import Image
 
@@ -176,10 +178,21 @@ class ImageService:
         today_t = datetime.now()
 
         async def get_random_happy() -> OneShotRespDTO:
-            return None  # todo
+            # todo exclude last very happy
+            last_ten_happy = await os_db.get_last_ten_happy(user.username)
+            if len(last_ten_happy):
+                choice = random.choice(last_ten_happy)
+                return OneShotRespDTO.from_db_oneshot(choice)
+            else:
+                return None
 
         async def get_last_very_happy_day() -> OneShotRespDTO:
-            return None  # todo
+            last_very_happy = await os_db.get_last_very_happy(user.username)
+            return (
+                None
+                if last_very_happy is None
+                else OneShotRespDTO.from_db_oneshot(last_very_happy)
+            )
 
         async def get_same_day_last_month() -> OneShotRespDTO:
             first_day_of_current_month_d = today_t.replace(day=1)
@@ -208,11 +221,45 @@ class ImageService:
             )
 
         async def get_same_day_last_years() -> list[OneShotRespDTO]:
-            return []  # todo
+            return [
+                OneShotRespDTO.from_db_oneshot(oneshot)
+                for oneshot in await os_db.get_same_day_last_years(
+                    user.username, today_t.strftime("%m-%d")
+                )
+            ]
 
         return FlashbackDTO(
             random_happy=await get_random_happy(),
             last_very_happy_day=await get_last_very_happy_day(),
             same_day_last_month=await get_same_day_last_month(),
             same_date_last_years=await get_same_day_last_years(),
+        )
+
+    async def get_calendar(
+        self, user: UserDTO, month: MonthDTO
+    ) -> list[CalendarEntryRespDTO]:
+        oneshots = await os_db.get_calendar_month(user.username, month)
+        return [
+            CalendarEntryRespDTO(oneshot=OneShotRespDTO.from_db_oneshot(i), date=i.date)
+            for i in oneshots
+        ]
+
+    async def get_statistics(self, user: UserDTO) -> StatisticDTO:
+        today_t = datetime.now()
+
+        def get_days_of_this_week():
+            start_of_week = today_t - timedelta(days=today_t.weekday())
+            days_of_week = [start_of_week + timedelta(days=i) for i in range(7)]
+            return [day.strftime("%Y-%m-%d") for day in days_of_week]
+
+        return StatisticDTO(
+            happiness_current_week=await os_db.get_happiness_statistic(
+                user.username, days=get_days_of_this_week()
+            ),
+            happiness_current_month=await os_db.get_happiness_statistic(
+                user.username, month=today_t.strftime("%Y-%m")
+            ),
+            happiness_current_year=await os_db.get_happiness_statistic(
+                user.username, year=today_t.strftime("%Y")
+            ),
         )

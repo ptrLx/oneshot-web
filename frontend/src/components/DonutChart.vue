@@ -1,13 +1,13 @@
 <template>
     <div class="donut-container">
-        <Doughnut class="donut" :data="data" :options="options" :plugins="plugins" ref="doughnutChart" />
+        <Doughnut class="donut" :data="happinessData" :options="options" :plugins="plugins" ref="doughnutChart" />
     </div>
 </template>
   
 <script lang="ts">
 import { IonAccordion } from '@ionic/vue'
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js'
-import { defineComponent, onMounted, ref } from 'vue'
+import { computed, defineComponent, onMounted, ref } from 'vue'
 import { Doughnut } from 'vue-chartjs'
 
 ChartJS.register(ArcElement, Tooltip, Legend)
@@ -20,7 +20,11 @@ export default defineComponent({
         centerText: {
             type: String,
             default: ''
-        }
+        },
+        data: {
+            type: Object,
+            default: () => ({})
+        },
     },
     setup(props) {
         const ionicFontFamily = getComputedStyle(document.documentElement).getPropertyValue('--ion-font-family').trim()
@@ -41,15 +45,36 @@ export default defineComponent({
             }
         }
 
-        const data = {
-            labels: ['Very Happy', 'Happy', 'Neutral', 'Sad', 'Very Sad'],
-            datasets: [
-                {
-                    backgroundColor: ['#41B883', '#A1C349', '#ccffcc', '#F2C94C', '#cc0000'],
-                    data: [40, 20, 80, 10, 2]
-                }
+        const happinessData = computed(() => {
+
+            let data = [
+                props.data.VERY_HAPPY || 0,
+                props.data.HAPPY || 0,
+                props.data.NEUTRAL || 0,
+                props.data.SAD || 0,
+                props.data.VERY_SAD || 0,
+                props.data.NOT_SPECIFIED || 0
             ]
-        }
+
+            const colors = [
+                getComputedStyle(document.documentElement).getPropertyValue('--color-very-happy').trim(),
+                getComputedStyle(document.documentElement).getPropertyValue('--color-happy').trim(),
+                getComputedStyle(document.documentElement).getPropertyValue('--color-neutral').trim(),
+                getComputedStyle(document.documentElement).getPropertyValue('--color-sad').trim(),
+                getComputedStyle(document.documentElement).getPropertyValue('--color-very-sad').trim(),
+                getComputedStyle(document.documentElement).getPropertyValue('--color-not-specified').trim(),
+            ]
+
+            return {
+                labels: ['Very Happy', 'Happy', 'Neutral', 'Sad', 'Very Sad', 'Not Specified'],
+                datasets: [
+                    {
+                        backgroundColor: colors,
+                        data: data
+                    }
+                ]
+            }
+        })
 
         const options = {
             responsive: true,
@@ -69,7 +94,7 @@ export default defineComponent({
         const plugins = [donutLabel]
 
         return {
-            data,
+            happinessData,
             options,
             plugins
         }

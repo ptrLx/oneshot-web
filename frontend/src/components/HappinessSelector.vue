@@ -31,8 +31,14 @@ export default defineComponent({
         IonCol,
         IonLabel,
     },
+    props: {
+        defaultHappiness: {
+            type: String,
+            required: false,
+        },
+    },
     setup(props, { emit }) {
-        const selectedHappiness = ref(null);
+
         const happinessOptions = [
             { emoji: '😄', value: HappinessDTO.VERY_HAPPY },
             { emoji: '😃', value: HappinessDTO.HAPPY },
@@ -40,6 +46,10 @@ export default defineComponent({
             { emoji: '😞', value: HappinessDTO.SAD },
             { emoji: '😢', value: HappinessDTO.VERY_SAD },
         ];
+
+        const selectedHappiness = ref<HappinessDTO | null>(
+            props.defaultHappiness as HappinessDTO || null
+        );
 
         watch(selectedHappiness, (newValue) => {
             console.log('selectedHappiness changed to', newValue);

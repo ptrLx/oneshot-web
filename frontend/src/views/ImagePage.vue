@@ -1,7 +1,7 @@
 <template>
     <base-layout :page-title="imageTitle" :hide-back-button=false>
         <template #custom-buttons>
-            <ion-button :router-link="`/image/${id}/edit`">
+            <ion-button @click="handleEditClick">
                 <ion-icon :icon="createOutline"></ion-icon>
             </ion-button>
         </template>
@@ -23,6 +23,9 @@ import { useRoute } from 'vue-router'
 import { useImageService } from '@/composables/imageService';
 import { OneShotService } from '@/_generated/api-client';
 import { createOutline, printOutline } from 'ionicons/icons';
+import router from '@/router';
+import { blobStore, metadataStore } from '@/composables/store';
+import { useThemeService } from '@/composables/themeService';
 
 export default defineComponent({
     components: {
@@ -34,6 +37,8 @@ export default defineComponent({
         IonIcon,
     },
     setup() {
+        useThemeService(true) // Set theme to media preference
+
         const route = useRoute()
         const { downloadGalleryImg } = useImageService()
 
@@ -86,11 +91,14 @@ export default defineComponent({
         })
 
 
-        downloadGalleryImg(id).then((blob) => {
+        downloadGalleryImg(id, false).then((blob) => {
+
+            blobStore.setBlob(blob) // store image in local storage in case user wants to edit it
             imgSrc.value = URL.createObjectURL(blob)
         })
 
         OneShotService.getMetadataMetadataGet(id).then((response) => {
+            metadataStore.setMetadata(response) // store metadata in local storage in case user wants to edit it
             if (response.happiness) {
                 imageHappiness.value = happinessMap[response.happiness]
             }
@@ -98,6 +106,11 @@ export default defineComponent({
                 descriptionText.value = response.text
             }
         })
+
+        const handleEditClick = () => {
+
+            router.push(`/image/${id}/edit`)
+        }
 
         return {
             imgSrc,
@@ -108,7 +121,8 @@ export default defineComponent({
             createOutline,
             isOverflowing,
             descriptionRef,
-            id
+            id,
+            handleEditClick,
         }
     }
 });

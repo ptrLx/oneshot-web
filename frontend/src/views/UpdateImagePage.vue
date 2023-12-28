@@ -1,7 +1,14 @@
 <template>
     <base-layout page-title="Edit Image" :hide-back-button=false>
 
-
+        <template #custom-buttons>
+            <ion-button id="presentDelete">
+                <ion-icon :icon="trashOutline"></ion-icon>
+            </ion-button>
+            <ion-alert trigger="presentDelete" header="Are you sure you want to delete this OneShot?"
+                :buttons="alertButtons" class="delete-alert">
+            </ion-alert>
+        </template>
         <ion-grid class="ion-text-center">
             <ion-row>
                 <ion-title>{{ imgDate }}</ion-title>
@@ -13,7 +20,8 @@
             </ion-row>
             <ion-row>
                 <ion-col size="12">
-                    <happiness-selector class="selector" @update:selectedHappiness="handleNewHappiness">
+                    <happiness-selector class="selector" :default-happiness="selectedHappiness?.toString()"
+                        @update:selectedHappiness="handleNewHappiness">
                     </happiness-selector>
                 </ion-col>
             </ion-row>
@@ -26,7 +34,7 @@
             </ion-row>
             <ion-row>
                 <ion-col size="12">
-                    <ion-button shape="round" @click="handleUpload">Upload</ion-button>
+                    <ion-button shape="round" @click="handleUpdate">Update</ion-button>
                 </ion-col>
             </ion-row>
         </ion-grid>
@@ -34,8 +42,8 @@
 </template>
   
 <script lang="ts">
-import { IonAvatar, IonButton, IonGrid, IonRow, IonCol, IonIcon, IonTextarea, useIonRouter, IonToast, toastController, IonTitle, IonImg } from '@ionic/vue';
-
+import { IonAvatar, IonButton, IonGrid, IonRow, IonCol, IonIcon, IonTextarea, useIonRouter, IonAlert, toastController, IonTitle, IonImg } from '@ionic/vue';
+import { trashOutline } from 'ionicons/icons';
 import { defineComponent, ref } from 'vue';
 import { OneShotService, UserService, OpenAPI, ApiError } from '@/_generated/api-client';
 import { routerKey, useRoute } from 'vue-router';
@@ -43,7 +51,9 @@ import { useCameraService } from '@/composables/cameraService';
 import { useImageService } from '@/composables/imageService';
 import HappinessSelector from '@/components/HappinessSelector.vue';
 import { HappinessDTO } from '@/_generated/api-client';
-import { OneShotUpdate } from '@/types/OneShotUpdate';
+import { OneShotRespDTO } from '@/_generated/api-client';
+import { blobStore, metadataStore } from '@/composables/store';
+import { useThemeService } from '@/composables/themeService';
 
 export default defineComponent({
     components: {
@@ -56,20 +66,22 @@ export default defineComponent({
         IonTextarea,
         IonTitle,
         IonImg,
-        HappinessSelector
+        HappinessSelector,
+        IonAlert,
     },
     setup() {
+        useThemeService(true) // Set theme to media preference
 
         const route = useRoute();
         const router = useIonRouter();
         const { takePhoto, pickPhoto, photos } = useCameraService();
-        const { uploadGalleryImg } = useImageService();
 
         const imgDate = ref<string>(route.params.id as string);
-        const uploadedImage = ref<string>("");
-        const description = ref<string>("");
-
-        let selectedHappiness = HappinessDTO.NEUTRAL // Default value
+        const imgSrc = ref<string>(URL.createObjectURL(blobStore.getBlob()));
+        const metadata = metadataStore.getMetadata();
+        const uploadedImage = ref<string>(imgSrc.value);
+        const description = ref<string>(metadata?.text || '');
+        const selectedHappiness = ref<HappinessDTO | null>(metadata?.happiness || null);
 
         switch (route.query.action) {
             case 'capture':
@@ -90,32 +102,51 @@ export default defineComponent({
         }
 
         const handleNewHappiness = (newHappiness: HappinessDTO) => {
-            selectedHappiness = newHappiness;
+            selectedHappiness.value = newHappiness;
         }
 
-        const handleUpload = () => {
+        const handleUpdate = () => {
 
-            const oneShotUpdate: OneShotUpdate = {
-                date: imgDate.value,
-                time: Date.now() / 1000, //TODO: read from image exif data instead
-                happiness: selectedHappiness,
-                text: description.value,
-            };
-
-            uploadGalleryImg(uploadedImage.value, oneShotUpdate).then((respose) => {
+            OneShotService.updateMetadataMetadataUpdatePost(
+                imgDate.value,
+                metadata?.time || 0,
+                selectedHappiness.value,
+                description.value,
+            ).then((response) => {
                 router.push('/home');
-            }).catch((error) => {
-                console.log(error);
-                //TODO: show error message to user
-            });
+            })
         }
+
+        const handleDelete = () => {
+            OneShotService.deleteImageImageDeletePost(imgDate.value).then((response) => {
+                router.push('/home');
+            }, (error: ApiError) => {
+                console.log("An error occurred while deleting the image");
+            })
+        }
+
+        const alertButtons = [
+            {
+                text: 'Delete',
+                //cssClass: 'alertButtonDelete', // Styling not working here
+                handler: handleDelete,
+            },
+            {
+                text: 'Cancel',
+                role: 'cancel',
+            },
+        ];
+
 
         return {
             uploadedImage,
             imgDate,
             description,
             handleNewHappiness,
-            handleUpload
+            handleUpdate,
+            selectedHappiness,
+            trashOutline,
+            alertButtons,
         };
     },
 });
@@ -161,6 +192,10 @@ ion-img::part(image) {
     margin-bottom: 5px;
     margin-left: 10%;
     margin-right: 10%;
+}
+
+ion-alert.delete-alert {
+    --backdrop-opacity: 0.7;
 }
 </style>
 

@@ -44,10 +44,10 @@ Store the `.env` file and the `ìnit.sql` file next to the `docker-compose.yml`
 `.env`:
 
 ```conf
-TZ="Europe/Berlin"
+DATABASE_HOST="oneshot-web-db"
 HOST_URL="example.com"
 POSTGRES_PASSWORD="change_this_password"
-DATABASE_HOST="oneshot-web-db"
+TZ="Europe/Berlin"
 ```
 
 `init.sql`:

@@ -1,6 +1,6 @@
 import FormData from 'form-data'
 import axios, { AxiosRequestConfig } from 'axios';
-import { OpenAPI } from '@/_generated/api-client';
+import { OneShotRespDTO, OpenAPI } from '@/_generated/api-client';
 import { OneShotUpdate } from '@/types/OneShotUpdate';
 import { useCookies } from 'vue3-cookies'
 
@@ -43,15 +43,15 @@ export const useImageService = () => {
         return await loadImg(endpoint);
     }
     
-    const uploadGalleryImg = async (src: string, data: OneShotUpdate) => {
+    const uploadGalleryImg = async (src: string, data: OneShotRespDTO) => {
         let endpoint = OpenAPI.BASE + "/image/upload";
         const fileName = `${data.date}_${data.time}.png`;
 
         const params = new URLSearchParams();
         params.append('date', data.date);
         params.append('time', Math.floor(data.time).toString());
-        params.append('happiness', data.happiness);
-        params.append('text', data.text);
+        params.append('happiness', data.happiness?.toString() || '');
+        params.append('text', data.text?.toString() || '');
 
         endpoint += `?${params.toString()}`
 

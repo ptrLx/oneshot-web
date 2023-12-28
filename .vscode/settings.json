@@ -9,7 +9,9 @@
     ],
     "cSpell.words": [
         "admcore",
+        "admdata",
         "admintools",
+        "admservice",
         "aiofiles",
         "devcontainer",
         "fastapi",

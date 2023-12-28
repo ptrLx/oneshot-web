@@ -17,17 +17,7 @@
         <ion-grid class="ion-text-center">
             <ion-row>
                 <ion-col size="12">
-                    <ion-button shape="round">Toggle theme</ion-button>
-                </ion-col>
-            </ion-row>
-            <ion-row>
-                <ion-col size="12">
-                    <ion-button shape="round">Export database</ion-button>
-                </ion-col>
-            </ion-row>
-            <ion-row>
-                <ion-col size="12">
-                    <ion-button shape="round">Import database</ion-button>
+                    <ion-button shape="round" @click="toggleTheme">Toggle theme</ion-button>
                 </ion-col>
             </ion-row>
             <ion-row>
@@ -57,13 +47,13 @@
 <script lang="ts">
 import { IonAvatar, IonButton, IonGrid, IonRow, IonCol, IonIcon, IonTitle, useIonRouter, IonImg, IonActionSheet } from '@ionic/vue';
 import { OneShotService, UserService, OpenAPI, ApiError } from '@/_generated/api-client';
-import { cameraOutline, chatboxEllipsesOutline, constructOutline, image } from 'ionicons/icons';
+import { cameraOutline, chatboxEllipsesOutline, constructOutline, image, toggle } from 'ionicons/icons';
 import { computed, defineComponent, onMounted, ref } from 'vue';
 import { useCookies } from 'vue3-cookies'
 import { useCameraService } from '@/composables/cameraService';
 import { useImageService } from '@/composables/imageService';
-
-
+import { store } from '@/composables/store';
+import { useThemeService } from '@/composables/themeService';
 
 export default defineComponent({
     components: {
@@ -78,7 +68,6 @@ export default defineComponent({
         IonActionSheet
     },
     setup() {
-
         const router = useIonRouter();
         const { cookies } = useCookies();
         OpenAPI.TOKEN = cookies.get("token");
@@ -87,6 +76,7 @@ export default defineComponent({
         const blobUrl = ref<string>("");
         const { takePhoto, pickPhoto, photos } = useCameraService();
         const { loadImg, uploadProfileImg } = useImageService();
+        const { toggleTheme } = useThemeService(true);
 
         const actionSheetButtons = [
             {
@@ -96,6 +86,7 @@ export default defineComponent({
                     takePhoto().then(() => {
                         blobUrl.value = photos.value[0]?.webviewPath || '';
                         uploadProfileImg(blobUrl.value);
+                        store.notifyProfilePicUpdate();
                     });
                 }
             },
@@ -106,6 +97,7 @@ export default defineComponent({
                     pickPhoto().then(() => {
                         blobUrl.value = photos.value[0]?.webviewPath || '';
                         uploadProfileImg(blobUrl.value);
+                        store.notifyProfilePicUpdate();
                     });
                 }
             },
@@ -145,6 +137,7 @@ export default defineComponent({
             profilePic,
             blobUrl,
             handleLogout,
+            toggleTheme,
             username,
             actionSheetButtons,
         };

@@ -59,7 +59,7 @@ export default defineComponent({
 ion-title {
     margin-top: 10px;
     font-size: 1rem;
-    color: var(--ion-color-primary-contrast);
+    color: var(--ion-color-light-contrast);
 }
 
 .ion-button,

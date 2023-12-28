@@ -45,6 +45,16 @@ class ADMUserDB(UserDB):
 
         return await prisma.user.find_many(take=9999)
 
+    async def get_enabled_users(self) -> List[DBUser]:
+        prisma = await app_config.get_prisma_conn()
+
+        return await prisma.user.find_many(take=9999, where={"disabled": False})
+
+    async def get_disabled_users(self) -> List[DBUser]:
+        prisma = await app_config.get_prisma_conn()
+
+        return await prisma.user.find_many(take=9999, where={"disabled": True})
+
     async def disable_user(self, username: str):
         prisma = await app_config.get_prisma_conn()
 

@@ -9,6 +9,7 @@ from router.flashback import router as flashback_router
 from router.image import router as image_router
 from router.login import router as login_router
 from router.metadata import router as metadata_router
+from router.statistic import router as statistic_router
 from router.user import router as user_router
 
 app_config = config.get_config()
@@ -47,6 +48,7 @@ app.include_router(image_router, prefix="/image", tags=["OneShot"])
 app.include_router(metadata_router, prefix="/metadata", tags=["OneShot"])
 app.include_router(flashback_router, prefix="/flashback", tags=["OneShot"])
 app.include_router(calendar_router, prefix="/calendar", tags=["Calendar"])
+app.include_router(statistic_router, prefix="/stats", tags=["Statistics"])
 
 
 logger.info(f"Running in stage {app_config.STAGE}.")
