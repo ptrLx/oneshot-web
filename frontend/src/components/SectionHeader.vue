@@ -86,5 +86,14 @@ export default defineComponent({
     font-size: 0.5rem;
     --background: transparent;
     --color: var(--ion-color-primary);
+    --box-shadow: none;
+}
+
+.button:hover {
+    --background: transparent;
+    --color: var(--ion-color-primary);
+    --box-shadow: none;
+    /* slightly scale up */
+    transform: scale(1.4);
 }
 </style>

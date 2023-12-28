@@ -17,7 +17,7 @@
         <ion-grid class="ion-text-center">
             <ion-row>
                 <ion-col size="12">
-                    <ion-button shape="round">Toggle theme</ion-button>
+                    <ion-button shape="round" @click="toggleTheme">Toggle theme</ion-button>
                 </ion-col>
             </ion-row>
             <ion-row>
@@ -53,6 +53,7 @@ import { useCookies } from 'vue3-cookies'
 import { useCameraService } from '@/composables/cameraService';
 import { useImageService } from '@/composables/imageService';
 import { store } from '@/composables/store';
+import { useThemeService } from '@/composables/themeService';
 
 export default defineComponent({
     components: {
@@ -67,9 +68,6 @@ export default defineComponent({
         IonActionSheet
     },
     setup() {
-        // set @media (prefers-color-scheme: dark)  to light
-        document.body.classList.toggle('dark');
-
         const router = useIonRouter();
         const { cookies } = useCookies();
         OpenAPI.TOKEN = cookies.get("token");
@@ -78,6 +76,7 @@ export default defineComponent({
         const blobUrl = ref<string>("");
         const { takePhoto, pickPhoto, photos } = useCameraService();
         const { loadImg, uploadProfileImg } = useImageService();
+        const { toggleTheme } = useThemeService(true);
 
         const actionSheetButtons = [
             {
@@ -138,6 +137,7 @@ export default defineComponent({
             profilePic,
             blobUrl,
             handleLogout,
+            toggleTheme,
             username,
             actionSheetButtons,
         };

@@ -36,6 +36,7 @@ import { defineComponent, popScopeId, ref } from 'vue';
 import { OneShotService, UserService, OpenAPI, ApiError } from '@/_generated/api-client';
 import { useCookies } from 'vue3-cookies'
 import { routerKey } from 'vue-router';
+import { useThemeService } from '@/composables/themeService';
 
 export default defineComponent({
     components: {
@@ -54,6 +55,8 @@ export default defineComponent({
         const oldpw = ref<string>("");
         const newpw = ref<string>("");
         const router = useIonRouter();
+
+        useThemeService(true) // Set theme to media preference
 
         const requestUserInfo = () => {
             UserService.getUserMeUserMeGet().then((user) => {

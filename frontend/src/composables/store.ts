@@ -27,3 +27,16 @@ export const metadataStore = reactive({
         return this.metadata;
     }
 })
+
+export const theme = reactive({
+    theme: '',
+    setTheme(theme: string) {
+        this.theme = theme;
+    },
+    getTheme() {
+        return this.theme;
+    },
+    isSet() {
+        return this.theme !== '';
+    }
+})

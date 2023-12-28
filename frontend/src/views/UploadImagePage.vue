@@ -44,6 +44,7 @@ import { useImageService } from '@/composables/imageService';
 import HappinessSelector from '@/components/HappinessSelector.vue';
 import { HappinessDTO } from '@/_generated/api-client';
 import { OneShotUpdate } from '@/types/OneShotUpdate';
+import { useThemeService } from '@/composables/themeService';
 
 export default defineComponent({
     components: {
@@ -59,6 +60,7 @@ export default defineComponent({
         HappinessSelector
     },
     setup() {
+        useThemeService(true) // Set theme to media preference
 
         const route = useRoute();
         const router = useIonRouter();

@@ -25,6 +25,7 @@ import { OneShotService } from '@/_generated/api-client';
 import { createOutline, printOutline } from 'ionicons/icons';
 import router from '@/router';
 import { blobStore, metadataStore } from '@/composables/store';
+import { useThemeService } from '@/composables/themeService';
 
 export default defineComponent({
     components: {
@@ -36,6 +37,8 @@ export default defineComponent({
         IonIcon,
     },
     setup() {
+        useThemeService(true) // Set theme to media preference
+
         const route = useRoute()
         const { downloadGalleryImg } = useImageService()
 

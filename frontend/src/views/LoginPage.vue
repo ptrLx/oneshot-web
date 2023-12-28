@@ -37,7 +37,7 @@ import { cameraOutline } from 'ionicons/icons';
 import { defineComponent, ref } from 'vue';
 import { OneShotService, UserService, OpenAPI, ApiError } from '@/_generated/api-client';
 import { useCookies } from 'vue3-cookies'
-import { routerKey } from 'vue-router';
+import { useThemeService } from '@/composables/themeService';
 
 export default defineComponent({
     components: {
@@ -54,6 +54,8 @@ export default defineComponent({
         const username = ref<string>("");
         const password = ref<string>("");
         const router = useIonRouter();
+
+        useThemeService(true) // Set theme to media preference
 
         const requestUserInfo = () => {
             UserService.getUserMeUserMeGet().then((user) => {

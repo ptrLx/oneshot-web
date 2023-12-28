@@ -93,7 +93,9 @@ import { useRouter } from 'vue-router';
 import { ApiError, StatisticsService, StatisticDTO } from '@/_generated/api-client';
 import { onMounted, ref } from 'vue';
 import { useFlashbackService, FlashbackUrlAndMeta } from '@/composables/flashbackService';
+import { useThemeService } from '@/composables/themeService';
 
+useThemeService(true) // Set theme to media preference
 
 const router = useRouter();
 const { getFlashbacks } = useFlashbackService();

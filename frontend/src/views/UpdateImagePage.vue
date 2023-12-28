@@ -53,6 +53,7 @@ import HappinessSelector from '@/components/HappinessSelector.vue';
 import { HappinessDTO } from '@/_generated/api-client';
 import { OneShotRespDTO } from '@/_generated/api-client';
 import { blobStore, metadataStore } from '@/composables/store';
+import { useThemeService } from '@/composables/themeService';
 
 export default defineComponent({
     components: {
@@ -69,6 +70,7 @@ export default defineComponent({
         IonAlert,
     },
     setup() {
+        useThemeService(true) // Set theme to media preference
 
         const route = useRoute();
         const router = useIonRouter();
