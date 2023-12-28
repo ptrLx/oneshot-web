@@ -175,7 +175,10 @@ class OneShotDB:
         total_count = len(happinesses)
         if total_count:
             for i in happinesses:
-                happiness_count[i] += 1
+                if i is None:
+                    happiness_count["NOT_SPECIFIED"] += 1
+                else:
+                    happiness_count[i] += 1
             happiness_percentage = {
                 category: int(count * 100 / total_count)
                 for category, count in happiness_count.items()
