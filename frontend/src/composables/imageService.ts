@@ -8,7 +8,7 @@ export const useImageService = () => {
 
     const { cookies } = useCookies();
     OpenAPI.TOKEN = cookies.get("token");
-    
+
     const loadImg = async (src: string) => {
 
         const config: AxiosRequestConfig<any> = {
@@ -26,13 +26,13 @@ export const useImageService = () => {
     const uploadProfileImg = async (src: string) => {
         const endpoint = OpenAPI.BASE + "/user/profileimg";
         const fileName = 'profile.png';
-    
+
         return await uploadImage(src, endpoint, fileName);
     };
 
     const downloadGalleryImg = async (date: string, preview: boolean = true) => {
         let endpoint = OpenAPI.BASE + "/image/download";
-        
+
         const params = new URLSearchParams();
 
         params.append('date', date);
@@ -42,8 +42,8 @@ export const useImageService = () => {
 
         return await loadImg(endpoint);
     }
-    
-    const uploadGalleryImg = async (src: string, data: OneShotRespDTO) => {
+
+    const uploadGalleryImg = async (src: string, data: Omit<OneShotRespDTO, 'file_name'>) => {
         let endpoint = OpenAPI.BASE + "/image/upload";
         const fileName = `${data.date}_${data.time}.png`;
 
@@ -68,7 +68,7 @@ export const useImageService = () => {
             const file = await fetch(src).then(res => res.blob());
             const formData = new FormData();
             formData.append('file', file, fileName);
-    
+
             const response = await axios.post(endpoint, formData, {
                 headers: {
                     'Authorization': 'Bearer ' + OpenAPI.TOKEN,
@@ -76,7 +76,7 @@ export const useImageService = () => {
                     ...headers,
                 },
             });
-    
+
             console.log('Upload successful', response);
             return response;
         } catch (error) {
@@ -84,7 +84,7 @@ export const useImageService = () => {
             return error;
         }
     };
-    
+
     return {
         loadImg,
         uploadProfileImg,
