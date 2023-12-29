@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.2](https://github.com/ptrLx/oneshot-web/compare/v1.2.1...v1.2.2) (2023-12-29)
+
+
+### Bug Fixes
+
+* **frontend:** added right api path for production ([b0319a3](https://github.com/ptrLx/oneshot-web/commit/b0319a3aee11aafcbb216d735e9dbcd611ef73d5))
+
 ## [1.2.1](https://github.com/ptrLx/oneshot-web/compare/v1.2.0...v1.2.1) (2023-12-28)
 
 
