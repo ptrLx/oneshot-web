@@ -48,8 +48,7 @@ if (nodeEnv === 'development') {
 }
 else {
   // production
-  OpenAPI.BASE = 'http://localhost:8080/api';
-  console.log('Running oneshot-web in production mode');
+  OpenAPI.BASE = '/api';
 }
 
 const app = createApp(App)
