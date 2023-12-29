@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.1](https://github.com/ptrLx/oneshot-web/compare/v1.2.0...v1.2.1) (2023-12-28)
+
+
+### Bug Fixes
+
+* **frontend:** uploadGalleryImg ([211a51d](https://github.com/ptrLx/oneshot-web/commit/211a51d17c846efb371b249fbf7568fc5a348c6b))
+
 ## [1.2.0](https://github.com/ptrLx/oneshot-web/compare/v1.1.0...v1.2.0) (2023-12-28)
 
 
