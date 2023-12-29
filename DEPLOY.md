@@ -33,7 +33,7 @@ services:
       db:
         condition: service_started
     volumes:
-      - ./app/:/srv/oneshot
+      - ./app/:/srv/oneshot:Z
     restart: unless-stopped
 
 networks:

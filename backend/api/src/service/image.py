@@ -224,7 +224,9 @@ class ImageService:
             return [
                 OneShotRespDTO.from_db_oneshot(oneshot)
                 for oneshot in await os_db.get_same_day_last_years(
-                    user.username, today_t.strftime("%m-%d")
+                    user.username,
+                    today_t.strftime("%m-%d"),
+                    today_t.strftime("%Y-%m-%d"),
                 )
             ]
 

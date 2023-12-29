@@ -123,7 +123,7 @@ class CLI:
                 return oneshot
 
     async def __handle_user_create(self) -> None:
-        username = await inquirer.text(message="Username:").execute_async()
+        username = (await inquirer.text(message="Username:").execute_async()).lower()
 
         user = await user_db.get_user(username)
 

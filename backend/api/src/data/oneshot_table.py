@@ -98,7 +98,7 @@ class OneShotDB:
         )
 
     async def get_same_day_last_years(
-        self, username, month_day: str
+        self, username, month_day: str, today: str
     ) -> list[DBOneShot]:
         prisma = await app_config.get_prisma_conn()
 
@@ -106,7 +106,13 @@ class OneShotDB:
 
         return await prisma.oneshot.find_many(
             order={"date": "desc"},
-            where={"AND": [{"username": username}, {"date": {"endswith": month_day}}]},
+            where={
+                "AND": [
+                    {"username": username},
+                    {"date": {"endswith": month_day}},
+                    {"date": {"not": {"equals": today}}},
+                ]
+            },
         )
 
     async def get_calendar_month(
