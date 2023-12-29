@@ -1,5 +1,7 @@
 # Deployment of oneshot-web
 
+Attention: oneshot-web comes with absolutely no warranty and is currently in beta phase! Please check out the repository on [GitHub](https://github.com/ptrLx/oneshot-web).
+
 Use following `docker-compose.yml`-template to host oneshot-web:
 
 ```yml
@@ -60,5 +62,5 @@ GRANT ALL PRIVILEGES ON DATABASE osweb TO postgres;
 ## Start the admintools to create a user
 
 ```bash
-docker exec -it os-web-compose-app /bin/bash -c "cd /api && pipenv run python admintools/main.py"
+docker exec -it oneshot-web-app /bin/bash -c "cd /api && pipenv run python admintools/main.py"
 ```
