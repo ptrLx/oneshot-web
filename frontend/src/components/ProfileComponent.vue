@@ -1,7 +1,7 @@
 <template>
   <router-link to="/profile">
     <ion-avatar class="avatar-icon">
-      <ion-img v-if="blobUrl" :src="blobUrl" />
+      <ion-img v-if="blobUrl" :src="blobUrl" alt="Profile picture of the current user" />
       <div class="avatar-overlay"></div>
     </ion-avatar>
   </router-link>

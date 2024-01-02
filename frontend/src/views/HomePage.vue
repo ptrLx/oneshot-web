@@ -19,7 +19,7 @@
         <swiper-slide v-if="hasImage('random_happy')">
           <card card-title="Random Happy Day">
             <router-link :to="`/image/${flashbackImgs['random_happy']?.meta.date}`">
-              <ion-img :src="flashbackImgs['random_happy']?.url">
+              <ion-img :src="flashbackImgs['random_happy']?.url" alt="Image of a random happy day.">
               </ion-img>
             </router-link>
           </card>
@@ -27,21 +27,21 @@
         <swiper-slide v-if="hasImage('last_very_happy_day')">
           <card card-title="Last Very Happy Day">
             <router-link :to="`/image/${flashbackImgs['last_very_happy_day']?.meta.date}`">
-              <ion-img :src="flashbackImgs['last_very_happy_day']?.url"></ion-img>
+              <ion-img :src="flashbackImgs['last_very_happy_day']?.url" alt="Image of the last very happy day."></ion-img>
             </router-link>
           </card>
         </swiper-slide>
         <swiper-slide v-if="hasImage('same_day_last_month')">
           <card card-title="Same Day Last Month">
             <router-link :to="`/image/${flashbackImgs['same_day_last_month']?.meta.date}`">
-              <ion-img :src="flashbackImgs['same_day_last_month']?.url"></ion-img>
+              <ion-img :src="flashbackImgs['same_day_last_month']?.url" alt="Image of the same day last month."></ion-img>
             </router-link>
           </card>
         </swiper-slide>
         <swiper-slide v-for="(image, index) in getSameDateLastYearsImages(flashbackImgs)" :key="index">
           <card :card-title=getCardTitle(image.meta.date)>
             <router-link :to="`/image/${image.meta.date}`">
-              <ion-img :src="image.url"></ion-img>
+              <ion-img :src="image.url" :alt="`Image of the day ${index} years ago.`"></ion-img>
             </router-link>
           </card>
         </swiper-slide>

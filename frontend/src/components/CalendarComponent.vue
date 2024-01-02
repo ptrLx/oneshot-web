@@ -134,6 +134,15 @@ ion-datetime {
     --background: var(--ion-color-light);
 }
 
+
+
+ion-datetime::part(calendar-day) {
+    /* text color */
+    color: var(--ion-color-dark-contrast);
+}
+
+
+
 ion-datetime::part(calendar-day today) {
     box-shadow: 0px 0px 0px 5px color-mix(in srgb, var(--ion-color-primary), transparent 66%);
 }
