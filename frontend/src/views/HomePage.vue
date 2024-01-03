@@ -2,8 +2,13 @@
   <ion-page>
     <ion-header :translucent="true">
       <ion-toolbar>
-        <ion-title>OneShot</ion-title>
-        <ion-title size="small">Remember the happy days!</ion-title>
+        <ion-title>
+          <div>
+            <span class="title-main">OneShot</span>
+            <br>
+            <span class="title-sub">Remember the happy days!</span>
+          </div>
+        </ion-title>
 
         <profile-component slot="end"></profile-component>
       </ion-toolbar>
@@ -81,7 +86,7 @@
 </template>
 
 <script setup lang="ts">
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonImg, IonRefresher, IonRefresherContent } from '@ionic/vue';
+import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonImg, IonRefresher, IonRefresherContent, IonText } from '@ionic/vue';
 import { SwiperSlide } from 'swiper/vue';
 import RowComponent from '@/components/RowComponent.vue';
 import ProfileComponent from '@/components/ProfileComponent.vue';
@@ -132,6 +137,10 @@ const getCardTitle = (flashbackDate: string) => {
     return words[number] || number.toString();
   }
 
+  if (differenceInYears === 0) {
+    return 'One Year Ago';
+  }
+
   return `${toWords(differenceInYears)} Years Ago`;
 }
 
@@ -159,14 +168,25 @@ const updateActions = (event: CustomEvent = { detail: { complete: () => { } } } 
 </script>
 
 <style scoped>
-#container {
-  text-align: center;
+ion-toolbar {
+  line-height: 0.9;
+}
 
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 50%;
-  transform: translateY(-50%);
+.title-main {
+  font-size: 18px;
+}
+
+.title-sub {
+  font-size: 12px;
+  color: var(--ion-color-primary-tint);
+}
+
+#container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
 }
 
 #container strong {

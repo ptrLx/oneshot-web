@@ -9,9 +9,12 @@
                 </ion-button>
             </ion-avatar>
         </div>
-        <ion-title class="ion-text-center">
-            <h1>{{ username }}</h1>
-        </ion-title>
+        <div class="ios-container">
+            <ion-title class="ion-text-center">
+                <h1>{{ username }}</h1>
+            </ion-title>
+        </div>
+
 
         <!-- Buttons Section -->
         <ion-grid class="ion-text-center">
@@ -166,6 +169,20 @@ export default defineComponent({
     scale: 0.3;
     height: 70px;
     width: 70px;
+}
+
+.ios .change-profile-pic-button {
+    top: 5px;
+    left: 5px;
+}
+
+.ios .ios-container {
+    margin-top: 0px;
+    height: 50px;
+}
+
+.ios ion-title {
+    position: inherit;
 }
 
 ion-button {

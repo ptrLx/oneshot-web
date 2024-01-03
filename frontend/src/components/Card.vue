@@ -43,5 +43,9 @@ export default defineComponent({
     background-color: var(--ion-color-light);
     border-radius: 20px;
 }
+
+.ios ion-card-title {
+    font-size: 1.0rem;
+}
 </style>
   

@@ -62,6 +62,16 @@ ion-title {
     color: var(--ion-color-dark-contrast);
 }
 
+.ios ion-title {
+    display: block;
+    padding-inline: 0px;
+    font-size: 1.0rem;
+}
+
+.ios ion-grid {
+    margin-top: 20px;
+}
+
 .ion-button,
 ion-button {
     margin-top: 30px;

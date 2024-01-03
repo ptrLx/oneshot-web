@@ -76,10 +76,13 @@ export default defineComponent({
 
 
 .title {
-
     font-size: 1.2rem;
     padding-top: 10px;
     padding-bottom: 10px;
+}
+
+.ios .title {
+    padding-inline: 0px;
 }
 
 .button {
