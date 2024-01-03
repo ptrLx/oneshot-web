@@ -11,7 +11,11 @@
         </template>
         <ion-grid class="ion-text-center">
             <ion-row>
-                <ion-title>{{ imgDate }}</ion-title>
+                <ion-title>
+                    <div class="ios-container">
+                        {{ imgDate }}
+                    </div>
+                </ion-title>
             </ion-row>
             <ion-row>
                 <ion-col size="12">
@@ -154,6 +158,16 @@ export default defineComponent({
 </script>
 
 <style scoped>
+.ios .ios-container {
+    margin-top: 20px;
+    height: 10%;
+    width: 100%;
+}
+
+.ios ion-title {
+    position: inherit;
+}
+
 ion-textarea {
     height: 250px;
     width: 80%;
@@ -169,6 +183,11 @@ ion-button {
     width: 80%;
     height: 50px;
     margin-top: 20px;
+}
+
+.ios ion-button {
+    margin-top: 0px;
+    height: inherit;
 }
 
 ion-img {
