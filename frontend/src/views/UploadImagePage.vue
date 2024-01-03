@@ -168,6 +168,9 @@ ion-img {
 
 ion-img::part(image) {
     border-radius: 50px;
+    border: 1px dashed var(--ion-color-primary);
+    overflow: hidden;
+    object-fit: cover;
 }
 
 .selector {
