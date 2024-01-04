@@ -22,7 +22,7 @@ export default defineComponent({
   },
   setup() {
 
-    const blobUrl = ref<string>("");
+    const blobUrl = ref<string>("https://ionicframework.com/docs/img/demos/avatar.svg");
     const { loadImg } = useImageService();
 
     const updateProfilePic = () => {

@@ -3,7 +3,7 @@
 
         <div class="logo">
             <ion-avatar>
-                <img alt="Silhouette of a person's head" src="https://ionicframework.com/docs/img/demos/avatar.svg" />
+                <img alt="OneShot logo" src="/icons/512.png" />
             </ion-avatar>
         </div>
         <!-- Login Section -->

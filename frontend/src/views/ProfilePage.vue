@@ -76,7 +76,7 @@ export default defineComponent({
         OpenAPI.TOKEN = cookies.get("token");
         const username = ref<string>("");
         const profilePic = ref<string | null>(null);
-        const blobUrl = ref<string>("");
+        const blobUrl = ref<string>("https://ionicframework.com/docs/img/demos/avatar.svg");
         const { takePhoto, pickPhoto, photos } = useCameraService();
         const { loadImg, uploadProfileImg } = useImageService();
         const { toggleTheme } = useThemeService(true);
@@ -131,6 +131,8 @@ export default defineComponent({
             loadImg(queryString).then(blob => {
 
                 blobUrl.value = URL.createObjectURL(blob);
+            }).catch((e: ApiError) => {
+                console.log("Profile image not found");
             })
         });
 
