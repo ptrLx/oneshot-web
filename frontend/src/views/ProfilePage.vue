@@ -99,8 +99,9 @@ export default defineComponent({
                 handler: () => {
                     pickPhoto().then(() => {
                         blobUrl.value = photos.value[0]?.webviewPath || '';
-                        uploadProfileImg(blobUrl.value);
-                        store.notifyProfilePicUpdate();
+                        uploadProfileImg(blobUrl.value).then(() => {
+                            store.notifyProfilePicUpdate();
+                        });
                     });
                 }
             },

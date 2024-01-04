@@ -20,41 +20,8 @@ export const useFlashbackService = () => {
         const flashbackImgs : { [key: string]: FlashbackUrlAndMeta } = {};
 
         await OneShotService.getFlashbacksFlashbackGet().then( async (res) => {
-
             const flashbacks = res;
-            // const flashbacks = {
-            //     "random_happy": {
-            //     "date": "2023-12-03",
-            //     "time": 0,
-            //     "happiness": "VERY_HAPPY",
-            //     "text": "string",
-            //     "file_name": "string"
-            //     },
-            //     "last_very_happy_day": {
-            //     "date": "2023-12-04",
-            //     "time": 0,
-            //     "happiness": "VERY_HAPPY",
-            //     "text": "string",
-            //     "file_name": "string"
-            //     },
-            //     "same_day_last_month": {
-            //     "date": "2023-12-05",
-            //     "time": 0,
-            //     "happiness": "VERY_HAPPY",
-            //     "text": "string",
-            //     "file_name": "string"
-            //     },
-            //     "same_date_last_years": [
-            //     {
-            //         "date": "2023-12-06",
-            //         "time": 0,
-            //         "happiness": "VERY_HAPPY",
-            //         "text": "string",
-            //         "file_name": "string"
-            //     }
-            //     ]
-            // };
-        
+            
             // loop through all flashbacks and download the images
             for (const key of Object.keys(flashbacks)) {
                 const flashback = flashbacks[key as keyof FlashbackDTO];
@@ -78,6 +45,10 @@ export const useFlashbackService = () => {
                     }
                 }
                 else {
+                    if (flashback === null) {
+                        continue;
+                    }
+
                     // Handle single OneShotRespDTO type
                     await downloadGalleryImg(flashback?.date ?? '', isPreview).then((blob) => {
                     const img = URL.createObjectURL(blob);

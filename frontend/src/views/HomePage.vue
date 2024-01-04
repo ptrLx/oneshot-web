@@ -159,7 +159,6 @@ const updateActions = (event: CustomEvent = { detail: { complete: () => { } } } 
 
   StatisticsService.getStatisticsStatsGet().then((response) => {
     stats.value = response;
-    console.log(stats.value.happiness_current_week);
   }).catch((err: ApiError) => {
     console.log("Could not retrieve stats");
   });

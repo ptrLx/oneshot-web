@@ -77,10 +77,10 @@ export const useImageService = () => {
                 },
             });
 
-            console.log('Upload successful', response);
+            console.log('Image Upload successful');
             return response;
         } catch (error) {
-            console.log('Error uploading image', error);
+            console.log('Error uploading image');
             return error;
         }
     };
