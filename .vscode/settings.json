@@ -39,4 +39,11 @@
     "python.analysis.extraPaths": [
         "./backend/api/src"
     ],
+    "editor.codeActionsOnSave": {
+        "source.fixAll.eslint": "explicit"
+    },
+    "eslint.validate": [
+        "typescript",
+        "vue"
+    ],
 }
