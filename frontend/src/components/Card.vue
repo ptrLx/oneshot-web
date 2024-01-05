@@ -5,10 +5,11 @@
             <ion-card-title> {{ cardTitle }} </ion-card-title>
             <ion-card-subtitle> {{ cardSubtitle }}</ion-card-subtitle>
         </ion-card-header>
+
         <slot></slot>
+
     </ion-card>
 </template>
-  
 <script lang="ts">
 import { defineComponent } from 'vue';
 import { IonCard, IonCardHeader, IonCardSubtitle, IonCardTitle } from '@ionic/vue';

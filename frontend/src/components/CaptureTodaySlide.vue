@@ -1,6 +1,5 @@
 <template>
-    <card>
-        <ion-title>Capture Today</ion-title>
+    <card cardTitle="Capture Today">
         <ion-grid>
             <ion-row>
                 <ion-col size="6">
@@ -16,7 +15,7 @@
 
 <script lang="ts">
 
-import { IonCard, IonButton, IonTitle, IonGrid, IonRow, IonCol } from '@ionic/vue';
+import { IonButton, IonTitle, IonGrid, IonRow, IonCol } from '@ionic/vue';
 import { defineComponent } from 'vue';
 import Card from '@/components/Card.vue';
 import router from '@/router';
@@ -26,7 +25,6 @@ export default defineComponent({
     components: {
         Card,
         IonButton,
-        IonTitle,
         IonGrid,
         IonRow,
         IonCol
@@ -73,7 +71,7 @@ ion-title {
 
 .ion-button,
 ion-button {
-    margin-top: 30px;
+    margin-top: 0px;
     transform: scale(1.2);
     width: 70%;
 }
