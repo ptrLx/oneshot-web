@@ -9,9 +9,9 @@
   
 <script lang="ts">
 import { IonDatetime, IonButton } from '@ionic/vue';
-import { defineComponent, ref, onMounted, watch, nextTick, Ref } from 'vue';
+import { defineComponent, ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
-import { ApiError, CalendarService } from '@/_generated/api-client';
+import { CalendarService } from '@/_generated/api-client';
 import { CalendarEntryRespDTO } from '@/_generated/api-client/models/CalendarEntryRespDTO';
 import { HappinessDTO } from '@/_generated/api-client/models/HappinessDTO';
 import { OneShotService } from '@/_generated/api-client';
@@ -24,7 +24,6 @@ export default defineComponent({
     setup() {
 
         const router = useRouter();
-        const datetime: Ref<typeof IonDatetime | null> = ref(null);
         const selectedDate = ref<string>((new Date).toISOString());
         const displayedMonth = ref<string>('');
         const highlightedDates = ref<{ date: string; textColor: string, backgroundColor: string }[]>();
@@ -69,7 +68,7 @@ export default defineComponent({
         };
 
         const updateHighlightedDates = (response: CalendarEntryRespDTO[]) => {
-            let result = response.map((item) => {
+            const result = response.map((item) => {
                 let bgColor = '';
                 const happinessState = item.oneshot?.happiness;
                 switch (happinessState) {
@@ -106,11 +105,11 @@ export default defineComponent({
             return result;
         };
 
-        const handleSelection = async (event: CustomEvent) => {
+        const handleSelection = async () => {
             const formattedDate = new Date(selectedDate.value).toLocaleDateString('en-CA');
-            OneShotService.getMetadataMetadataGet(formattedDate).then((response) => {
+            OneShotService.getMetadataMetadataGet(formattedDate).then(() => {
                 router.push("/image/" + formattedDate);
-            }, (e: ApiError) => {
+            }, () => {
                 console.log("No image for this date exists");
             })
         };

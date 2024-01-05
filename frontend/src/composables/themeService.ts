@@ -1,7 +1,7 @@
 import { theme } from '@/composables/store';
 import { onMounted } from 'vue';
 
-export const useThemeService = (mediaPreferred : boolean = true) => {
+export const useThemeService = (mediaPreferred  = true) => {
 
     onMounted(() => {
         if (mediaPreferred) {

@@ -8,9 +8,8 @@
 </template>
 
 <script lang="ts">
-import { IonAvatar, IonImg, onIonViewDidEnter } from '@ionic/vue';
+import { IonAvatar, IonImg } from '@ionic/vue';
 import { defineComponent, ref, onMounted, watch } from 'vue';
-import axios, { AxiosRequestConfig } from 'axios';
 import { OpenAPI } from '@/_generated/api-client'
 import { useImageService } from '@/composables/imageService';
 import { store } from '@/composables/store';

@@ -17,14 +17,13 @@
 </template>
 
 <script lang="ts">
-import { IonLabel, IonButton, IonGrid, IonRow, IonCol, IonTitle, IonIcon, } from '@ionic/vue';
+import { IonButton, IonGrid, IonRow, IonCol, IonTitle, IonIcon, } from '@ionic/vue';
 import { defineComponent } from 'vue';
 import { arrowForwardOutline } from 'ionicons/icons';
 
 
 export default defineComponent({
     components: {
-        IonLabel,
         IonButton,
         IonGrid,
         IonRow,

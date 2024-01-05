@@ -38,11 +38,10 @@
 </template>
   
 <script lang="ts">
-import { IonAvatar, IonButton, IonGrid, IonRow, IonCol, IonIcon, IonTextarea, useIonRouter, IonToast, toastController, IonTitle, IonImg } from '@ionic/vue';
+import { IonButton, IonGrid, IonRow, IonCol, IonTextarea, useIonRouter, IonTitle, IonImg } from '@ionic/vue';
 
 import { defineComponent, ref } from 'vue';
-import { OneShotService, UserService, OpenAPI, ApiError } from '@/_generated/api-client';
-import { routerKey, useRoute } from 'vue-router';
+import { useRoute } from 'vue-router';
 import { useCameraService } from '@/composables/cameraService';
 import { useImageService } from '@/composables/imageService';
 import HappinessSelector from '@/components/HappinessSelector.vue';
@@ -52,12 +51,10 @@ import { useThemeService } from '@/composables/themeService';
 
 export default defineComponent({
     components: {
-        IonAvatar,
         IonButton,
         IonGrid,
         IonRow,
         IonCol,
-        IonIcon,
         IonTextarea,
         IonTitle,
         IonImg,
@@ -108,7 +105,7 @@ export default defineComponent({
                 text: description.value,
             };
 
-            uploadGalleryImg(uploadedImage.value, oneShotUpdate).then((respose) => {
+            uploadGalleryImg(uploadedImage.value, oneShotUpdate).then(() => {
                 router.push('/home');
             }).catch((error) => {
                 console.log(error);

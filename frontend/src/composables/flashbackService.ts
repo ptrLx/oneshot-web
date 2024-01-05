@@ -1,4 +1,4 @@
-import { ApiError, FlashbackDTO, OneShotRespDTO, OneShotService } from '@/_generated/api-client';
+import { FlashbackDTO, OneShotRespDTO, OneShotService } from '@/_generated/api-client';
 import { useImageService } from '@/composables/imageService';
 
 /**
@@ -39,7 +39,7 @@ export const useFlashbackService = () => {
                                 url: img,
                                 meta: item as OneShotRespDTO
                             };
-                        }, (e: ApiError) => {
+                        }, () => {
                             return; // Skip this item if it can't be downloaded
                         });
                     }
@@ -56,13 +56,13 @@ export const useFlashbackService = () => {
                         url: img,
                         meta: flashback as OneShotRespDTO
                     };
-                    }, (e: ApiError) => {
+                    }, () => {
                         return; // Skip this item if it can't be downloaded
                     });
                 }
             }
 
-            }, (e: ApiError) => {
+            }, () => {
                 console.log("Error retrieving flashbacks");
         });
 

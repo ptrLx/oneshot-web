@@ -46,22 +46,19 @@
 </template>
   
 <script lang="ts">
-import { IonAvatar, IonButton, IonGrid, IonRow, IonCol, IonIcon, IonTextarea, useIonRouter, IonAlert, toastController, IonTitle, IonImg } from '@ionic/vue';
+import { IonButton, IonGrid, IonRow, IonCol, IonIcon, IonTextarea, useIonRouter, IonAlert, IonTitle, IonImg } from '@ionic/vue';
 import { trashOutline } from 'ionicons/icons';
 import { defineComponent, ref } from 'vue';
-import { OneShotService, UserService, OpenAPI, ApiError } from '@/_generated/api-client';
-import { routerKey, useRoute } from 'vue-router';
+import { OneShotService } from '@/_generated/api-client';
+import { useRoute } from 'vue-router';
 import { useCameraService } from '@/composables/cameraService';
-import { useImageService } from '@/composables/imageService';
 import HappinessSelector from '@/components/HappinessSelector.vue';
 import { HappinessDTO } from '@/_generated/api-client';
-import { OneShotRespDTO } from '@/_generated/api-client';
 import { blobStore, metadataStore } from '@/composables/store';
 import { useThemeService } from '@/composables/themeService';
 
 export default defineComponent({
     components: {
-        IonAvatar,
         IonButton,
         IonGrid,
         IonRow,
@@ -116,15 +113,15 @@ export default defineComponent({
                 metadata?.time || 0,
                 selectedHappiness.value,
                 description.value,
-            ).then((response) => {
+            ).then(() => {
                 router.push('/home');
             })
         }
 
         const handleDelete = () => {
-            OneShotService.deleteImageImageDeletePost(imgDate.value).then((response) => {
+            OneShotService.deleteImageImageDeletePost(imgDate.value).then(() => {
                 router.push('/home');
-            }, (error: ApiError) => {
+            }, () => {
                 console.log("An error occurred while deleting the image");
             })
         }

@@ -25,11 +25,10 @@ import {
     IonInfiniteScrollContent
 } from '@ionic/vue';
 
-import { defineComponent, ref, onMounted, nextTick } from 'vue';
+import { defineComponent, ref, onMounted } from 'vue';
 import { OneShotService } from '@/_generated/api-client';
 import { useImageService } from '@/composables/imageService';
 import GalleryImage from '@/components/GalleryImage.vue';
-import { images } from 'ionicons/icons';
 import { useThemeService } from '@/composables/themeService';
 
 export default defineComponent({
@@ -49,7 +48,7 @@ export default defineComponent({
         let imgPage = 0;
 
         // if this set is too small, dynamic loading will not work (ion-infinite event will not trigger)
-        let imgPageSize = 10; // initial load / batch size when loading more images
+        const imgPageSize = 10; // initial load / batch size when loading more images
 
         const happinessMap = {
             VERY_HAPPY: '😁',

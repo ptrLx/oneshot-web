@@ -37,10 +37,14 @@
             </ion-row>
             <ion-row>
                 <ion-col size="12">
-                    <ion-button shape="round">Open Source Licence</ion-button>
+                    <ion-button id="open-modal" shape="round">Open Source Licence</ion-button>
                 </ion-col>
             </ion-row>
         </ion-grid>
+
+        <ion-modal trigger="open-modal">
+            test
+        </ion-modal>
 
         <ion-action-sheet trigger="changeProfilePic" header="Change profile picture"
             :buttons="actionSheetButtons"></ion-action-sheet>
@@ -48,10 +52,10 @@
 </template>
   
 <script lang="ts">
-import { IonAvatar, IonButton, IonGrid, IonRow, IonCol, IonIcon, IonTitle, useIonRouter, IonImg, IonActionSheet } from '@ionic/vue';
-import { OneShotService, UserService, OpenAPI, ApiError } from '@/_generated/api-client';
-import { cameraOutline, chatboxEllipsesOutline, constructOutline, image, toggle } from 'ionicons/icons';
-import { computed, defineComponent, onMounted, ref } from 'vue';
+import { IonAvatar, IonButton, IonGrid, IonRow, IonCol, IonIcon, IonTitle, useIonRouter, IonImg, IonActionSheet, IonModal } from '@ionic/vue';
+import { UserService, OpenAPI, ApiError } from '@/_generated/api-client';
+import { cameraOutline } from 'ionicons/icons';
+import { defineComponent, onMounted, ref } from 'vue';
 import { useCookies } from 'vue3-cookies'
 import { useCameraService } from '@/composables/cameraService';
 import { useImageService } from '@/composables/imageService';
@@ -68,7 +72,8 @@ export default defineComponent({
         IonIcon,
         IonTitle,
         IonImg,
-        IonActionSheet
+        IonActionSheet,
+        IonModal,
     },
     setup() {
         const router = useIonRouter();
@@ -131,7 +136,7 @@ export default defineComponent({
             loadImg(queryString).then(blob => {
 
                 blobUrl.value = URL.createObjectURL(blob);
-            }).catch((e: ApiError) => {
+            }).catch(() => {
                 console.log("Profile image not found");
             })
         });

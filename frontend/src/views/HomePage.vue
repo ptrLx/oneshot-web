@@ -86,7 +86,7 @@
 </template>
 
 <script setup lang="ts">
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonImg, IonRefresher, IonRefresherContent, IonText } from '@ionic/vue';
+import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonImg, IonRefresher, IonRefresherContent } from '@ionic/vue';
 import { SwiperSlide } from 'swiper/vue';
 import RowComponent from '@/components/RowComponent.vue';
 import ProfileComponent from '@/components/ProfileComponent.vue';
@@ -95,7 +95,7 @@ import CaptureTodaySlide from '@/components/CaptureTodaySlide.vue';
 import DonutChart from '@/components/DonutChart.vue';
 import CalendarComponent from '@/components/CalendarComponent.vue';
 import { useRouter } from 'vue-router';
-import { ApiError, StatisticsService, StatisticDTO } from '@/_generated/api-client';
+import { StatisticsService, StatisticDTO } from '@/_generated/api-client';
 import { onMounted, ref } from 'vue';
 import { useFlashbackService, FlashbackUrlAndMeta } from '@/composables/flashbackService';
 import { useThemeService } from '@/composables/themeService';
@@ -152,14 +152,14 @@ const updateActions = (event: CustomEvent = { detail: { complete: () => { } } } 
   getFlashbacks().then((flashbacks) => {
     flashbackImgs.value = flashbacks;
     event.detail.complete();
-  }).catch((err: ApiError) => {
+  }).catch(() => {
     console.log("Could not retrieve flashbacks");
     event.detail.complete();
   });
 
   StatisticsService.getStatisticsStatsGet().then((response) => {
     stats.value = response;
-  }).catch((err: ApiError) => {
+  }).catch(() => {
     console.log("Could not retrieve stats");
   });
 }

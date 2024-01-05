@@ -9,7 +9,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { Swiper, SwiperSlide } from 'swiper/vue';
+import { Swiper } from 'swiper/vue';
 import SectionHeader from '@/components/SectionHeader.vue';
 
 import 'swiper/css';

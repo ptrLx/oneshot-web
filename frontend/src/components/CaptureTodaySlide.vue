@@ -25,7 +25,6 @@ import router from '@/router';
 export default defineComponent({
     components: {
         Card,
-        IonCard,
         IonButton,
         IonTitle,
         IonGrid,

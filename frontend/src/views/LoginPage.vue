@@ -32,10 +32,10 @@
 </template>
   
 <script lang="ts">
-import { IonAvatar, IonButton, IonGrid, IonRow, IonCol, IonIcon, IonInput, useIonRouter, IonToast, toastController } from '@ionic/vue';
+import { IonAvatar, IonButton, IonGrid, IonRow, IonCol, IonInput, useIonRouter, toastController } from '@ionic/vue';
 import { cameraOutline } from 'ionicons/icons';
 import { defineComponent, ref } from 'vue';
-import { OneShotService, UserService, OpenAPI, ApiError } from '@/_generated/api-client';
+import { UserService, OpenAPI, ApiError } from '@/_generated/api-client';
 import { useCookies } from 'vue3-cookies'
 import { useThemeService } from '@/composables/themeService';
 
@@ -46,7 +46,6 @@ export default defineComponent({
         IonGrid,
         IonRow,
         IonCol,
-        IonIcon,
         IonInput
     },
     setup() {
