@@ -22,33 +22,49 @@
       <row-component row-height="360px" sectionHeaderTitle="Gallery" :button-func="() => router.push('/gallery')">
         <swiper-slide v-if="hasImage('random_happy')">
           <router-link :to="`/image/${flashbackImgs['random_happy']?.meta.date}`">
-            <ion-img :src="flashbackImgs['random_happy']?.url" alt="Image of a random happy day." class="rounded-image">
-            </ion-img>
+            <div class="flashback-container">
+              <ion-img :src="flashbackImgs['random_happy']?.url" alt="Image of a random happy day." class="rounded-image">
+              </ion-img>
+              <div class="flashback-title"> Random Happy Day</div>
+            </div>
           </router-link>
         </swiper-slide>
         <swiper-slide v-else>
           <card card-title="Your Flashbacks" card-subtitle="Nothing here yet - Upload images to see them appear here!">
-            <div style="width: 200px; height: 200px; display: flex; justify-content: center; align-items: center;">
-              <ion-img src="/icons/512.png" alt="OneShot logo" class="rounded-image"></ion-img>
-            </div>
+
+            <ion-img src="/icons/512.png" alt="OneShot logo" class="rounded-image"
+              style="width: 200px; position: relative; top: 0px; margin-top: 0px; margin-bottom: 0px; margin-left: auto; margin-right: auto;">
+            </ion-img>
+
           </card>
         </swiper-slide>
         <swiper-slide v-if="hasImage('last_very_happy_day')">
           <router-link :to="`/image/${flashbackImgs['last_very_happy_day']?.meta.date}`">
-            <ion-img :src="flashbackImgs['last_very_happy_day']?.url" alt="Image of the last very happy day."
-              class="rounded-image">
-            </ion-img>
+            <div class="flashback-container">
+              <ion-img :src="flashbackImgs['last_very_happy_day']?.url" alt="Image of the last very happy day."
+                class="rounded-image">
+              </ion-img>
+              <div class="flashback-title"> Last Very Happy Day</div>
+            </div>
           </router-link>
         </swiper-slide>
         <swiper-slide v-if="hasImage('same_day_last_month')">
           <router-link :to="`/image/${flashbackImgs['same_day_last_month']?.meta.date}`">
-            <ion-img :src="flashbackImgs['same_day_last_month']?.url" alt="Image of the same day last month."
-              class="rounded-image"></ion-img>
+            <div class="flashback-container">
+              <ion-img :src="flashbackImgs['same_day_last_month']?.url" alt="Image of the same day last month."
+                class="rounded-image">
+              </ion-img>
+              <div class="flashback-title"> Same Day Last Month</div>
+            </div>
           </router-link>
         </swiper-slide>
         <swiper-slide v-for="(image, index) in getSameDateLastYearsImages(flashbackImgs)" :key="index">
           <router-link :to="`/image/${image.meta.date}`">
-            <ion-img :src="image.url" :alt="`Image of the day ${index} years ago.`" class="rounded-image"></ion-img>
+            <div class="flashback-container">
+              <ion-img :src="image.url" :alt="`Image of the day ${index} years ago.`" class="rounded-image">
+              </ion-img>
+              <div class="flashback-title"> {{ getCardTitle(image.meta.date) }}</div>
+            </div>
           </router-link>
         </swiper-slide>
       </row-component>
@@ -168,6 +184,24 @@ const updateActions = (event: CustomEvent = { detail: { complete: () => { } } } 
 </script>
 
 <style scoped>
+.flashback-container {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.flashback-title {
+  position: absolute;
+  bottom: 50px;
+  z-index: 1;
+  background-color: rgba(0, 0, 0, 0.5);
+  color: white;
+  padding: 8px;
+  border-radius: 20px;
+}
+
 .rounded-image {
 
   max-height: 350px;

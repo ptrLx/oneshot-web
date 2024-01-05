@@ -1,7 +1,7 @@
 <template>
   <section-header v-if="enableSectionHeader" :title="sectionHeaderTitle" :enableButton="enableButton"
     :buttonFunc="handleButtonClick"></section-header>
-  <swiper :slidesPerView="'auto'" :centeredSlides="true" :effect="'coverflow'" :modules="modules"
+  <swiper :slidesPerView="'auto'" :centeredSlides="true" :effect="'coverflow'" :modules="modules" :lazy="true"
     :style="{ height: rowHeight }">
     <slot></slot>
   </swiper>

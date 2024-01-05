@@ -66,7 +66,7 @@ ion-title {
 }
 
 .ios ion-grid {
-    margin-top: 20px;
+    margin-top: 0px;
 }
 
 .ion-button,
