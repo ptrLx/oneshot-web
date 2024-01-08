@@ -49,7 +49,9 @@ export const useImageService = () => {
         const params = new URLSearchParams();
         params.append('date', data.date);
         params.append('time', Math.floor(data.time).toString());
-        params.append('happiness', data.happiness?.toString() || '');
+        if (data.happiness !== null){
+            params.append('happiness', data.happiness?.toString() || '');
+        }    
         params.append('text', data.text?.toString() || '');
 
         endpoint += `?${params.toString()}`

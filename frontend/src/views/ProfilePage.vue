@@ -30,6 +30,17 @@
             </ion-row>
             <ion-row>
                 <ion-col size="12">
+                    <ion-button shape="round" @click="openFileDialog('file-upload')">Import database</ion-button>
+                </ion-col>
+            </ion-row>
+            <ion-row>
+                <ion-col size="12">
+                    <ion-button shape="round">Export database</ion-button>
+                </ion-col>
+                <input type="file" id="file-upload" style="display: none;" webkitdirectory @change="importDatabase" />
+            </ion-row>
+            <ion-row>
+                <ion-col size="12">
                     <ion-button @click="handleLogout" shape="round">Log out</ion-button>
                 </ion-col>
             </ion-row>
@@ -61,6 +72,7 @@ import { useCameraService } from '@/composables/cameraService';
 import { useImageService } from '@/composables/imageService';
 import { store } from '@/composables/store';
 import { useThemeService } from '@/composables/themeService';
+import { useImportExportService } from '@/composables/importExportService';
 
 export default defineComponent({
     components: {
@@ -85,6 +97,7 @@ export default defineComponent({
         const { takePhoto, pickPhoto, photos } = useCameraService();
         const { loadImg, uploadProfileImg } = useImageService();
         const { toggleTheme } = useThemeService(true);
+        const { importDatabase, openFileDialog } = useImportExportService();
 
         const actionSheetButtons = [
             {
@@ -149,6 +162,8 @@ export default defineComponent({
             blobUrl,
             handleLogout,
             toggleTheme,
+            importDatabase,
+            openFileDialog,
             username,
             actionSheetButtons,
         };
