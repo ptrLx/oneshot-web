@@ -1,5 +1,30 @@
 # Changelog
 
+## [1.3.0](https://github.com/ptrLx/oneshot-web/compare/v1.2.2...v1.3.0) (2024-01-08)
+
+
+### Features
+
+* **frontend:** Add dashed borders for empty image space on update/upload image page ([b4da0ce](https://github.com/ptrLx/oneshot-web/commit/b4da0cebfadbb6e1c12ffc13caa1683b3470614b))
+* **frontend:** Add Logo to login page and default profile pic ([3bf8458](https://github.com/ptrLx/oneshot-web/commit/3bf845832a9ee75b4af9d8b1fb7a05bea0ea66da))
+* **frontend:** build for android and connection to backend ([9715862](https://github.com/ptrLx/oneshot-web/commit/9715862f648c854840ec6df6f6379c0a11bd1f2c))
+* **frontend:** Improve Swiper flashback visuals ([9003069](https://github.com/ptrLx/oneshot-web/commit/9003069d1f297f1782bde9a2009bea9cd372706c))
+
+
+### Bug Fixes
+
+* **api:** exclude today from same day last years ([666a9e6](https://github.com/ptrLx/oneshot-web/commit/666a9e66becfed438a14ce8a2e37a42f33e816be))
+* **frontend:** Apply correct logo and fix ios display bugs ([15680b5](https://github.com/ptrLx/oneshot-web/commit/15680b59c78d1ba6e1c751f20498d98bd662aef8))
+* **frontend:** Fix ios Update/Upload image page display errors ([d722d22](https://github.com/ptrLx/oneshot-web/commit/d722d223938cd0f966ed741854ada9cc51e50f7a))
+* **frontend:** Fix profile pic reload domtimes not working and remove verbose console logs ([8215b29](https://github.com/ptrLx/oneshot-web/commit/8215b29cb229d6505c853d138dcbf89b1a078b5e))
+* **frontend:** Fix small placement issues on homepage ([2c1ffb3](https://github.com/ptrLx/oneshot-web/commit/2c1ffb389fa2a373b3befc0dd8033ca93e9fad97))
+
+
+### Performance Improvements
+
+* **frontend:** enable text compression for server ([f1f9ba3](https://github.com/ptrLx/oneshot-web/commit/f1f9ba39ce5ba361c5ad89f485ce88c92c63d22f))
+* **frontend:** Improve lighthouse accessibility score ([50dd2bf](https://github.com/ptrLx/oneshot-web/commit/50dd2bf0fb9f9cfc83316062857619561611af21))
+
 ## [1.2.2](https://github.com/ptrLx/oneshot-web/compare/v1.2.1...v1.2.2) (2023-12-29)
 
 
