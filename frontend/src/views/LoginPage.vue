@@ -62,9 +62,9 @@ export default defineComponent({
             })
         }
 
-        const showToast = () => {
+        const showToastFail = (msg: string) => {
             toastController.create({
-                message: 'Unknown username or password',
+                message: msg,
                 duration: 2000,
                 color: 'danger'
             }).then((toast) => {
@@ -94,18 +94,11 @@ export default defineComponent({
                 console.log(t.access_token) // TODO: remove, for debugging
 
                 router.push('/home');
-            }).catch((e: ApiError) => {
-
-                switch (e.status) {
-                    case 401:
-                        console.log("Unauthorized")
-
-                        //TODO: change user/passwd field to red and play access denied animation
-                        showToast()
-                        break;
-                    default:
-                        console.log("Unknown error")
-                        break;
+            }, (e: ApiError) => {
+                if (e.body.detail === undefined) {
+                    showToastFail("An error occurred during the login.")
+                } else {
+                    showToastFail(e.body.detail);
                 }
             })
         }

@@ -40,7 +40,7 @@ start-frontend:  ## Start the frontend
 
 .PHONY: compile-frontend
 compile-frontend:  ## Compile the frontend
-	cd frontend && npm run build
+	cd frontend && VITE_DEPLOYMENT_MODE=SAME_HOST npm run build
 
 .PHONY: gen-api-client
 gen-api-client:  ## Generate api client for frontend
@@ -95,3 +95,12 @@ pull-and-start-docker-image:  ## Start the docker image from Docker Hub.
 .PHONY: lint-local
 lint-local:  ## Lint the codebase with super-linter
 	docker run --rm -e RUN_LOCAL=true --env-file ".github/super-linter.env" -v "$PWD":/tmp/lint github/super-linter
+
+
+.PHONY: build-frontend-android
+build-frontend-android:  ## Build the frontend for android 
+	cd frontend && VITE_DEPLOYMENT_MODE=ANDROID_EMULATOR ionic capacitor build android
+
+.PHONY: build-frontend-android-prod
+build-frontend-android-prod:  ## Build the frontend for android for production
+	cd frontend && VITE_DEPLOYMENT_MODE=ANDROID_REMOTE ionic capacitor build android --prod
