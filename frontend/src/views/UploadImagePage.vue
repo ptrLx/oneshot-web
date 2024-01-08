@@ -4,7 +4,11 @@
 
         <ion-grid class="ion-text-center">
             <ion-row>
-                <ion-title>{{ imgDate }}</ion-title>
+                <ion-title>
+                    <div class="ios-container">
+                        {{ imgDate }}
+                    </div>
+                </ion-title>
             </ion-row>
             <ion-row>
                 <ion-col size="12">
@@ -34,11 +38,10 @@
 </template>
   
 <script lang="ts">
-import { IonAvatar, IonButton, IonGrid, IonRow, IonCol, IonIcon, IonTextarea, useIonRouter, IonToast, toastController, IonTitle, IonImg } from '@ionic/vue';
+import { IonButton, IonGrid, IonRow, IonCol, IonTextarea, useIonRouter, IonTitle, IonImg } from '@ionic/vue';
 
 import { defineComponent, ref } from 'vue';
-import { OneShotService, UserService, OpenAPI, ApiError } from '@/_generated/api-client';
-import { routerKey, useRoute } from 'vue-router';
+import { useRoute } from 'vue-router';
 import { useCameraService } from '@/composables/cameraService';
 import { useImageService } from '@/composables/imageService';
 import HappinessSelector from '@/components/HappinessSelector.vue';
@@ -48,12 +51,10 @@ import { useThemeService } from '@/composables/themeService';
 
 export default defineComponent({
     components: {
-        IonAvatar,
         IonButton,
         IonGrid,
         IonRow,
         IonCol,
-        IonIcon,
         IonTextarea,
         IonTitle,
         IonImg,
@@ -104,7 +105,7 @@ export default defineComponent({
                 text: description.value,
             };
 
-            uploadGalleryImg(uploadedImage.value, oneShotUpdate).then((respose) => {
+            uploadGalleryImg(uploadedImage.value, oneShotUpdate).then(() => {
                 router.push('/home');
             }).catch((error) => {
                 console.log(error);
@@ -125,6 +126,16 @@ export default defineComponent({
 </script>
 
 <style scoped>
+.ios .ios-container {
+    margin-top: 20px;
+    height: 10%;
+    width: 100%;
+}
+
+.ios ion-title {
+    position: inherit;
+}
+
 ion-textarea {
     height: 250px;
     width: 80%;
@@ -154,6 +165,9 @@ ion-img {
 
 ion-img::part(image) {
     border-radius: 50px;
+    border: 1px dashed var(--ion-color-primary);
+    overflow: hidden;
+    object-fit: cover;
 }
 
 .selector {

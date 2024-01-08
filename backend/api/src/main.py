@@ -14,8 +14,6 @@ from router.user import router as user_router
 
 app_config = config.get_config()
 logger = logging.getLogger(__name__)
-origins = [app_config.HOST_URL]
-
 
 app = FastAPI(
     docs_url=None
@@ -27,6 +25,12 @@ app = FastAPI(
     lifespan=lifespan,
 )
 
+
+origins = [
+    app_config.HOST_URL,
+    "https://localhost",
+    "http://localhost",
+]  # Localhost is set as CORS header from compiled android app
 
 app.add_middleware(
     CORSMiddleware,

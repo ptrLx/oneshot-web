@@ -30,25 +30,21 @@
 </template>
   
 <script lang="ts">
-import { IonAvatar, IonButton, IonGrid, IonRow, IonCol, IonIcon, IonInput, useIonRouter, IonToast, toastController, IonText } from '@ionic/vue';
+import { IonButton, IonGrid, IonRow, IonCol, IonIcon, IonInput, useIonRouter, toastController } from '@ionic/vue';
 import { warningOutline } from 'ionicons/icons';
-import { defineComponent, popScopeId, ref } from 'vue';
-import { OneShotService, UserService, OpenAPI, ApiError } from '@/_generated/api-client';
+import { defineComponent, ref } from 'vue';
+import { UserService, ApiError } from '@/_generated/api-client';
 import { useCookies } from 'vue3-cookies'
-import { routerKey } from 'vue-router';
 import { useThemeService } from '@/composables/themeService';
 
 export default defineComponent({
     components: {
-        IonAvatar,
         IonButton,
         IonGrid,
         IonRow,
         IonCol,
         IonIcon,
         IonInput,
-        IonText,
-        IonToast
     },
     setup() {
         const { cookies } = useCookies();
@@ -57,12 +53,6 @@ export default defineComponent({
         const router = useIonRouter();
 
         useThemeService(true) // Set theme to media preference
-
-        const requestUserInfo = () => {
-            UserService.getUserMeUserMeGet().then((user) => {
-                console.log(user.username)
-            })
-        }
 
         const showToastSuccess = () => {
             toastController.create({

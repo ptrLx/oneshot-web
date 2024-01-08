@@ -1,16 +1,15 @@
 <template>
   <router-link to="/profile">
     <ion-avatar class="avatar-icon">
-      <ion-img v-if="blobUrl" :src="blobUrl" />
+      <ion-img v-if="blobUrl" :src="blobUrl" alt="Profile picture of the current user" />
       <div class="avatar-overlay"></div>
     </ion-avatar>
   </router-link>
 </template>
 
 <script lang="ts">
-import { IonAvatar, IonImg, onIonViewDidEnter } from '@ionic/vue';
+import { IonAvatar, IonImg } from '@ionic/vue';
 import { defineComponent, ref, onMounted, watch } from 'vue';
-import axios, { AxiosRequestConfig } from 'axios';
 import { OpenAPI } from '@/_generated/api-client'
 import { useImageService } from '@/composables/imageService';
 import { store } from '@/composables/store';
@@ -22,7 +21,7 @@ export default defineComponent({
   },
   setup() {
 
-    const blobUrl = ref<string>("");
+    const blobUrl = ref<string>("https://ionicframework.com/docs/img/demos/avatar.svg");
     const { loadImg } = useImageService();
 
     const updateProfilePic = () => {

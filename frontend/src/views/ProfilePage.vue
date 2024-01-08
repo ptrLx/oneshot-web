@@ -9,9 +9,12 @@
                 </ion-button>
             </ion-avatar>
         </div>
-        <ion-title class="ion-text-center">
-            <h1>{{ username }}</h1>
-        </ion-title>
+        <div class="ios-container">
+            <ion-title class="ion-text-center">
+                <h1>{{ username }}</h1>
+            </ion-title>
+        </div>
+
 
         <!-- Buttons Section -->
         <ion-grid class="ion-text-center">
@@ -34,10 +37,14 @@
             </ion-row>
             <ion-row>
                 <ion-col size="12">
-                    <ion-button shape="round">Open Source Licence</ion-button>
+                    <ion-button id="open-modal" shape="round">Open Source Licence</ion-button>
                 </ion-col>
             </ion-row>
         </ion-grid>
+
+        <ion-modal trigger="open-modal">
+            test
+        </ion-modal>
 
         <ion-action-sheet trigger="changeProfilePic" header="Change profile picture"
             :buttons="actionSheetButtons"></ion-action-sheet>
@@ -45,10 +52,10 @@
 </template>
   
 <script lang="ts">
-import { IonAvatar, IonButton, IonGrid, IonRow, IonCol, IonIcon, IonTitle, useIonRouter, IonImg, IonActionSheet } from '@ionic/vue';
-import { OneShotService, UserService, OpenAPI, ApiError } from '@/_generated/api-client';
-import { cameraOutline, chatboxEllipsesOutline, constructOutline, image, toggle } from 'ionicons/icons';
-import { computed, defineComponent, onMounted, ref } from 'vue';
+import { IonAvatar, IonButton, IonGrid, IonRow, IonCol, IonIcon, IonTitle, useIonRouter, IonImg, IonActionSheet, IonModal } from '@ionic/vue';
+import { UserService, OpenAPI, ApiError } from '@/_generated/api-client';
+import { cameraOutline } from 'ionicons/icons';
+import { defineComponent, onMounted, ref } from 'vue';
 import { useCookies } from 'vue3-cookies'
 import { useCameraService } from '@/composables/cameraService';
 import { useImageService } from '@/composables/imageService';
@@ -65,7 +72,8 @@ export default defineComponent({
         IonIcon,
         IonTitle,
         IonImg,
-        IonActionSheet
+        IonActionSheet,
+        IonModal,
     },
     setup() {
         const router = useIonRouter();
@@ -73,7 +81,7 @@ export default defineComponent({
         OpenAPI.TOKEN = cookies.get("token");
         const username = ref<string>("");
         const profilePic = ref<string | null>(null);
-        const blobUrl = ref<string>("");
+        const blobUrl = ref<string>("https://ionicframework.com/docs/img/demos/avatar.svg");
         const { takePhoto, pickPhoto, photos } = useCameraService();
         const { loadImg, uploadProfileImg } = useImageService();
         const { toggleTheme } = useThemeService(true);
@@ -96,8 +104,9 @@ export default defineComponent({
                 handler: () => {
                     pickPhoto().then(() => {
                         blobUrl.value = photos.value[0]?.webviewPath || '';
-                        uploadProfileImg(blobUrl.value);
-                        store.notifyProfilePicUpdate();
+                        uploadProfileImg(blobUrl.value).then(() => {
+                            store.notifyProfilePicUpdate();
+                        });
                     });
                 }
             },
@@ -127,6 +136,8 @@ export default defineComponent({
             loadImg(queryString).then(blob => {
 
                 blobUrl.value = URL.createObjectURL(blob);
+            }).catch(() => {
+                console.log("Profile image not found");
             })
         });
 
@@ -166,6 +177,20 @@ export default defineComponent({
     scale: 0.3;
     height: 70px;
     width: 70px;
+}
+
+.ios .change-profile-pic-button {
+    top: 5px;
+    left: 5px;
+}
+
+.ios .ios-container {
+    margin-top: 0px;
+    height: 50px;
+}
+
+.ios ion-title {
+    position: inherit;
 }
 
 ion-button {

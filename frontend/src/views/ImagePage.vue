@@ -18,21 +18,18 @@
 
 <script lang="ts">
 import { computed, defineComponent, nextTick, ref, watch } from 'vue';
-import { IonCard, IonImg, IonCardSubtitle, IonCardTitle, IonButton, IonIcon } from '@ionic/vue';
+import { IonImg, IonButton, IonIcon } from '@ionic/vue';
 import { useRoute } from 'vue-router'
 import { useImageService } from '@/composables/imageService';
 import { OneShotService } from '@/_generated/api-client';
-import { createOutline, printOutline } from 'ionicons/icons';
+import { createOutline } from 'ionicons/icons';
 import router from '@/router';
 import { blobStore, metadataStore } from '@/composables/store';
 import { useThemeService } from '@/composables/themeService';
 
 export default defineComponent({
     components: {
-        IonCard,
         IonImg,
-        IonCardSubtitle,
-        IonCardTitle,
         IonButton,
         IonIcon,
     },

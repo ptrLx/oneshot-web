@@ -23,7 +23,8 @@
         "pipenv",
         "postgres",
         "prisma",
-        "uvicorn"
+        "uvicorn",
+        "VITE"
     ],
     "[python]": {
         "editor.defaultFormatter": "ms-python.black-formatter",
@@ -38,5 +39,12 @@
     ],
     "python.analysis.extraPaths": [
         "./backend/api/src"
+    ],
+    "editor.codeActionsOnSave": {
+        "source.fixAll.eslint": "explicit"
+    },
+    "eslint.validate": [
+        "typescript",
+        "vue"
     ],
 }

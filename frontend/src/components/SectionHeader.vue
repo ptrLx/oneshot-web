@@ -17,14 +17,13 @@
 </template>
 
 <script lang="ts">
-import { IonLabel, IonButton, IonGrid, IonRow, IonCol, IonTitle, IonIcon, } from '@ionic/vue';
+import { IonButton, IonGrid, IonRow, IonCol, IonTitle, IonIcon, } from '@ionic/vue';
 import { defineComponent } from 'vue';
 import { arrowForwardOutline } from 'ionicons/icons';
 
 
 export default defineComponent({
     components: {
-        IonLabel,
         IonButton,
         IonGrid,
         IonRow,
@@ -76,10 +75,13 @@ export default defineComponent({
 
 
 .title {
-
     font-size: 1.2rem;
     padding-top: 10px;
     padding-bottom: 10px;
+}
+
+.ios .title {
+    padding-inline: 0px;
 }
 
 .button {

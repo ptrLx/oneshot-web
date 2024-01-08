@@ -1,7 +1,6 @@
 import FormData from 'form-data'
 import axios, { AxiosRequestConfig } from 'axios';
 import { OneShotRespDTO, OpenAPI } from '@/_generated/api-client';
-import { OneShotUpdate } from '@/types/OneShotUpdate';
 import { useCookies } from 'vue3-cookies'
 
 export const useImageService = () => {
@@ -30,7 +29,7 @@ export const useImageService = () => {
         return await uploadImage(src, endpoint, fileName);
     };
 
-    const downloadGalleryImg = async (date: string, preview: boolean = true) => {
+    const downloadGalleryImg = async (date: string, preview = true) => {
         let endpoint = OpenAPI.BASE + "/image/download";
 
         const params = new URLSearchParams();
@@ -77,10 +76,10 @@ export const useImageService = () => {
                 },
             });
 
-            console.log('Upload successful', response);
+            console.log('Image Upload successful');
             return response;
         } catch (error) {
-            console.log('Error uploading image', error);
+            console.log('Error uploading image');
             return error;
         }
     };

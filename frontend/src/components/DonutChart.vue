@@ -5,9 +5,8 @@
 </template>
   
 <script lang="ts">
-import { IonAccordion } from '@ionic/vue'
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js'
-import { computed, defineComponent, onMounted, ref } from 'vue'
+import { computed, defineComponent } from 'vue'
 import { Doughnut } from 'vue-chartjs'
 
 ChartJS.register(ArcElement, Tooltip, Legend)
@@ -32,8 +31,8 @@ export default defineComponent({
 
         const donutLabel = {
             id: 'donut-label',
-            beforeDatasetsDraw(chart: { getDatasetMeta?: any; ctx?: any; data?: any }, args: any, pluginOptions: any) {
-                const { ctx, data } = chart;
+            beforeDatasetsDraw(chart: { getDatasetMeta?: any; ctx?: any; data?: any }) {
+                const { ctx } = chart;
                 ctx.save();
                 const xCoor = chart.getDatasetMeta(0).data[0].x;
                 const yCoor = chart.getDatasetMeta(0).data[0].y;
@@ -47,7 +46,7 @@ export default defineComponent({
 
         const happinessData = computed(() => {
 
-            let data = [
+            const data = [
                 props.data.VERY_HAPPY || 0,
                 props.data.HAPPY || 0,
                 props.data.NEUTRAL || 0,

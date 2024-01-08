@@ -11,7 +11,11 @@
         </template>
         <ion-grid class="ion-text-center">
             <ion-row>
-                <ion-title>{{ imgDate }}</ion-title>
+                <ion-title>
+                    <div class="ios-container">
+                        {{ imgDate }}
+                    </div>
+                </ion-title>
             </ion-row>
             <ion-row>
                 <ion-col size="12">
@@ -42,22 +46,19 @@
 </template>
   
 <script lang="ts">
-import { IonAvatar, IonButton, IonGrid, IonRow, IonCol, IonIcon, IonTextarea, useIonRouter, IonAlert, toastController, IonTitle, IonImg } from '@ionic/vue';
+import { IonButton, IonGrid, IonRow, IonCol, IonIcon, IonTextarea, useIonRouter, IonAlert, IonTitle, IonImg } from '@ionic/vue';
 import { trashOutline } from 'ionicons/icons';
 import { defineComponent, ref } from 'vue';
-import { OneShotService, UserService, OpenAPI, ApiError } from '@/_generated/api-client';
-import { routerKey, useRoute } from 'vue-router';
+import { OneShotService } from '@/_generated/api-client';
+import { useRoute } from 'vue-router';
 import { useCameraService } from '@/composables/cameraService';
-import { useImageService } from '@/composables/imageService';
 import HappinessSelector from '@/components/HappinessSelector.vue';
 import { HappinessDTO } from '@/_generated/api-client';
-import { OneShotRespDTO } from '@/_generated/api-client';
 import { blobStore, metadataStore } from '@/composables/store';
 import { useThemeService } from '@/composables/themeService';
 
 export default defineComponent({
     components: {
-        IonAvatar,
         IonButton,
         IonGrid,
         IonRow,
@@ -112,15 +113,15 @@ export default defineComponent({
                 metadata?.time || 0,
                 selectedHappiness.value,
                 description.value,
-            ).then((response) => {
+            ).then(() => {
                 router.push('/home');
             })
         }
 
         const handleDelete = () => {
-            OneShotService.deleteImageImageDeletePost(imgDate.value).then((response) => {
+            OneShotService.deleteImageImageDeletePost(imgDate.value).then(() => {
                 router.push('/home');
-            }, (error: ApiError) => {
+            }, () => {
                 console.log("An error occurred while deleting the image");
             })
         }
@@ -154,6 +155,16 @@ export default defineComponent({
 </script>
 
 <style scoped>
+.ios .ios-container {
+    margin-top: 20px;
+    height: 10%;
+    width: 100%;
+}
+
+.ios ion-title {
+    position: inherit;
+}
+
 ion-textarea {
     height: 250px;
     width: 80%;
@@ -171,6 +182,11 @@ ion-button {
     margin-top: 20px;
 }
 
+.ios ion-button {
+    margin-top: 0px;
+    height: inherit;
+}
+
 ion-img {
 
     width: 60%;
@@ -183,6 +199,9 @@ ion-img {
 
 ion-img::part(image) {
     border-radius: 50px;
+    border: 1px dashed var(--ion-color-primary);
+    overflow: hidden;
+    object-fit: cover;
 }
 
 .selector {

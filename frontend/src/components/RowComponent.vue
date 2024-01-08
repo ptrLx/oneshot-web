@@ -1,17 +1,17 @@
 <template>
   <section-header v-if="enableSectionHeader" :title="sectionHeaderTitle" :enableButton="enableButton"
     :buttonFunc="handleButtonClick"></section-header>
-  <swiper :slidesPerView="1.2" :centeredSlides="true" :spaceBetween="5" :style="{ height: rowHeight }">
+  <swiper :slidesPerView="'auto'" :centeredSlides="true" :effect="'coverflow'" :modules="modules" :lazy="true"
+    :style="{ height: rowHeight }">
     <slot></slot>
-
   </swiper>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { Swiper, SwiperSlide } from 'swiper/vue';
+import { Swiper } from 'swiper/vue';
 import SectionHeader from '@/components/SectionHeader.vue';
-
+import { EffectCoverflow, Pagination } from 'swiper/modules';
 import 'swiper/css';
 import '@ionic/vue/css/ionic-swiper.css';
 
@@ -49,7 +49,8 @@ export default defineComponent({
     }
 
     return {
-      handleButtonClick
+      handleButtonClick,
+      modules: [EffectCoverflow, Pagination]
     }
   }
 });

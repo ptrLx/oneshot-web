@@ -1,9 +1,6 @@
 
-import { ref, defineComponent } from 'vue';
-import { Camera, CameraResultType, CameraSource, Photo } from '@capacitor/camera';
-import { Filesystem, Directory } from '@capacitor/filesystem';
-import { Preferences } from '@capacitor/preferences';
-
+import { ref } from 'vue';
+import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
 
 export interface UserPhoto {
     filepath: string,
@@ -17,6 +14,7 @@ export const useCameraService = () => {
         const photo = await Camera.getPhoto({
             resultType: CameraResultType.Uri,
             source: CameraSource.Camera,
+            allowEditing: true,
             quality: 100
         });
         const fileName = Date.now() + '.jpeg';

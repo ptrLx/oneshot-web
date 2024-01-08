@@ -3,7 +3,7 @@
 
         <div class="logo">
             <ion-avatar>
-                <img alt="Silhouette of a person's head" src="https://ionicframework.com/docs/img/demos/avatar.svg" />
+                <img alt="OneShot logo" src="/icons/512.png" />
             </ion-avatar>
         </div>
         <!-- Login Section -->
@@ -32,10 +32,10 @@
 </template>
   
 <script lang="ts">
-import { IonAvatar, IonButton, IonGrid, IonRow, IonCol, IonIcon, IonInput, useIonRouter, IonToast, toastController } from '@ionic/vue';
+import { IonAvatar, IonButton, IonGrid, IonRow, IonCol, IonInput, useIonRouter, toastController } from '@ionic/vue';
 import { cameraOutline } from 'ionicons/icons';
 import { defineComponent, ref } from 'vue';
-import { OneShotService, UserService, OpenAPI, ApiError } from '@/_generated/api-client';
+import { UserService, OpenAPI, ApiError } from '@/_generated/api-client';
 import { useCookies } from 'vue3-cookies'
 import { useThemeService } from '@/composables/themeService';
 
@@ -46,7 +46,6 @@ export default defineComponent({
         IonGrid,
         IonRow,
         IonCol,
-        IonIcon,
         IonInput
     },
     setup() {
@@ -63,9 +62,9 @@ export default defineComponent({
             })
         }
 
-        const showToast = () => {
+        const showToastFail = (msg: string) => {
             toastController.create({
-                message: 'Unknown username or password',
+                message: msg,
                 duration: 2000,
                 color: 'danger'
             }).then((toast) => {
@@ -95,18 +94,11 @@ export default defineComponent({
                 console.log(t.access_token) // TODO: remove, for debugging
 
                 router.push('/home');
-            }).catch((e: ApiError) => {
-
-                switch (e.status) {
-                    case 401:
-                        console.log("Unauthorized")
-
-                        //TODO: change user/passwd field to red and play access denied animation
-                        showToast()
-                        break;
-                    default:
-                        console.log("Unknown error")
-                        break;
+            }, (e: ApiError) => {
+                if (e.body.detail === undefined) {
+                    showToastFail("An error occurred during the login.")
+                } else {
+                    showToastFail(e.body.detail);
                 }
             })
         }

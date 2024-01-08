@@ -42,14 +42,28 @@ globalCookiesConfig({
 // Set base URL for backend API calls
 const nodeEnv = process.env.NODE_ENV;
 if (nodeEnv === 'development') {
-  // development
+  // development (using the vite dev server)
   OpenAPI.BASE = 'http://localhost:8200';
-  console.log('Running oneshot-web in development mode');
 }
 else {
   // production
-  OpenAPI.BASE = '/api';
+
+  // VITE_DEPLOYMENT_MODE decides whether to use the local backend or the remote backend.
+  const VITE_DEPLOYMENT_MODE = import.meta.env.VITE_DEPLOYMENT_MODE || 'SAME_HOST';
+  if (VITE_DEPLOYMENT_MODE === 'ANDROID_EMULATOR') {
+    // See https://stackoverflow.com/questions/5528850/how-do-you-connect-localhost-in-the-android-emulator
+    // For local connection of the android app it has to connect to the IP 10.0.2.2.
+    OpenAPI.BASE = 'http://10.0.2.2:8200'
+  } else if (VITE_DEPLOYMENT_MODE === 'ANDROID_REMOTE') {
+    // todo remove this and let user configure this in the login screen
+    OpenAPI.BASE = 'https://osweb.ptrlx.de/api';
+  } else { // SAME_HOST
+    // Default is '/api' as this will connect to the same host where the frontend is served from and nginx will redirect to the backend.
+    OpenAPI.BASE = '/api';
+  }
 }
+
+console.log('Using api URL: ' + OpenAPI.BASE); //todo remove this
 
 const app = createApp(App)
   .use(IonicVue)

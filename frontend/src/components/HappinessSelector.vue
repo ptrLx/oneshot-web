@@ -21,7 +21,6 @@
 import { defineComponent, ref, watch } from 'vue';
 import { IonRadio, IonRadioGroup, IonRow, IonCol, IonLabel } from '@ionic/vue';
 import { HappinessDTO } from '@/_generated/api-client';
-import { computed } from '@vue/reactivity';
 
 export default defineComponent({
     components: {
