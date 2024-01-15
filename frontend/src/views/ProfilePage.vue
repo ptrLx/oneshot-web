@@ -32,11 +32,6 @@
                 <ion-col size="12">
                     <ion-button shape="round" @click="openFileDialog('file-upload')">Import database</ion-button>
                 </ion-col>
-            </ion-row>
-            <ion-row>
-                <ion-col size="12">
-                    <ion-button shape="round">Export database</ion-button>
-                </ion-col>
                 <input type="file" id="file-upload" style="display: none;" webkitdirectory @change="importDatabase" />
             </ion-row>
             <ion-row>
