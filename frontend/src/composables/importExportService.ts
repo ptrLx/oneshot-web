@@ -29,7 +29,15 @@ export const useImportExportService = () => {
                 else {
                     imageFiles.push(files[i]);
                 }             
-            }  
+            }
+            
+            if (!json) {
+                throw new Error("Database import failed: no json file found.");
+            }
+
+            if (imageFiles.length === 0) {
+                throw new Error("Database import failed: no image files found");
+            }
 
             for (const image of imageFiles) {
                 console.log(image);
@@ -56,10 +64,6 @@ export const useImportExportService = () => {
                 }
             }      
         }
-    }
-
-    const exportDatabase = () => {
-        
     }
 
     const findMatchingJsonObj = (json: any, fileName: string) => {

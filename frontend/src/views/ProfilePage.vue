@@ -32,7 +32,7 @@
                 <ion-col size="12">
                     <ion-button shape="round" @click="openFileDialog('file-upload')">Import database</ion-button>
                 </ion-col>
-                <input type="file" id="file-upload" style="display: none;" webkitdirectory @change="importDatabase" />
+                <input type="file" id="file-upload" style="display: none;" webkitdirectory @change="handleImportDatabase" />
             </ion-row>
             <ion-row>
                 <ion-col size="12">
@@ -48,8 +48,12 @@
             </ion-row>
         </ion-grid>
 
-        <ion-modal trigger="open-modal">
-            test
+        <ion-modal trigger="open-modal" :initial-breakpoint="1" :breakpoints="[0, 1]">
+            <base-layout pageTitle="Open Source Licence" hide-back-button="true" fullscreen="false">
+                <div style="padding: 20px;">
+                    <p>OneShot-Web is free software released under GPLv3 and comes with absolutely no warranty.</p>
+                </div>
+            </base-layout>
         </ion-modal>
 
         <ion-action-sheet trigger="changeProfilePic" header="Change profile picture"
@@ -58,7 +62,7 @@
 </template>
   
 <script lang="ts">
-import { IonAvatar, IonButton, IonGrid, IonRow, IonCol, IonIcon, IonTitle, useIonRouter, IonImg, IonActionSheet, IonModal } from '@ionic/vue';
+import { IonAvatar, IonButton, IonGrid, IonRow, IonCol, IonIcon, IonTitle, useIonRouter, IonImg, IonActionSheet, IonModal, toastController } from '@ionic/vue';
 import { UserService, OpenAPI, ApiError } from '@/_generated/api-client';
 import { cameraOutline } from 'ionicons/icons';
 import { defineComponent, onMounted, ref } from 'vue';
@@ -127,6 +131,27 @@ export default defineComponent({
             }
         ]
 
+        const handleImportDatabase = (event: Event) => {
+            importDatabase(event)
+                .then(() => {
+                    return toastController.create({
+                        message: 'Database imported successfully',
+                        duration: 2000,
+                        color: 'success'
+                    });
+                })
+                .catch((error) => {
+                    return toastController.create({
+                        message: error.message,
+                        duration: 2000,
+                        color: 'danger'
+                    });
+                })
+                .then((toast) => {
+                    toast.present();
+                });
+        };
+
         const handleLogout = () => {
             cookies.remove("token");
             router.push('/login');
@@ -157,7 +182,7 @@ export default defineComponent({
             blobUrl,
             handleLogout,
             toggleTheme,
-            importDatabase,
+            handleImportDatabase,
             openFileDialog,
             username,
             actionSheetButtons,
@@ -210,6 +235,17 @@ ion-button {
 
 ion-icon {
     scale: 2.0;
+}
+
+ion-modal {
+    --height: 50%;
+    --border-radius: 16px;
+    --box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+}
+
+ion-modal::part(backdrop) {
+    background: var(--ion-color-dark);
+    opacity: 1;
 }
 </style>
 
