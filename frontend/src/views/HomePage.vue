@@ -23,7 +23,8 @@
         <swiper-slide v-if="hasImage('random_happy')">
           <router-link :to="`/image/${flashbackImgs['random_happy']?.meta.date}`">
             <div class="flashback-container">
-              <ion-img :src="flashbackImgs['random_happy']?.url" alt="Image of a random happy day." class="rounded-image">
+              <ion-img :src="flashbackImgs['random_happy']?.url" alt="Image of a random happy day." class="rounded-image"
+                fetchpriority="high">
               </ion-img>
               <div class="flashback-title"> Random Happy Day</div>
             </div>
@@ -113,7 +114,7 @@ import DonutChart from '@/components/DonutChart.vue';
 import CalendarComponent from '@/components/CalendarComponent.vue';
 import { useRouter } from 'vue-router';
 import { StatisticsService, StatisticDTO } from '@/_generated/api-client';
-import { onMounted, ref } from 'vue';
+import { onBeforeMount, onMounted, ref } from 'vue';
 import { useFlashbackService, FlashbackUrlAndMeta } from '@/composables/flashbackService';
 import { useThemeService } from '@/composables/themeService';
 
@@ -127,9 +128,10 @@ const flashbackImgs = ref<{ [key: string]: FlashbackUrlAndMeta }>({});
 const stats = ref<StatisticDTO | null>(null);
 
 
-onMounted(() => {
+onBeforeMount(() => {
   updateActions();
 });
+
 
 const handleRefresh = (event: CustomEvent) => {
   updateActions(event);

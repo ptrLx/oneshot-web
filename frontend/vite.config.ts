@@ -18,6 +18,11 @@ export default defineConfig({
      */
     VitePWA({
       manifest: {
+        name: 'OneShot-Web',
+        short_name: 'OneShot',
+        theme_color: '#feba4b',
+        background_color: '#000000',
+        display: 'standalone',
         icons: [
           {
             src: "/icons/512.png",
@@ -44,5 +49,16 @@ export default defineConfig({
   test: {
     globals: true,
     environment: 'jsdom'
-  }
+  },
+  build: {
+    rollupOptions: {
+        output:{
+            manualChunks(id) {
+                if (id.includes('node_modules')) {
+                    return id.toString().split('node_modules/')[1].split('/')[0].toString();
+                }
+            }
+        }
+    }
+}
 })
