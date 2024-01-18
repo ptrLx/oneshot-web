@@ -1,8 +1,8 @@
 <template>
   <section-header v-if="enableSectionHeader" :title="sectionHeaderTitle" :enableButton="enableButton"
     :buttonFunc="handleButtonClick"></section-header>
-  <swiper :slidesPerView="'auto'" :centeredSlides="true" :effect="'coverflow'" :modules="modules" :lazy="true"
-    :style="{ height: rowHeight }">
+  <swiper :slidesPerView=slidesPerView :centeredSlides="true" :effect="'coverflow'" :modules="modules" :lazy="true"
+    :style="{ height: rowHeight }" :loop="true">
     <slot></slot>
   </swiper>
 </template>
@@ -40,6 +40,10 @@ export default defineComponent({
     enableButton: {
       type: Boolean,
       default: true
+    },
+    slidesPerView: {
+      type: Number,
+      default: 1
     }
   },
   setup(props) {
