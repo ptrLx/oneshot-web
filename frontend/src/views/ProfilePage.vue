@@ -52,7 +52,27 @@
             <base-layout pageTitle="Open Source Licence" hide-back-button="true" fullscreen="false">
                 <div style="padding: 20px;">
                     <p>OneShot-Web is free software released under GPLv3 and comes with absolutely no warranty.</p>
+                    <p>Thanks to following open source projects that where used as dependencies:</p>
+                    <p>Python (PSF)</p>
+                    <p>Fastapi (MIT)</p>
+                    <p>Pydantic (MIT)</p>
+                    <p>Uvicorn (BSD 3-Clause)</p>
+                    <p>python-jose (MIT)</p>
+                    <p>passlib (BSD)</p>
+                    <p>python-multipart (Apache)</p>
+                    <p>aiofiles (Apache)</p>
+                    <p>InquirerPy (MIT)</p>
+                    <p>Prisma Client Python (Apache)</p>
+                    <p>Pillow (HPND)</p>
+                    <p>Capacitor (MIT)</p>
+                    <p>Ionic (MIT)</p>
+                    <p>Vue (MIT)</p>
+                    <p>openapi-typescript-codegen (MIT)</p>
+                    <p>Axios (MIT)</p>
+                    <p>Swiper (MIT)</p>
+                    <p>Vite (MIT)</p>
                 </div>
+
             </base-layout>
         </ion-modal>
 
@@ -238,7 +258,7 @@ ion-icon {
 }
 
 ion-modal {
-    --height: 50%;
+    --height: 80%;
     --border-radius: 16px;
     --box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
 }
