@@ -1,4 +1,4 @@
-package io.ionic.starter;
+package de.ptrlx.oneshotweb;
 
 import com.getcapacitor.BridgeActivity;
 

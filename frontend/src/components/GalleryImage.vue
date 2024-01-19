@@ -78,6 +78,14 @@ export default defineComponent({
     text-align: left;
 }
 
+.image-title {
+    text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.9);
+    color: white;
+    background-color: rgba(0, 0, 0, 0.5);
+    padding: 5px;
+    border-radius: 10px;
+}
+
 .emoji-container {
     position: absolute;
     bottom: -16px;

@@ -11,7 +11,7 @@
                 </ion-buttons>
             </ion-toolbar>
         </ion-header>
-        <ion-content :fullscreen="true">
+        <ion-content :fullscreen="fullscreen">
             <slot />
         </ion-content>
     </ion-page>
@@ -42,6 +42,10 @@ export default defineComponent({
         hideBackButton: {
             type: Boolean,
             default: false
+        },
+        fullscreen: {
+            type: Boolean,
+            default: true
         }
     },
     components: {
@@ -58,7 +62,7 @@ export default defineComponent({
 
 <style scoped>
 ion-toolbar {
-    --background: transparent;
+    --background: rgba(var(--ion-background-color-rgb), 0.9);
     --ion-color-base: transparent !important;
 }
 </style>

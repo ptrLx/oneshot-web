@@ -4,7 +4,7 @@
             <ion-col size="1"> </ion-col>
             <ion-col size="5">
 
-                <ion-title class="title">{{ title }}</ion-title>
+                <ion-title class="title" slot="">{{ title }}</ion-title>
             </ion-col>
             <ion-col size="5" class="ion-text-end">
                 <ion-button v-if="enableButton" class="button" aria-label="See all" @click="handleButtonClick">
@@ -78,6 +78,7 @@ export default defineComponent({
     font-size: 1.2rem;
     padding-top: 10px;
     padding-bottom: 10px;
+    padding-inline: 0px;
 }
 
 .ios .title {

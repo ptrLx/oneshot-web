@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources>
-    <string name="app_name">oneshot-web</string>
-    <string name="title_activity_main">oneshot-web</string>
-    <string name="package_name">io.ionic.starter</string>
-    <string name="custom_url_scheme">io.ionic.starter</string>
+    <string name="app_name">OneShot Web</string>
+    <string name="title_activity_main">OneShot Web</string>
+    <string name="package_name">de.ptrlx.oneshotweb</string>
+    <string name="custom_url_scheme">de.ptrlx.oneshotweb</string>
 </resources>

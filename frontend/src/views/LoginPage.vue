@@ -95,10 +95,14 @@ export default defineComponent({
 
                 router.push('/home');
             }, (e: ApiError) => {
-                if (e.body.detail === undefined) {
-                    showToastFail("An error occurred during the login.")
-                } else {
-                    showToastFail(e.body.detail);
+                console.log(e.body)
+                if (typeof e.body === 'string') {
+                    showToastFail(e.body); // Most likely a internal server error (e.g. the database not reachable)
+                } else if (Array.isArray(e.body.detail)) {
+                    showToastFail("Username and password is required"); // Field is missing
+                }
+                else {
+                    showToastFail(e.body.detail); // Incorrect username or password
                 }
             })
         }
