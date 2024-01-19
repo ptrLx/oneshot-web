@@ -1,5 +1,22 @@
 # Changelog
 
+## [1.4.0](https://github.com/ptrLx/oneshot-web/compare/v1.3.0...v1.4.0) (2024-01-19)
+
+
+### Features
+
+* **frontend:** Add database import ([228ca5d](https://github.com/ptrLx/oneshot-web/commit/228ca5db7350707c6000ea679e4b451d5447d265))
+* **frontend:** Add licence modal and small ui adjustments ([d13bb56](https://github.com/ptrLx/oneshot-web/commit/d13bb564f3c5b8ba3fe32d40614cdbdb9534bb8f))
+* **frontend:** Enable looping swiper slides ([8b78af8](https://github.com/ptrLx/oneshot-web/commit/8b78af8b3917e86be25f149504378113e79ac4cf))
+* **frontend:** Performance and PWA optimizations ([c454c21](https://github.com/ptrLx/oneshot-web/commit/c454c21620cffd55a5d9c35e02791aaa735fb31f))
+
+
+### Bug Fixes
+
+* **frontend:** error handling in login page ([dde679b](https://github.com/ptrLx/oneshot-web/commit/dde679b2fd460060dc3118655701722939c4ea4e))
+* **frontend:** Fix completely transparent toolbar ([9e85682](https://github.com/ptrLx/oneshot-web/commit/9e8568207767671d71069bd9bcaea79719d9ec68))
+* **frontend:** Make GalleryImage title more readable ([538401a](https://github.com/ptrLx/oneshot-web/commit/538401a0b6efc8f8ac543c63b6a795ea409113bc))
+
 ## [1.3.0](https://github.com/ptrLx/oneshot-web/compare/v1.2.2...v1.3.0) (2024-01-08)
 
 
