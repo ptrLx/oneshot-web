@@ -46,16 +46,16 @@
 </template>
   
 <script lang="ts">
-import { IonButton, IonGrid, IonRow, IonCol, IonIcon, IonTextarea, useIonRouter, IonAlert, IonTitle, IonImg } from '@ionic/vue';
-import { trashOutline } from 'ionicons/icons';
-import { defineComponent, ref } from 'vue';
-import { OneShotService } from '@/_generated/api-client';
-import { useRoute } from 'vue-router';
-import { useCameraService } from '@/composables/cameraService';
-import HappinessSelector from '@/components/HappinessSelector.vue';
-import { HappinessDTO } from '@/_generated/api-client';
-import { blobStore, metadataStore } from '@/composables/store';
-import { useThemeService } from '@/composables/themeService';
+import { IonButton, IonGrid, IonRow, IonCol, IonIcon, IonTextarea, useIonRouter, IonAlert, IonTitle, IonImg } from "@ionic/vue"
+import { trashOutline } from "ionicons/icons"
+import { defineComponent, ref } from "vue"
+import { OneShotService } from "@/_generated/api-client"
+import { useRoute } from "vue-router"
+import { useCameraService } from "@/composables/cameraService"
+import HappinessSelector from "@/components/HappinessSelector.vue"
+import { HappinessDTO } from "@/_generated/api-client"
+import { blobStore, metadataStore } from "@/composables/store"
+import { useThemeService } from "@/composables/themeService"
 
 export default defineComponent({
     components: {
@@ -73,37 +73,37 @@ export default defineComponent({
     setup() {
         useThemeService(true) // Set theme to media preference
 
-        const route = useRoute();
-        const router = useIonRouter();
-        const { takePhoto, pickPhoto, photos } = useCameraService();
+        const route = useRoute()
+        const router = useIonRouter()
+        const { takePhoto, pickPhoto, photos } = useCameraService()
 
-        const imgDate = ref<string>(route.params.id as string);
-        const imgSrc = ref<string>(URL.createObjectURL(blobStore.getBlob()));
-        const metadata = metadataStore.getMetadata();
-        const uploadedImage = ref<string>(imgSrc.value);
-        const description = ref<string>(metadata?.text || '');
-        const selectedHappiness = ref<HappinessDTO | null>(metadata?.happiness || null);
+        const imgDate = ref<string>(route.params.id as string)
+        const imgSrc = ref<string>(URL.createObjectURL(blobStore.getBlob()))
+        const metadata = metadataStore.getMetadata()
+        const uploadedImage = ref<string>(imgSrc.value)
+        const description = ref<string>(metadata?.text || "")
+        const selectedHappiness = ref<HappinessDTO | null>(metadata?.happiness || null)
 
         switch (route.query.action) {
-            case 'capture':
+            case "capture":
                 takePhoto().then(() => {
-                    uploadedImage.value = photos.value[0]?.webviewPath || '';
-                    imgDate.value = new Date().toISOString().slice(0, 10);
+                    uploadedImage.value = photos.value[0]?.webviewPath || ""
+                    imgDate.value = new Date().toISOString().slice(0, 10)
                 })
-                break;
-            case 'pick':
+                break
+            case "pick":
                 pickPhoto().then(() => {
-                    uploadedImage.value = photos.value[0]?.webviewPath || '';
-                    imgDate.value = new Date().toISOString().slice(0, 10);
+                    uploadedImage.value = photos.value[0]?.webviewPath || ""
+                    imgDate.value = new Date().toISOString().slice(0, 10)
                 })
-                break;
+                break
             default:
-                console.log('Unknown action');
-                break;
+                console.log("Unknown action")
+                break
         }
 
         const handleNewHappiness = (newHappiness: HappinessDTO) => {
-            selectedHappiness.value = newHappiness;
+            selectedHappiness.value = newHappiness
         }
 
         const handleUpdate = () => {
@@ -114,29 +114,29 @@ export default defineComponent({
                 selectedHappiness.value,
                 description.value,
             ).then(() => {
-                router.push('/home');
+                router.push("/home")
             })
         }
 
         const handleDelete = () => {
             OneShotService.deleteImageImageDeletePost(imgDate.value).then(() => {
-                router.push('/home');
+                router.push("/home")
             }, () => {
-                console.log("An error occurred while deleting the image");
+                console.log("An error occurred while deleting the image")
             })
         }
 
         const alertButtons = [
             {
-                text: 'Delete',
+                text: "Delete",
                 //cssClass: 'alertButtonDelete', // Styling not working here
                 handler: handleDelete,
             },
             {
-                text: 'Cancel',
-                role: 'cancel',
+                text: "Cancel",
+                role: "cancel",
             },
-        ];
+        ]
 
 
         return {
@@ -148,9 +148,9 @@ export default defineComponent({
             selectedHappiness,
             trashOutline,
             alertButtons,
-        };
+        }
     },
-});
+})
 
 </script>
 

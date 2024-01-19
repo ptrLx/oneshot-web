@@ -8,13 +8,13 @@
 </template>
   
 <script lang="ts">
-import { IonDatetime, IonButton } from '@ionic/vue';
-import { defineComponent, ref, onMounted } from 'vue';
-import { useRouter } from 'vue-router';
-import { CalendarService } from '@/_generated/api-client';
-import { CalendarEntryRespDTO } from '@/_generated/api-client/models/CalendarEntryRespDTO';
-import { HappinessDTO } from '@/_generated/api-client/models/HappinessDTO';
-import { OneShotService } from '@/_generated/api-client';
+import { IonDatetime, IonButton } from "@ionic/vue"
+import { defineComponent, ref, onMounted } from "vue"
+import { useRouter } from "vue-router"
+import { CalendarService } from "@/_generated/api-client"
+import { CalendarEntryRespDTO } from "@/_generated/api-client/models/CalendarEntryRespDTO"
+import { HappinessDTO } from "@/_generated/api-client/models/HappinessDTO"
+import { OneShotService } from "@/_generated/api-client"
 
 export default defineComponent({
     components: {
@@ -23,104 +23,104 @@ export default defineComponent({
     },
     setup() {
 
-        const router = useRouter();
-        const selectedDate = ref<string>((new Date).toISOString());
-        const displayedMonth = ref<string>('');
-        const highlightedDates = ref<{ date: string; textColor: string, backgroundColor: string }[]>();
+        const router = useRouter()
+        const selectedDate = ref<string>((new Date).toISOString())
+        const displayedMonth = ref<string>("")
+        const highlightedDates = ref<{ date: string; textColor: string, backgroundColor: string }[]>()
 
         const observeCalendarChanges = () => {
-            const targetNode = document.querySelector('ion-datetime#calendar');
-            if (!targetNode) return;
+            const targetNode = document.querySelector("ion-datetime#calendar")
+            if (!targetNode) return
 
             const observerCallback = (mutationsList: MutationRecord[]) => {
                 for (const mutation of mutationsList) {
-                    if (mutation.type === 'attributes') {
-                        const calendar = document.querySelector('ion-datetime#calendar');
-                        const label = calendar?.shadowRoot?.querySelector('.calendar-month-year ion-item ion-label');
-                        const textContent = label?.textContent;
+                    if (mutation.type === "attributes") {
+                        const calendar = document.querySelector("ion-datetime#calendar")
+                        const label = calendar?.shadowRoot?.querySelector(".calendar-month-year ion-item ion-label")
+                        const textContent = label?.textContent
 
                         if (textContent && textContent !== displayedMonth.value) {
                             displayedMonth.value = textContent
-                            handleMonthChange(textContent);
+                            handleMonthChange(textContent)
                         }
                     }
                 }
-            };
+            }
 
-            const observer = new MutationObserver(observerCallback);
-            observer.observe(targetNode, { attributes: true, childList: true, subtree: true });
-        };
+            const observer = new MutationObserver(observerCallback)
+            observer.observe(targetNode, { attributes: true, childList: true, subtree: true })
+        }
 
-        onMounted(observeCalendarChanges);
+        onMounted(observeCalendarChanges)
 
         const handleMonthChange = (dateText: string) => {
-            const formattedDate = formatDisplayDate(dateText);
+            const formattedDate = formatDisplayDate(dateText)
             CalendarService.getCalendarCalendarGet(formattedDate).then((response) => {
-                highlightedDates.value = updateHighlightedDates(response);
-            });
-        };
+                highlightedDates.value = updateHighlightedDates(response)
+            })
+        }
 
         const formatDisplayDate = (dateText: string) => {
-            const date = new Date(`1 ${dateText}`);
-            const year = date.getFullYear();
-            const month = date.getMonth() + 1;
-            return `${year}-${month.toString().padStart(2, '0')}`;
-        };
+            const date = new Date(`1 ${dateText}`)
+            const year = date.getFullYear()
+            const month = date.getMonth() + 1
+            return `${year}-${month.toString().padStart(2, "0")}`
+        }
 
         const updateHighlightedDates = (response: CalendarEntryRespDTO[]) => {
             const result = response.map((item) => {
-                let bgColor = '';
-                const happinessState = item.oneshot?.happiness;
+                let bgColor = ""
+                const happinessState = item.oneshot?.happiness
                 switch (happinessState) {
                     case HappinessDTO.VERY_HAPPY:
-                        bgColor = 'var(--color-very-happy)';
-                        break;
+                        bgColor = "var(--color-very-happy)"
+                        break
                     case HappinessDTO.HAPPY:
-                        bgColor = 'var(--color-happy)';
-                        break;
+                        bgColor = "var(--color-happy)"
+                        break
                     case HappinessDTO.NEUTRAL:
-                        bgColor = 'var(--color-neutral)';
-                        break;
+                        bgColor = "var(--color-neutral)"
+                        break
                     case HappinessDTO.SAD:
-                        bgColor = 'var(--color-sad)';
-                        break;
+                        bgColor = "var(--color-sad)"
+                        break
                     case HappinessDTO.VERY_SAD:
-                        bgColor = 'var(--color-very-sad)';
-                        break;
+                        bgColor = "var(--color-very-sad)"
+                        break
                     case null: // Unspecified happiness
-                        bgColor = 'var(--color-unspecified)';
-                        break;
+                        bgColor = "var(--color-unspecified)"
+                        break
                     default:
-                        bgColor = 'var(--color-none)';
-                        break;
+                        bgColor = "var(--color-none)"
+                        break
                 }
 
                 return {
                     date: item.date,
-                    textColor: 'var(--ion-color-light)',
+                    textColor: "var(--ion-color-light)",
                     backgroundColor: bgColor,
-                };
-            });
+                }
+            })
 
-            return result;
-        };
+            return result
+        }
 
         const handleSelection = async () => {
-            const formattedDate = new Date(selectedDate.value).toLocaleDateString('en-CA');
+            const formattedDate = new Date(selectedDate.value).toLocaleDateString("en-CA")
             OneShotService.getMetadataMetadataGet(formattedDate).then(() => {
-                router.push("/image/" + formattedDate);
+                router.push("/image/" + formattedDate)
             }, () => {
-                console.log("No image for this date exists");
+                console.log("No image for this date exists")
             })
-        };
+        }
 
         return {
             highlightedDates,
             selectedDate,
             handleSelection,
-        };
+        }
     },
-});
+})
 </script>
   
 <style scoped>

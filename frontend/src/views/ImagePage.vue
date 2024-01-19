@@ -17,15 +17,15 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, nextTick, ref, watch } from 'vue';
-import { IonImg, IonButton, IonIcon } from '@ionic/vue';
-import { useRoute } from 'vue-router'
-import { useImageService } from '@/composables/imageService';
-import { OneShotService } from '@/_generated/api-client';
-import { createOutline } from 'ionicons/icons';
-import router from '@/router';
-import { blobStore, metadataStore } from '@/composables/store';
-import { useThemeService } from '@/composables/themeService';
+import { computed, defineComponent, nextTick, ref, watch } from "vue"
+import { IonImg, IonButton, IonIcon } from "@ionic/vue"
+import { useRoute } from "vue-router"
+import { useImageService } from "@/composables/imageService"
+import { OneShotService } from "@/_generated/api-client"
+import { createOutline } from "ionicons/icons"
+import router from "@/router"
+import { blobStore, metadataStore } from "@/composables/store"
+import { useThemeService } from "@/composables/themeService"
 
 export default defineComponent({
     components: {
@@ -40,51 +40,51 @@ export default defineComponent({
         const { downloadGalleryImg } = useImageService()
 
         const happinessMap = {
-            VERY_HAPPY: '😁',
-            HAPPY: '🙂',
-            NEUTRAL: '😐',
-            SAD: '😞',
-            VERY_SAD: '😭',
-            NOT_SPECIFIED: '❓'
-        };
+            VERY_HAPPY: "😁",
+            HAPPY: "🙂",
+            NEUTRAL: "😐",
+            SAD: "😞",
+            VERY_SAD: "😭",
+            NOT_SPECIFIED: "❓"
+        }
         const id = route.params.id as string // the image date in format YYYY-MM-DD
-        const imgSrc = ref<string>('')
+        const imgSrc = ref<string>("")
         const imageDate = ref<string>(id)
         const imageHappiness = ref<string>(happinessMap.NOT_SPECIFIED)
-        const imageTitle = computed(() => `${imageDate.value} | ${imageHappiness.value}`);
-        const descriptionText = ref<string>('')
+        const imageTitle = computed(() => `${imageDate.value} | ${imageHappiness.value}`)
+        const descriptionText = ref<string>("")
         const descriptionRef = ref<HTMLDivElement | null>(null)
 
         const isExpanded = ref<boolean>(false)
         const isOverflowing = computed(() => {
             if (descriptionRef.value) {
-                return descriptionRef.value.scrollHeight > descriptionRef.value.clientHeight;
+                return descriptionRef.value.scrollHeight > descriptionRef.value.clientHeight
             }
-            return false;
+            return false
         })
 
         const updateDescriptionClass = () => {
             nextTick(() => {
-                const method = isExpanded.value ? 'remove' : 'add';
-                descriptionRef.value?.classList[method]('description-overflowing');
-            });
-        };
+                const method = isExpanded.value ? "remove" : "add"
+                descriptionRef.value?.classList[method]("description-overflowing")
+            })
+        }
 
         const expandDescription = () => {
             if (isOverflowing.value) {
-                isExpanded.value = !isExpanded.value;
-                updateDescriptionClass();
+                isExpanded.value = !isExpanded.value
+                updateDescriptionClass()
             }
-        };
+        }
 
         // Initial update of css class when description is set
         watch(descriptionText, () => {
             nextTick(() => {
                 // update css class of description
                 if (isOverflowing.value) {
-                    descriptionRef.value?.classList.add('description-overflowing');
+                    descriptionRef.value?.classList.add("description-overflowing")
                 }
-            });
+            })
         })
 
 
@@ -122,7 +122,7 @@ export default defineComponent({
             handleEditClick,
         }
     }
-});
+})
 </script>
 
 <style scoped>

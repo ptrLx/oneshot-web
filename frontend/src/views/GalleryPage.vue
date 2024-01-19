@@ -23,13 +23,13 @@ import {
     IonCol,
     IonInfiniteScroll,
     IonInfiniteScrollContent
-} from '@ionic/vue';
+} from "@ionic/vue"
 
-import { defineComponent, ref, onMounted } from 'vue';
-import { OneShotService } from '@/_generated/api-client';
-import { useImageService } from '@/composables/imageService';
-import GalleryImage from '@/components/GalleryImage.vue';
-import { useThemeService } from '@/composables/themeService';
+import { defineComponent, ref, onMounted } from "vue"
+import { OneShotService } from "@/_generated/api-client"
+import { useImageService } from "@/composables/imageService"
+import GalleryImage from "@/components/GalleryImage.vue"
+import { useThemeService } from "@/composables/themeService"
 
 export default defineComponent({
     components: {
@@ -43,63 +43,63 @@ export default defineComponent({
     setup() {
         useThemeService(true) // Set theme to media preference
 
-        const { downloadGalleryImg } = useImageService();
-        const galleryRows = ref<{ date: string; url: string; happiness: string }[][]>([]);
-        let imgPage = 0;
+        const { downloadGalleryImg } = useImageService()
+        const galleryRows = ref<{ date: string; url: string; happiness: string }[][]>([])
+        let imgPage = 0
 
         // if this set is too small, dynamic loading will not work (ion-infinite event will not trigger)
-        const imgPageSize = 10; // initial load / batch size when loading more images
+        const imgPageSize = 10 // initial load / batch size when loading more images
 
         const happinessMap = {
-            VERY_HAPPY: '😁',
-            HAPPY: '🙂',
-            NEUTRAL: '😐',
-            SAD: '😞',
-            VERY_SAD: '😭',
-            NOT_SPECIFIED: '❓'
-        };
+            VERY_HAPPY: "😁",
+            HAPPY: "🙂",
+            NEUTRAL: "😐",
+            SAD: "😞",
+            VERY_SAD: "😭",
+            NOT_SPECIFIED: "❓"
+        }
         const loadGalleryImages = async () => {
-            const images = await OneShotService.paginateGalleryImageGalleryGet(imgPage, imgPageSize);
+            const images = await OneShotService.paginateGalleryImageGalleryGet(imgPage, imgPageSize)
             const galleryImages = await Promise.all(
                 images.map(async (image) => {
-                    const blob = await downloadGalleryImg(image.date);
-                    const url = URL.createObjectURL(blob);
-                    let hapinessEmoji = happinessMap["NOT_SPECIFIED"];
+                    const blob = await downloadGalleryImg(image.date)
+                    const url = URL.createObjectURL(blob)
+                    let hapinessEmoji = happinessMap["NOT_SPECIFIED"]
                     if (image.happiness) {
-                        hapinessEmoji = happinessMap[image.happiness];
+                        hapinessEmoji = happinessMap[image.happiness]
                     }
 
                     return {
                         date: image.date,
                         url: url,
                         happiness: hapinessEmoji
-                    };
+                    }
                 })
-            );
-            galleryRows.value.push(galleryImages);
-        };
+            )
+            galleryRows.value.push(galleryImages)
+        }
 
         const loadMoreImages = async (event?: CustomEvent<void>) => {
-            console.log('Loading more images ... ');
-            await loadGalleryImages();
-            imgPage++;
+            console.log("Loading more images ... ")
+            await loadGalleryImages()
+            imgPage++
             if (event) {
-                (event.target as HTMLIonInfiniteScrollElement).complete();
+                (event.target as HTMLIonInfiniteScrollElement).complete()
             }
-        };
+        }
 
 
         onMounted(() => {
             // Initial load 
-            loadMoreImages();
-        });
+            loadMoreImages()
+        })
 
         return {
             galleryRows,
             loadMoreImages
-        };
+        }
     }
-});
+})
 </script>
   
 <style scoped></style>

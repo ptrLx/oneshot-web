@@ -82,16 +82,16 @@
 </template>
   
 <script lang="ts">
-import { IonAvatar, IonButton, IonGrid, IonRow, IonCol, IonIcon, IonTitle, useIonRouter, IonImg, IonActionSheet, IonModal, toastController } from '@ionic/vue';
-import { UserService, OpenAPI, ApiError } from '@/_generated/api-client';
-import { cameraOutline } from 'ionicons/icons';
-import { defineComponent, onMounted, ref } from 'vue';
-import { useCookies } from 'vue3-cookies'
-import { useCameraService } from '@/composables/cameraService';
-import { useImageService } from '@/composables/imageService';
-import { store } from '@/composables/store';
-import { useThemeService } from '@/composables/themeService';
-import { useImportExportService } from '@/composables/importExportService';
+import { IonAvatar, IonButton, IonGrid, IonRow, IonCol, IonIcon, IonTitle, useIonRouter, IonImg, IonActionSheet, IonModal, toastController } from "@ionic/vue"
+import { UserService, OpenAPI, ApiError } from "@/_generated/api-client"
+import { cameraOutline } from "ionicons/icons"
+import { defineComponent, onMounted, ref } from "vue"
+import { useCookies } from "vue3-cookies"
+import { useCameraService } from "@/composables/cameraService"
+import { useImageService } from "@/composables/imageService"
+import { store } from "@/composables/store"
+import { useThemeService } from "@/composables/themeService"
+import { useImportExportService } from "@/composables/importExportService"
 
 export default defineComponent({
     components: {
@@ -107,46 +107,46 @@ export default defineComponent({
         IonModal,
     },
     setup() {
-        const router = useIonRouter();
-        const { cookies } = useCookies();
-        OpenAPI.TOKEN = cookies.get("token");
-        const username = ref<string>("");
-        const profilePic = ref<string | null>(null);
-        const blobUrl = ref<string>("https://ionicframework.com/docs/img/demos/avatar.svg");
-        const { takePhoto, pickPhoto, photos } = useCameraService();
-        const { loadImg, uploadProfileImg } = useImageService();
-        const { toggleTheme } = useThemeService(true);
-        const { importDatabase, openFileDialog } = useImportExportService();
+        const router = useIonRouter()
+        const { cookies } = useCookies()
+        OpenAPI.TOKEN = cookies.get("token")
+        const username = ref<string>("")
+        const profilePic = ref<string | null>(null)
+        const blobUrl = ref<string>("https://ionicframework.com/docs/img/demos/avatar.svg")
+        const { takePhoto, pickPhoto, photos } = useCameraService()
+        const { loadImg, uploadProfileImg } = useImageService()
+        const { toggleTheme } = useThemeService(true)
+        const { importDatabase, openFileDialog } = useImportExportService()
 
         const actionSheetButtons = [
             {
-                text: 'Camera',
-                role: 'destructive',
+                text: "Camera",
+                role: "destructive",
                 handler: () => {
                     takePhoto().then(() => {
-                        blobUrl.value = photos.value[0]?.webviewPath || '';
-                        uploadProfileImg(blobUrl.value);
-                        store.notifyProfilePicUpdate();
-                    });
+                        blobUrl.value = photos.value[0]?.webviewPath || ""
+                        uploadProfileImg(blobUrl.value)
+                        store.notifyProfilePicUpdate()
+                    })
                 }
             },
             {
-                text: 'Gallery',
-                role: 'destructive',
+                text: "Gallery",
+                role: "destructive",
                 handler: () => {
                     pickPhoto().then(() => {
-                        blobUrl.value = photos.value[0]?.webviewPath || '';
+                        blobUrl.value = photos.value[0]?.webviewPath || ""
                         uploadProfileImg(blobUrl.value).then(() => {
-                            store.notifyProfilePicUpdate();
-                        });
-                    });
+                            store.notifyProfilePicUpdate()
+                        })
+                    })
                 }
             },
             {
-                text: 'Cancel',
-                role: 'cancel',
+                text: "Cancel",
+                role: "cancel",
                 handler: () => {
-                    console.log('Cancel clicked');
+                    console.log("Cancel clicked")
                 }
             }
         ]
@@ -155,44 +155,44 @@ export default defineComponent({
             importDatabase(event)
                 .then(() => {
                     return toastController.create({
-                        message: 'Database imported successfully',
+                        message: "Database imported successfully",
                         duration: 2000,
-                        color: 'success'
-                    });
+                        color: "success"
+                    })
                 })
                 .catch((error) => {
                     return toastController.create({
                         message: error.message,
                         duration: 2000,
-                        color: 'danger'
-                    });
+                        color: "danger"
+                    })
                 })
                 .then((toast) => {
-                    toast.present();
-                });
-        };
+                    toast.present()
+                })
+        }
 
         const handleLogout = () => {
-            cookies.remove("token");
-            router.push('/login');
+            cookies.remove("token")
+            router.push("/login")
         }
 
         UserService.getUserMeUserMeGet().then((response) => {
-            username.value = response.username;
+            username.value = response.username
         }, (e: ApiError) => {
             console.log(e)
         })
 
 
         onMounted(async () => {
-            const queryString = OpenAPI.BASE + "/user/profileimg";
+            const queryString = OpenAPI.BASE + "/user/profileimg"
             loadImg(queryString).then(blob => {
 
-                blobUrl.value = URL.createObjectURL(blob);
+                blobUrl.value = URL.createObjectURL(blob)
             }).catch(() => {
-                console.log("Profile image not found");
+                console.log("Profile image not found")
             })
-        });
+        })
 
         return {
             cameraOutline,
@@ -206,9 +206,9 @@ export default defineComponent({
             openFileDialog,
             username,
             actionSheetButtons,
-        };
+        }
     },
-});
+})
 
 </script>
 

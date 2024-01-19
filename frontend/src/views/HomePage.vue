@@ -104,83 +104,83 @@
 </template>
 
 <script setup lang="ts">
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonImg, IonRefresher, IonRefresherContent } from '@ionic/vue';
-import { SwiperSlide } from 'swiper/vue';
-import RowComponent from '@/components/RowComponent.vue';
-import ProfileComponent from '@/components/ProfileComponent.vue';
-import Card from '@/components/Card.vue';
-import CaptureTodaySlide from '@/components/CaptureTodaySlide.vue';
-import DonutChart from '@/components/DonutChart.vue';
-import CalendarComponent from '@/components/CalendarComponent.vue';
-import { useRouter } from 'vue-router';
-import { StatisticsService, StatisticDTO } from '@/_generated/api-client';
-import { onBeforeMount, onMounted, ref } from 'vue';
-import { useFlashbackService, FlashbackUrlAndMeta } from '@/composables/flashbackService';
-import { useThemeService } from '@/composables/themeService';
+import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonImg, IonRefresher, IonRefresherContent } from "@ionic/vue"
+import { SwiperSlide } from "swiper/vue"
+import RowComponent from "@/components/RowComponent.vue"
+import ProfileComponent from "@/components/ProfileComponent.vue"
+import Card from "@/components/Card.vue"
+import CaptureTodaySlide from "@/components/CaptureTodaySlide.vue"
+import DonutChart from "@/components/DonutChart.vue"
+import CalendarComponent from "@/components/CalendarComponent.vue"
+import { useRouter } from "vue-router"
+import { StatisticsService, StatisticDTO } from "@/_generated/api-client"
+import { onBeforeMount, ref } from "vue"
+import { useFlashbackService, FlashbackUrlAndMeta } from "@/composables/flashbackService"
+import { useThemeService } from "@/composables/themeService"
 
 useThemeService(true) // Set theme to media preference
 
-const router = useRouter();
-const { getFlashbacks } = useFlashbackService();
+const router = useRouter()
+const { getFlashbacks } = useFlashbackService()
 
-const flashbackImgs = ref<{ [key: string]: FlashbackUrlAndMeta }>({});
+const flashbackImgs = ref<{ [key: string]: FlashbackUrlAndMeta }>({})
 
-const stats = ref<StatisticDTO | null>(null);
+const stats = ref<StatisticDTO | null>(null)
 
 
 onBeforeMount(() => {
-  updateActions();
-});
+  updateActions()
+})
 
 
 const handleRefresh = (event: CustomEvent) => {
-  updateActions(event);
+  updateActions(event)
 }
 
 const getSameDateLastYearsImages = (flashbackImgs: { [key: string]: FlashbackUrlAndMeta }) => {
   return Object.keys(flashbackImgs)
-    .filter(key => key.startsWith('same_date_last_years_'))
-    .map(key => flashbackImgs[key]);
+    .filter(key => key.startsWith("same_date_last_years_"))
+    .map(key => flashbackImgs[key])
 }
 
 const getCardTitle = (flashbackDate: string) => {
-  const currentDate = new Date();
-  const flashbackYear = new Date(flashbackDate).getFullYear();
-  const currentYear = currentDate.getFullYear();
-  const differenceInYears = currentYear - flashbackYear;
+  const currentDate = new Date()
+  const flashbackYear = new Date(flashbackDate).getFullYear()
+  const currentYear = currentDate.getFullYear()
+  const differenceInYears = currentYear - flashbackYear
 
   const toWords = (number: number) => {
     const words = [
-      'One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine', 'Ten', 'Eleven', 'Twelve'
-    ];
-    return words[number] || number.toString();
+      "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten", "Eleven", "Twelve"
+    ]
+    return words[number] || number.toString()
   }
 
   if (differenceInYears === 0) {
-    return 'One Year Ago';
+    return "One Year Ago"
   }
 
-  return `${toWords(differenceInYears)} Years Ago`;
+  return `${toWords(differenceInYears)} Years Ago`
 }
 
 const hasImage = (key: string) => {
-  return flashbackImgs.value[key]?.url;
-};
+  return flashbackImgs.value[key]?.url
+}
 
 const updateActions = (event: CustomEvent = { detail: { complete: () => { } } } as CustomEvent) => {
   getFlashbacks().then((flashbacks) => {
-    flashbackImgs.value = flashbacks;
-    event.detail.complete();
+    flashbackImgs.value = flashbacks
+    event.detail.complete()
   }).catch(() => {
-    console.log("Could not retrieve flashbacks");
-    event.detail.complete();
-  });
+    console.log("Could not retrieve flashbacks")
+    event.detail.complete()
+  })
 
   StatisticsService.getStatisticsStatsGet().then((response) => {
-    stats.value = response;
+    stats.value = response
   }).catch(() => {
-    console.log("Could not retrieve stats");
-  });
+    console.log("Could not retrieve stats")
+  })
 }
 
 </script>

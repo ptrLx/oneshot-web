@@ -40,11 +40,24 @@
     "python.analysis.extraPaths": [
         "./backend/api/src"
     ],
+    "eslint.format.enable": true,
     "editor.codeActionsOnSave": {
-        "source.fixAll.eslint": "explicit"
+        "source.fixAll.eslint": "always"
+    },
+    //disable format on safe for all that is handled by eslint
+    "[vue]": {
+        "editor.defaultFormatter": "dbaeumer.vscode-eslint"
+    },
+    "[typescript]": {
+        "editor.defaultFormatter": "dbaeumer.vscode-eslint"
+    },
+    "[javascript]": {
+        "editor.defaultFormatter": "dbaeumer.vscode-eslint"
     },
     "eslint.validate": [
         "typescript",
-        "vue"
+        "vue",
+        "cjs",
+        "js"
     ],
 }

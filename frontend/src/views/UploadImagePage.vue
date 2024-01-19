@@ -38,16 +38,16 @@
 </template>
   
 <script lang="ts">
-import { IonButton, IonGrid, IonRow, IonCol, IonTextarea, useIonRouter, IonTitle, IonImg } from '@ionic/vue';
+import { IonButton, IonGrid, IonRow, IonCol, IonTextarea, useIonRouter, IonTitle, IonImg } from "@ionic/vue"
 
-import { defineComponent, ref } from 'vue';
-import { useRoute } from 'vue-router';
-import { useCameraService } from '@/composables/cameraService';
-import { useImageService } from '@/composables/imageService';
-import HappinessSelector from '@/components/HappinessSelector.vue';
-import { HappinessDTO } from '@/_generated/api-client';
-import { OneShotUpdate } from '@/types/OneShotUpdate';
-import { useThemeService } from '@/composables/themeService';
+import { defineComponent, ref } from "vue"
+import { useRoute } from "vue-router"
+import { useCameraService } from "@/composables/cameraService"
+import { useImageService } from "@/composables/imageService"
+import HappinessSelector from "@/components/HappinessSelector.vue"
+import { HappinessDTO } from "@/_generated/api-client"
+import { OneShotUpdate } from "@/types/OneShotUpdate"
+import { useThemeService } from "@/composables/themeService"
 
 export default defineComponent({
     components: {
@@ -63,37 +63,37 @@ export default defineComponent({
     setup() {
         useThemeService(true) // Set theme to media preference
 
-        const route = useRoute();
-        const router = useIonRouter();
-        const { takePhoto, pickPhoto, photos } = useCameraService();
-        const { uploadGalleryImg } = useImageService();
+        const route = useRoute()
+        const router = useIonRouter()
+        const { takePhoto, pickPhoto, photos } = useCameraService()
+        const { uploadGalleryImg } = useImageService()
 
-        const imgDate = ref<string>("");
-        const uploadedImage = ref<string>("");
-        const description = ref<string>("");
+        const imgDate = ref<string>("")
+        const uploadedImage = ref<string>("")
+        const description = ref<string>("")
 
         let selectedHappiness: HappinessDTO | null = null // Default value
 
         switch (route.query.action) {
-            case 'capture':
+            case "capture":
                 takePhoto().then(() => {
-                    uploadedImage.value = photos.value[0]?.webviewPath || '';
-                    imgDate.value = new Date().toISOString().slice(0, 10);
+                    uploadedImage.value = photos.value[0]?.webviewPath || ""
+                    imgDate.value = new Date().toISOString().slice(0, 10)
                 })
-                break;
-            case 'pick':
+                break
+            case "pick":
                 pickPhoto().then(() => {
-                    uploadedImage.value = photos.value[0]?.webviewPath || '';
-                    imgDate.value = new Date().toISOString().slice(0, 10);
+                    uploadedImage.value = photos.value[0]?.webviewPath || ""
+                    imgDate.value = new Date().toISOString().slice(0, 10)
                 })
-                break;
+                break
             default:
-                console.log('Unknown action');
-                break;
+                console.log("Unknown action")
+                break
         }
 
         const handleNewHappiness = (newHappiness: HappinessDTO) => {
-            selectedHappiness = newHappiness;
+            selectedHappiness = newHappiness
         }
 
         const handleUpload = () => {
@@ -103,14 +103,14 @@ export default defineComponent({
                 time: Date.now() / 1000, //TODO: read from image exif data instead
                 happiness: selectedHappiness,
                 text: description.value,
-            };
+            }
 
             uploadGalleryImg(uploadedImage.value, oneShotUpdate).then(() => {
-                router.push('/home');
+                router.push("/home")
             }).catch((error) => {
-                console.log(error);
+                console.log(error)
                 //TODO: show error message to user
-            });
+            })
         }
 
         return {
@@ -119,9 +119,9 @@ export default defineComponent({
             description,
             handleNewHappiness,
             handleUpload
-        };
+        }
     },
-});
+})
 
 </script>
 
@@ -179,5 +179,3 @@ ion-img::part(image) {
     margin-right: 10%;
 }
 </style>
-
-  
