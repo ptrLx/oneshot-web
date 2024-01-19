@@ -38,7 +38,7 @@
 </template>
   
 <script lang="ts">
-import { IonButton, IonGrid, IonRow, IonCol, IonTextarea, useIonRouter, IonTitle, IonImg } from "@ionic/vue"
+import { IonButton, IonGrid, IonRow, IonCol, IonTextarea, useIonRouter, IonTitle, IonImg, onIonViewDidLeave } from "@ionic/vue"
 
 import { defineComponent, ref } from "vue"
 import { useRoute } from "vue-router"
@@ -77,14 +77,24 @@ export default defineComponent({
         switch (route.query.action) {
             case "capture":
                 takePhoto().then(() => {
-                    uploadedImage.value = photos.value[0]?.webviewPath || ""
-                    imgDate.value = new Date().toISOString().slice(0, 10)
+                    if (photos.value[0]?.webviewPath) {
+                        uploadedImage.value = photos.value[0]?.webviewPath || ""
+                        imgDate.value = new Date().toISOString().slice(0, 10)
+                    } else {
+                        console.log("No image captured. Returning to home page.")
+                        router.push("/")
+                    }
                 })
                 break
             case "pick":
                 pickPhoto().then(() => {
-                    uploadedImage.value = photos.value[0]?.webviewPath || ""
-                    imgDate.value = new Date().toISOString().slice(0, 10)
+                    if (photos.value[0]?.webviewPath) {
+                        uploadedImage.value = photos.value[0]?.webviewPath || ""
+                        imgDate.value = new Date().toISOString().slice(0, 10)
+                    } else {
+                        console.log("No image picked. Returning to home page.")
+                        router.push("/")
+                    }
                 })
                 break
             default:
@@ -112,6 +122,13 @@ export default defineComponent({
                 //TODO: show error message to user
             })
         }
+
+        onIonViewDidLeave(() => {
+            imgDate.value = ""
+            uploadedImage.value = ""
+            description.value = ""
+            selectedHappiness = null
+        })
 
         return {
             uploadedImage,
