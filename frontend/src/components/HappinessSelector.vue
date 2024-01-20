@@ -18,9 +18,9 @@
 </template>
   
 <script lang="ts">
-import { defineComponent, ref, watch } from 'vue';
-import { IonRadio, IonRadioGroup, IonRow, IonCol, IonLabel } from '@ionic/vue';
-import { HappinessDTO } from '@/_generated/api-client';
+import { defineComponent, ref, watch } from "vue"
+import { IonRadio, IonRadioGroup, IonRow, IonCol, IonLabel } from "@ionic/vue"
+import { HappinessDTO } from "@/_generated/api-client"
 
 export default defineComponent({
     components: {
@@ -39,32 +39,31 @@ export default defineComponent({
     setup(props, { emit }) {
 
         const happinessOptions = [
-            { emoji: '😄', value: HappinessDTO.VERY_HAPPY },
-            { emoji: '😃', value: HappinessDTO.HAPPY },
-            { emoji: '😐', value: HappinessDTO.NEUTRAL },
-            { emoji: '😞', value: HappinessDTO.SAD },
-            { emoji: '😢', value: HappinessDTO.VERY_SAD },
-        ];
+            { emoji: "😄", value: HappinessDTO.VERY_HAPPY },
+            { emoji: "😃", value: HappinessDTO.HAPPY },
+            { emoji: "😐", value: HappinessDTO.NEUTRAL },
+            { emoji: "😞", value: HappinessDTO.SAD },
+            { emoji: "😢", value: HappinessDTO.VERY_SAD },
+        ]
 
         const selectedHappiness = ref<HappinessDTO | null>(
             props.defaultHappiness as HappinessDTO || null
-        );
+        )
 
         watch(selectedHappiness, (newValue) => {
-            console.log('selectedHappiness changed to', newValue);
-            emit('update:selectedHappiness', newValue)
-        });
+            emit("update:selectedHappiness", newValue)
+        })
 
         const isSelected = (happiness: { value: HappinessDTO; }) =>
-            selectedHappiness.value === happiness.value;
+            selectedHappiness.value === happiness.value
 
         return {
             selectedHappiness,
             happinessOptions,
             isSelected
-        };
+        }
     },
-});
+})
 </script>
   
 <style scoped>

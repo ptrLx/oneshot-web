@@ -11,11 +11,11 @@
     </ion-card>
 </template>
 <script lang="ts">
-import { defineComponent } from 'vue';
-import { IonCard, IonCardHeader, IonCardSubtitle, IonCardTitle } from '@ionic/vue';
+import { defineComponent } from "vue"
+import { IonCard, IonCardHeader, IonCardSubtitle, IonCardTitle } from "@ionic/vue"
 
-import 'swiper/css';
-import '@ionic/vue/css/ionic-swiper.css';
+import "swiper/css"
+import "@ionic/vue/css/ionic-swiper.css"
 
 export default defineComponent({
     props: {
@@ -34,7 +34,7 @@ export default defineComponent({
         IonCardSubtitle,
         IonCardTitle,
     },
-});
+})
 </script>
 
 <style scoped>
@@ -47,6 +47,10 @@ export default defineComponent({
 
 .ios ion-card-title {
     font-size: 1.0rem;
+}
+
+ion-card-subtitle {
+    --color: var(--ion-color-primary);
 }
 </style>
   

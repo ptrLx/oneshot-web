@@ -30,12 +30,12 @@
 </template>
   
 <script lang="ts">
-import { IonButton, IonGrid, IonRow, IonCol, IonIcon, IonInput, useIonRouter, toastController } from '@ionic/vue';
-import { warningOutline } from 'ionicons/icons';
-import { defineComponent, ref } from 'vue';
-import { UserService, ApiError } from '@/_generated/api-client';
-import { useCookies } from 'vue3-cookies'
-import { useThemeService } from '@/composables/themeService';
+import { IonButton, IonGrid, IonRow, IonCol, IonIcon, IonInput, useIonRouter, toastController } from "@ionic/vue"
+import { warningOutline } from "ionicons/icons"
+import { defineComponent, ref } from "vue"
+import { UserService, ApiError } from "@/_generated/api-client"
+import { useCookies } from "vue3-cookies"
+import { useThemeService } from "@/composables/themeService"
 
 export default defineComponent({
     components: {
@@ -47,40 +47,40 @@ export default defineComponent({
         IonInput,
     },
     setup() {
-        const { cookies } = useCookies();
-        const oldpw = ref<string>("");
-        const newpw = ref<string>("");
-        const router = useIonRouter();
+        const { cookies } = useCookies()
+        const oldpw = ref<string>("")
+        const newpw = ref<string>("")
+        const router = useIonRouter()
 
         useThemeService(true) // Set theme to media preference
 
         const showToastSuccess = () => {
             toastController.create({
-                message: 'Password changed successfully',
+                message: "Password changed successfully",
                 duration: 2000,
-                color: 'success'
+                color: "success"
             }).then((toast) => {
-                toast.present();
-            });
+                toast.present()
+            })
         }
 
         const showToastFail = (msg: string) => {
             toastController.create({
                 message: msg,
                 duration: 2000,
-                color: 'danger'
+                color: "danger"
             }).then((toast) => {
-                toast.present();
-            });
+                toast.present()
+            })
         }
 
         const handlechangePw = () => {
 
             UserService.changeUserPasswordUserChpwPost(oldpw.value, newpw.value).then(() => {
-                showToastSuccess();
-                router.back();
+                showToastSuccess()
+                router.back()
             }, (e: ApiError) => {
-                showToastFail(e.body.detail);
+                showToastFail(e.body.detail)
             })
         }
 
@@ -91,9 +91,9 @@ export default defineComponent({
             oldpw,
             newpw,
             handlechangePw
-        };
+        }
     },
-});
+})
 
 </script>
 

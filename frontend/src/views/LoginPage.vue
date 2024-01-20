@@ -32,12 +32,12 @@
 </template>
   
 <script lang="ts">
-import { IonAvatar, IonButton, IonGrid, IonRow, IonCol, IonInput, useIonRouter, toastController } from '@ionic/vue';
-import { cameraOutline } from 'ionicons/icons';
-import { defineComponent, ref } from 'vue';
-import { UserService, OpenAPI, ApiError } from '@/_generated/api-client';
-import { useCookies } from 'vue3-cookies'
-import { useThemeService } from '@/composables/themeService';
+import { IonAvatar, IonButton, IonGrid, IonRow, IonCol, IonInput, useIonRouter, toastController } from "@ionic/vue"
+import { cameraOutline } from "ionicons/icons"
+import { defineComponent, ref } from "vue"
+import { UserService, OpenAPI, ApiError } from "@/_generated/api-client"
+import { useCookies } from "vue3-cookies"
+import { useThemeService } from "@/composables/themeService"
 
 export default defineComponent({
     components: {
@@ -49,27 +49,21 @@ export default defineComponent({
         IonInput
     },
     setup() {
-        const { cookies } = useCookies();
-        const username = ref<string>("");
-        const password = ref<string>("");
-        const router = useIonRouter();
+        const { cookies } = useCookies()
+        const username = ref<string>("")
+        const password = ref<string>("")
+        const router = useIonRouter()
 
         useThemeService(true) // Set theme to media preference
-
-        const requestUserInfo = () => {
-            UserService.getUserMeUserMeGet().then((user) => {
-                console.log(user.username)
-            })
-        }
 
         const showToastFail = (msg: string) => {
             toastController.create({
                 message: msg,
                 duration: 2000,
-                color: 'danger'
+                color: "danger"
             }).then((toast) => {
-                toast.present();
-            });
+                toast.present()
+            })
         }
 
         const handleLogin = () => {
@@ -88,21 +82,18 @@ export default defineComponent({
                     password: password.value
                 }
             ).then((t) => {
-                cookies.set("token", t.access_token);
-                OpenAPI.TOKEN = t.access_token;
-                requestUserInfo() // TODO: remove, for debugging
-                console.log(t.access_token) // TODO: remove, for debugging
+                cookies.set("token", t.access_token)
+                OpenAPI.TOKEN = t.access_token
 
-                router.push('/home');
+                router.push("/home")
             }, (e: ApiError) => {
-                console.log(e.body)
-                if (typeof e.body === 'string') {
-                    showToastFail(e.body); // Most likely a internal server error (e.g. the database not reachable)
+                if (typeof e.body === "string") {
+                    showToastFail(e.body) // Most likely a internal server error (e.g. the database not reachable)
                 } else if (Array.isArray(e.body.detail)) {
-                    showToastFail("Username and password is required"); // Field is missing
+                    showToastFail("Username and password is required") // Field is missing
                 }
                 else {
-                    showToastFail(e.body.detail); // Incorrect username or password
+                    showToastFail(e.body.detail) // Incorrect username or password
                 }
             })
         }
@@ -114,9 +105,9 @@ export default defineComponent({
             password,
             router,
             handleLogin
-        };
+        }
     },
-});
+})
 
 </script>
 

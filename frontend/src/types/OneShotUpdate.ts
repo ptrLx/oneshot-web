@@ -1,4 +1,4 @@
-import { HappinessDTO } from "@/_generated/api-client";
+import { HappinessDTO } from "@/_generated/api-client"
 
 export interface OneShotUpdate {
     date: string,
@@ -6,4 +6,3 @@ export interface OneShotUpdate {
     happiness: HappinessDTO | null,
     text: string
 }
-

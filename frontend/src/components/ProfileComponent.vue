@@ -28,7 +28,9 @@ export default defineComponent({
       const queryString = OpenAPI.BASE + "/user/profileimg";
       loadImg(queryString).then(blob => {
         blobUrl.value = URL.createObjectURL(blob);
-      })
+      }, () => {
+        console.log("No profile picture found.");
+      });
     }
 
     onMounted(async () => {
