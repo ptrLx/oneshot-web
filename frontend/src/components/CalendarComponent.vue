@@ -155,6 +155,22 @@ export default defineComponent({
     padding-bottom: 50px;
 }
 
+.ios .datetime-light  {
+    --wheel-fade-background-rgb: rgba(var(--ion-color-dark-rgb), 1.0);
+}
+
+.ios .datetime-dark  {
+    --wheel-fade-background-rgb: rgba(var(--ion-color-dark-rgb), 1.0);
+}
+
+.ios ion-datetime::part(wheel-item) {
+    color: var(--ion-color-primary);
+}
+
+.ios ion-datetime::part(wheel-item active) {
+    color: var(--ion-color-primary);
+}
+
 ion-datetime::part(calendar-day today) {
     box-shadow: 0px 0px 0px 5px color-mix(in srgb, var(--ion-color-primary), transparent 66%);
 }
