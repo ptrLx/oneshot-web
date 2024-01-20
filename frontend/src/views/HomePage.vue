@@ -151,8 +151,8 @@ const getCardTitle = (flashbackDate: string) => {
     const currentDate = new Date()
     const flashbackYear = new Date(flashbackDate).getFullYear()
     const currentYear = currentDate.getFullYear()
-    const differenceInYears = currentYear - flashbackYear
-
+    const differenceInYears = currentYear - flashbackYear - 1
+    console.log(differenceInYears)
     const toWords = (number: number) => {
         const words = [
             "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten", "Eleven", "Twelve"
