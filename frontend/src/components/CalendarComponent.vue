@@ -149,6 +149,7 @@ export default defineComponent({
     height: 100%;
     --ion-color-step-500: var(--ion-color-primary);
     --background: var(--ion-color-light);
+    color: var(--ion-color-dark);
     padding-bottom: 50px;
 }
 
