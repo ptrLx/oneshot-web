@@ -31,7 +31,7 @@
           </router-link>
         </swiper-slide>
         <swiper-slide v-else>
-          <card card-title="Your Flashbacks" card-subtitle="Nothing here yet - Upload images to see them appear here!">
+          <card card-title="Your Flashbacks" card-subtitle="Nothing here yet - Upload more images and assign a happiness to see them appear here!">
 
             <ion-img src="/icons/512.png" alt="OneShot logo" class="rounded-image"
               style="width: 200px; position: relative; top: 0px; margin-top: 0px; margin-bottom: 0px; margin-left: auto; margin-right: auto;">
@@ -129,58 +129,58 @@ const stats = ref<StatisticDTO | null>(null)
 
 
 onBeforeMount(() => {
-  updateActions()
+    updateActions()
 })
 
 
 const handleRefresh = (event: CustomEvent) => {
-  updateActions(event)
+    updateActions(event)
 }
 
 const getSameDateLastYearsImages = (flashbackImgs: { [key: string]: FlashbackUrlAndMeta }) => {
-  return Object.keys(flashbackImgs)
-    .filter(key => key.startsWith("same_date_last_years_"))
-    .map(key => flashbackImgs[key])
+    return Object.keys(flashbackImgs)
+        .filter(key => key.startsWith("same_date_last_years_"))
+        .map(key => flashbackImgs[key])
 }
 
 const getCardTitle = (flashbackDate: string) => {
-  const currentDate = new Date()
-  const flashbackYear = new Date(flashbackDate).getFullYear()
-  const currentYear = currentDate.getFullYear()
-  const differenceInYears = currentYear - flashbackYear
+    const currentDate = new Date()
+    const flashbackYear = new Date(flashbackDate).getFullYear()
+    const currentYear = currentDate.getFullYear()
+    const differenceInYears = currentYear - flashbackYear
 
-  const toWords = (number: number) => {
-    const words = [
-      "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten", "Eleven", "Twelve"
-    ]
-    return words[number] || number.toString()
-  }
+    const toWords = (number: number) => {
+        const words = [
+            "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten", "Eleven", "Twelve"
+        ]
+        return words[number] || number.toString()
+    }
 
-  if (differenceInYears === 0) {
-    return "One Year Ago"
-  }
+    if (differenceInYears === 0) {
+        return "One Year Ago"
+    }
 
-  return `${toWords(differenceInYears)} Years Ago`
+    return `${toWords(differenceInYears)} Years Ago`
 }
 
 const hasImage = (key: string) => {
-  return flashbackImgs.value[key]?.url
+    return flashbackImgs.value[key]?.url
 }
 
 const updateActions = (event: CustomEvent = { detail: { complete: () => { } } } as CustomEvent) => {
-  getFlashbacks().then((flashbacks) => {
-    flashbackImgs.value = flashbacks
-    event.detail.complete()
-  }).catch(() => {
-    console.log("Could not retrieve flashbacks")
-    event.detail.complete()
-  })
+    getFlashbacks().then((flashbacks) => {
+        flashbackImgs.value = flashbacks
+        event.detail.complete()
+    }).catch(() => {
+        console.log("Could not retrieve flashbacks")
+        event.detail.complete()
+    })
 
-  StatisticsService.getStatisticsStatsGet().then((response) => {
-    stats.value = response
-  }).catch(() => {
-    console.log("Could not retrieve stats")
-  })
+    StatisticsService.getStatisticsStatsGet().then((response) => {
+        stats.value = response
+    }).catch(() => {
+        console.log("Could not retrieve stats")
+    })
 }
 
 </script>

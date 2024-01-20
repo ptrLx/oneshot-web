@@ -1,5 +1,6 @@
 <template>
-    <ion-datetime ref="datetime" id="calendar" class="datetime" presentation="date" display-format="DDDD MMMM D, YYYY"
+    <ion-datetime ref="datetime" id="calendar" :class="{'datetime-dark': themeIsDark, 'datetime-light': !themeIsDark}"
+     presentation="date" display-format="DDDD MMMM D, YYYY"
         picker-format="DDDD MMMM D, YYYY" placeholder="Select Date" size="cover" :highlightedDates="highlightedDates"
         v-model="selectedDate"></ion-datetime>
     <ion-button shape="round" @click="handleSelection">
@@ -9,12 +10,13 @@
   
 <script lang="ts">
 import { IonDatetime, IonButton } from "@ionic/vue"
-import { defineComponent, ref, onMounted } from "vue"
+import { defineComponent, ref, onMounted, computed } from "vue"
 import { useRouter } from "vue-router"
 import { CalendarService } from "@/_generated/api-client"
 import { CalendarEntryRespDTO } from "@/_generated/api-client/models/CalendarEntryRespDTO"
 import { HappinessDTO } from "@/_generated/api-client/models/HappinessDTO"
 import { OneShotService } from "@/_generated/api-client"
+import { theme } from "@/composables/store"
 
 export default defineComponent({
     components: {
@@ -27,6 +29,14 @@ export default defineComponent({
         const selectedDate = ref<string>((new Date).toISOString())
         const displayedMonth = ref<string>("")
         const highlightedDates = ref<{ date: string; textColor: string, backgroundColor: string }[]>()
+        const themeIsDark = computed(() => {
+            if (theme.isSet()) {
+                return theme.getTheme() === "dark"
+            } else { // media preferred
+                return window.matchMedia("(prefers-color-scheme: dark)").matches
+            }
+        })
+            
 
         const observeCalendarChanges = () => {
             const targetNode = document.querySelector("ion-datetime#calendar")
@@ -118,25 +128,28 @@ export default defineComponent({
             highlightedDates,
             selectedDate,
             handleSelection,
+            themeIsDark,
         }
     },
 })
 </script>
   
 <style scoped>
-.datetime {
+.datetime-light{
     min-height: 0px;
     height: 100%;
-}
-
-ion-datetime {
+    --ion-color-step-500: var(--ion-color-dark);
     --background: var(--ion-color-light);
+    color: var(--ion-color-dark-tint);
     padding-bottom: 50px;
 }
 
-ion-datetime::part(calendar-day) {
-    /* text color */
-    color: var(--ion-color-dark-contrast);
+.datetime-dark {
+    min-height: 0px;
+    height: 100%;
+    --ion-color-step-500: var(--ion-color-primary);
+    --background: var(--ion-color-light);
+    padding-bottom: 50px;
 }
 
 ion-datetime::part(calendar-day today) {
