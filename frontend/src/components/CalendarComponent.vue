@@ -67,6 +67,8 @@ export default defineComponent({
             const formattedDate = formatDisplayDate(dateText)
             CalendarService.getCalendarCalendarGet(formattedDate).then((response) => {
                 highlightedDates.value = updateHighlightedDates(response)
+            }, () => {
+                console.log("No calendar entries for this month")
             })
         }
 

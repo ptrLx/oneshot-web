@@ -56,12 +56,6 @@ export default defineComponent({
 
         useThemeService(true) // Set theme to media preference
 
-        const requestUserInfo = () => {
-            UserService.getUserMeUserMeGet().then((user) => {
-                console.log(user.username)
-            })
-        }
-
         const showToastFail = (msg: string) => {
             toastController.create({
                 message: msg,
@@ -90,7 +84,6 @@ export default defineComponent({
             ).then((t) => {
                 cookies.set("token", t.access_token)
                 OpenAPI.TOKEN = t.access_token
-                requestUserInfo() // TODO: remove, for debugging
 
                 router.push("/home")
             }, (e: ApiError) => {
