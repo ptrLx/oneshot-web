@@ -22,7 +22,6 @@ export const useImportExportService = () => {
         if (files && files.length > 0) {
             // Make sure to get json data first
             for (let i = 0; i < files.length; i++) {
-                console.log(files[i].name)
                 if (isJson(files[i])) {
                     json = await parseJson(files[i])
                 }
@@ -40,7 +39,6 @@ export const useImportExportService = () => {
             }
 
             for (const image of imageFiles) {
-                console.log(image)
                 const matchingJsonObj = findMatchingJsonObj(json, image.name)
                 if (matchingJsonObj) {
 
@@ -50,8 +48,9 @@ export const useImportExportService = () => {
                         happiness = matchingJsonObj.happiness
                     }
 
-                    const oneShotUpdate: OneShotUpdate = {
-                        date: new Date(matchingJsonObj.date).toISOString().slice(0, 10),
+                    const dateObj = new Date(matchingJsonObj.date * 24 * 60 * 60 * 1000)
+                    const oneShotUpdate : OneShotUpdate = {
+                        date: dateObj.toISOString().slice(0, 10),
                         time: matchingJsonObj.created,
                         happiness: happiness,
                         text: matchingJsonObj.textContent,
