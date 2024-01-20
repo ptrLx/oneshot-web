@@ -31,7 +31,7 @@
           </router-link>
         </swiper-slide>
         <swiper-slide v-else>
-          <card card-title="Your Flashbacks" card-subtitle="Nothing here yet - Upload more images and assign a happiness to see them appear here!">
+          <card card-title="Your Flashbacks" card-subtitle="Nothing here yet - Upload more images to see them appear here!">
 
             <ion-img src="/icons/512.png" alt="OneShot logo" class="rounded-image"
               style="width: 200px; position: relative; top: 0px; margin-top: 0px; margin-bottom: 0px; margin-left: auto; margin-right: auto;">
@@ -104,7 +104,7 @@
 </template>
 
 <script setup lang="ts">
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonImg, IonRefresher, IonRefresherContent } from "@ionic/vue"
+import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonImg, IonRefresher, IonRefresherContent, onIonViewDidEnter } from "@ionic/vue"
 import { SwiperSlide } from "swiper/vue"
 import RowComponent from "@/components/RowComponent.vue"
 import ProfileComponent from "@/components/ProfileComponent.vue"
@@ -129,6 +129,10 @@ const stats = ref<StatisticDTO | null>(null)
 
 
 onBeforeMount(() => {
+    updateActions()
+})
+
+onIonViewDidEnter(() => {
     updateActions()
 })
 

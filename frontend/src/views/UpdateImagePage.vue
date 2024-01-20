@@ -2,12 +2,9 @@
     <base-layout page-title="Edit Image" :hide-back-button=false>
 
         <template #custom-buttons>
-            <ion-button id="presentDelete">
+            <ion-button id="presentDelete" @click="showDeleteAlert">
                 <ion-icon :icon="trashOutline"></ion-icon>
             </ion-button>
-            <ion-alert trigger="presentDelete" header="Are you sure you want to delete this OneShot?"
-                :buttons="alertButtons" class="delete-alert">
-            </ion-alert>
         </template>
         <ion-grid class="ion-text-center">
             <ion-row>
@@ -46,12 +43,11 @@
 </template>
   
 <script lang="ts">
-import { IonButton, IonGrid, IonRow, IonCol, IonIcon, IonTextarea, useIonRouter, IonAlert, IonTitle, IonImg } from "@ionic/vue"
+import { IonButton, IonGrid, IonRow, IonCol, IonIcon, IonTextarea, useIonRouter, IonAlert, IonTitle, IonImg, onIonViewDidLeave, alertController } from "@ionic/vue"
 import { trashOutline } from "ionicons/icons"
 import { defineComponent, ref } from "vue"
 import { OneShotService } from "@/_generated/api-client"
-import { useRoute } from "vue-router"
-import { useCameraService } from "@/composables/cameraService"
+import { useRoute, useRouter } from "vue-router"
 import HappinessSelector from "@/components/HappinessSelector.vue"
 import { HappinessDTO } from "@/_generated/api-client"
 import { blobStore, metadataStore } from "@/composables/store"
@@ -68,14 +64,12 @@ export default defineComponent({
         IonTitle,
         IonImg,
         HappinessSelector,
-        IonAlert,
     },
     setup() {
         useThemeService(true) // Set theme to media preference
 
         const route = useRoute()
-        const router = useIonRouter()
-        const { takePhoto, pickPhoto, photos } = useCameraService()
+        const router = useRouter()
 
         const imgDate = ref<string>(route.params.id as string)
         const imgSrc = ref<string>(URL.createObjectURL(blobStore.getBlob()))
@@ -83,24 +77,6 @@ export default defineComponent({
         const uploadedImage = ref<string>(imgSrc.value)
         const description = ref<string>(metadata?.text || "")
         const selectedHappiness = ref<HappinessDTO | null>(metadata?.happiness || null)
-
-        switch (route.query.action) {
-            case "capture":
-                takePhoto().then(() => {
-                    uploadedImage.value = photos.value[0]?.webviewPath || ""
-                    imgDate.value = new Date().toISOString().slice(0, 10)
-                })
-                break
-            case "pick":
-                pickPhoto().then(() => {
-                    uploadedImage.value = photos.value[0]?.webviewPath || ""
-                    imgDate.value = new Date().toISOString().slice(0, 10)
-                })
-                break
-            default:
-                console.log("Unknown action")
-                break
-        }
 
         const handleNewHappiness = (newHappiness: HappinessDTO) => {
             selectedHappiness.value = newHappiness
@@ -114,30 +90,47 @@ export default defineComponent({
                 selectedHappiness.value,
                 description.value,
             ).then(() => {
-                router.push("/home")
+                router.back()
             })
         }
 
         const handleDelete = () => {
             OneShotService.deleteImageImageDeletePost(imgDate.value).then(() => {
-                router.push("/home")
+                // go back to gallery / go back twice
+                router.go(-2)
             }, () => {
                 console.log("An error occurred while deleting the image")
             })
         }
 
-        const alertButtons = [
-            {
-                text: "Delete",
-                //cssClass: 'alertButtonDelete', // Styling not working here
-                handler: handleDelete,
-            },
-            {
-                text: "Cancel",
-                role: "cancel",
-            },
-        ]
 
+        const showDeleteAlert = async () => {
+
+            const alert = await alertController.create({
+                header: "Are you sure you want to delete this OneShot?",
+                buttons: [
+                    {
+                        text: "Delete",
+                        handler: handleDelete,
+                    },
+                    {
+                        text: "Cancel",
+                        role: "cancel",
+                    },
+                ],
+                cssClass: "delete-alert",
+            })
+            await alert.present()
+        }
+
+
+        onIonViewDidLeave(() => {
+            imgDate.value = ""
+            imgSrc.value = ""
+            uploadedImage.value = ""
+            description.value = ""
+            selectedHappiness.value = null
+        })
 
         return {
             uploadedImage,
@@ -147,7 +140,7 @@ export default defineComponent({
             handleUpdate,
             selectedHappiness,
             trashOutline,
-            alertButtons,
+            showDeleteAlert,
         }
     },
 })

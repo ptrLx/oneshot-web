@@ -22,7 +22,9 @@ import {
     IonRow,
     IonCol,
     IonInfiniteScroll,
-    IonInfiniteScrollContent
+    IonInfiniteScrollContent,
+    onIonViewDidLeave,
+    onIonViewDidEnter
 } from "@ionic/vue"
 
 import { defineComponent, ref, onMounted } from "vue"
@@ -88,9 +90,12 @@ export default defineComponent({
             }
         }
 
+        onIonViewDidLeave(() => {
+            galleryRows.value = []
+            imgPage = 0
+        })
 
-        onMounted(() => {
-            // Initial load 
+        onIonViewDidEnter(() => {
             loadMoreImages()
         })
 
