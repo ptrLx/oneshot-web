@@ -77,24 +77,21 @@ export default defineComponent({
         switch (route.query.action) {
             case "capture":
                 takePhoto().then(() => {
-                    if (photos.value[0]?.webviewPath) {
-                        uploadedImage.value = photos.value[0]?.webviewPath || ""
-                        imgDate.value = new Date().toISOString().slice(0, 10)
-                    } else {
-                        console.log("No image captured. Returning to home page.")
-                        router.push("/")
-                    }
+                    uploadedImage.value = photos.value[0]?.webviewPath || ""
+                    imgDate.value = new Date().toISOString().slice(0, 10)
+                }, () => {
+                    console.log("User cancelled camera")
+                    router.back()
                 })
                 break
             case "pick":
-                pickPhoto().then(() => {
-                    if (photos.value[0]?.webviewPath) {
-                        uploadedImage.value = photos.value[0]?.webviewPath || ""
-                        imgDate.value = new Date().toISOString().slice(0, 10)
-                    } else {
-                        console.log("No image picked. Returning to home page.")
-                        router.push("/")
-                    }
+                pickPhoto().then(() => {           
+                
+                    uploadedImage.value = photos.value[0]?.webviewPath || ""
+                    imgDate.value = new Date().toISOString().slice(0, 10)
+                }, () => {
+                    console.log("User cancelled gallery")
+                    router.back()
                 })
                 break
             default:

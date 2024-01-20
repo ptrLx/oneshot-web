@@ -127,6 +127,8 @@ export default defineComponent({
                         blobUrl.value = photos.value[0]?.webviewPath || ""
                         uploadProfileImg(blobUrl.value)
                         store.notifyProfilePicUpdate()
+                    }, () => {
+                        console.log("User cancelled camera")
                     })
                 }
             },
@@ -139,6 +141,8 @@ export default defineComponent({
                         uploadProfileImg(blobUrl.value).then(() => {
                             store.notifyProfilePicUpdate()
                         })
+                    }, () => {
+                        console.log("User cancelled gallery")
                     })
                 }
             },
