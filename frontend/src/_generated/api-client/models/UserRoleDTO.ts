@@ -4,6 +4,6 @@
 /* eslint-disable */
 
 export enum UserRoleDTO {
-    ADMIN = 'ADMIN',
-    USER = 'USER',
+    ADMIN = "ADMIN",
+    USER = "USER",
 }

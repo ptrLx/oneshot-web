@@ -2,12 +2,11 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { CancelablePromise } from '../core/CancelablePromise';
-import { OpenAPI } from '../core/OpenAPI';
-import { request as __request } from '../core/request';
+import type { CancelablePromise } from "../core/CancelablePromise"
+import { OpenAPI } from "../core/OpenAPI"
+import { request as __request } from "../core/request"
 
 export class StatusService {
-
     /**
      * Get Status
      * @returns string Successful Response
@@ -15,9 +14,8 @@ export class StatusService {
      */
     public static getStatusGet(): CancelablePromise<string> {
         return __request(OpenAPI, {
-            method: 'GET',
-            url: '/',
-        });
+            method: "GET",
+            url: "/",
+        })
     }
-
 }
