@@ -5,7 +5,6 @@ import { OneShotUpdate } from "@/types/OneShotUpdate"
 export const useImportExportService = () => {
     const { uploadGalleryImg } = useImageService()
 
-
     const openFileDialog = (elemId: string) => {
         console.log("Open file dialog")
         const fileUpload = document.getElementById(elemId)
@@ -24,8 +23,7 @@ export const useImportExportService = () => {
             for (let i = 0; i < files.length; i++) {
                 if (isJson(files[i])) {
                     json = await parseJson(files[i])
-                }
-                else {
+                } else {
                     imageFiles.push(files[i])
                 }
             }
@@ -41,7 +39,6 @@ export const useImportExportService = () => {
             for (const image of imageFiles) {
                 const matchingJsonObj = findMatchingJsonObj(json, image.name)
                 if (matchingJsonObj) {
-
                     // set happiness, if happiness is NOT_SPECIFIED, set to null
                     let happiness: HappinessDTO | null = null
                     if (matchingJsonObj.happiness !== "NOT_SPECIFIED") {
@@ -49,7 +46,7 @@ export const useImportExportService = () => {
                     }
 
                     const dateObj = new Date(matchingJsonObj.date * 24 * 60 * 60 * 1000)
-                    const oneShotUpdate : OneShotUpdate = {
+                    const oneShotUpdate: OneShotUpdate = {
                         date: dateObj.toISOString().slice(0, 10),
                         time: matchingJsonObj.created,
                         happiness: happiness,
@@ -82,8 +79,7 @@ export const useImportExportService = () => {
                     try {
                         const json = JSON.parse(result.toString())
                         resolve(json)
-                    }
-                    catch (err) {
+                    } catch (err) {
                         reject(err)
                     }
                 }
@@ -97,6 +93,6 @@ export const useImportExportService = () => {
 
     return {
         openFileDialog,
-        importDatabase
+        importDatabase,
     }
 }

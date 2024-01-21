@@ -15,7 +15,7 @@ export const blobStore = reactive({
     },
     getBlob() {
         return this.blob
-    }
+    },
 })
 
 export const metadataStore = reactive({
@@ -25,7 +25,7 @@ export const metadataStore = reactive({
     },
     getMetadata() {
         return this.metadata
-    }
+    },
 })
 
 export const theme = reactive({
@@ -38,5 +38,5 @@ export const theme = reactive({
     },
     isSet() {
         return this.theme !== ""
-    }
+    },
 })

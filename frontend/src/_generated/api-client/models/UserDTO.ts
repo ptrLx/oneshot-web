@@ -3,12 +3,11 @@
 /* tslint:disable */
 /* eslint-disable */
 
-import type { UserRoleDTO } from './UserRoleDTO';
+import type { UserRoleDTO } from "./UserRoleDTO"
 
 export type UserDTO = {
-    username: string;
-    role: UserRoleDTO;
-    disabled: boolean;
-    full_name?: (string | null);
-};
-
+    username: string
+    role: UserRoleDTO
+    disabled: boolean
+    full_name?: string | null
+}

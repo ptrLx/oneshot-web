@@ -3,16 +3,15 @@
 /* tslint:disable */
 /* eslint-disable */
 
-import type { HappinessDTO } from './HappinessDTO';
+import type { HappinessDTO } from "./HappinessDTO"
 
 /**
  * Output model for a OneShot.
  */
 export type OneShotRespDTO = {
-    date: string;
-    time: number;
-    happiness?: (HappinessDTO | null);
-    text?: (string | null);
-    file_name: string;
-};
-
+    date: string
+    time: number
+    happiness?: HappinessDTO | null
+    text?: string | null
+    file_name: string
+}

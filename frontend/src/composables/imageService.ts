@@ -4,22 +4,20 @@ import { OneShotRespDTO, OpenAPI } from "@/_generated/api-client"
 import { useCookies } from "vue3-cookies"
 
 export const useImageService = () => {
-
     const { cookies } = useCookies()
     OpenAPI.TOKEN = cookies.get("token")
 
     const loadImg = async (src: string) => {
-
         const config: AxiosRequestConfig<any> = {
             url: src,
             method: "get",
             responseType: "blob",
             headers: {
-                "Authorization": `Bearer ${OpenAPI.TOKEN}`
-            }
+                Authorization: `Bearer ${OpenAPI.TOKEN}`,
+            },
         }
         const response = await axios.request(config)
-        return response.data // the blob    
+        return response.data // the blob
     }
 
     const uploadProfileImg = async (src: string) => {
@@ -63,16 +61,16 @@ export const useImageService = () => {
         src: string,
         endpoint: string,
         fileName: string,
-        headers: Record<string, string> = {}
+        headers: Record<string, string> = {},
     ) => {
         try {
-            const file = await fetch(src).then(res => res.blob())
+            const file = await fetch(src).then((res) => res.blob())
             const formData = new FormData()
             formData.append("file", file, fileName)
 
             const response = await axios.post(endpoint, formData, {
                 headers: {
-                    "Authorization": "Bearer " + OpenAPI.TOKEN,
+                    Authorization: "Bearer " + OpenAPI.TOKEN,
                     "Content-Type": "multipart/form-data",
                     ...headers,
                 },
@@ -90,6 +88,6 @@ export const useImageService = () => {
         loadImg,
         uploadProfileImg,
         uploadGalleryImg,
-        downloadGalleryImg
+        downloadGalleryImg,
     }
 }

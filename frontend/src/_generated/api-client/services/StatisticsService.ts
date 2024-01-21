@@ -2,14 +2,13 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { StatisticDTO } from '../models/StatisticDTO';
+import type { StatisticDTO } from "../models/StatisticDTO"
 
-import type { CancelablePromise } from '../core/CancelablePromise';
-import { OpenAPI } from '../core/OpenAPI';
-import { request as __request } from '../core/request';
+import type { CancelablePromise } from "../core/CancelablePromise"
+import { OpenAPI } from "../core/OpenAPI"
+import { request as __request } from "../core/request"
 
 export class StatisticsService {
-
     /**
      * Get Statistics
      * @returns StatisticDTO Successful Response
@@ -17,9 +16,8 @@ export class StatisticsService {
      */
     public static getStatisticsStatsGet(): CancelablePromise<StatisticDTO> {
         return __request(OpenAPI, {
-            method: 'GET',
-            url: '/stats/',
-        });
+            method: "GET",
+            url: "/stats/",
+        })
     }
-
 }

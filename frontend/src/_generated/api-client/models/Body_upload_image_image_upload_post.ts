@@ -4,6 +4,5 @@
 /* eslint-disable */
 
 export type Body_upload_image_image_upload_post = {
-    file: Blob;
-};
-
+    file: Blob
+}

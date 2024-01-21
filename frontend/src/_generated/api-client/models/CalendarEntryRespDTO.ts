@@ -3,10 +3,9 @@
 /* tslint:disable */
 /* eslint-disable */
 
-import type { OneShotRespDTO } from './OneShotRespDTO';
+import type { OneShotRespDTO } from "./OneShotRespDTO"
 
 export type CalendarEntryRespDTO = {
-    date: string;
-    oneshot?: (OneShotRespDTO | null);
-};
-
+    date: string
+    oneshot?: OneShotRespDTO | null
+}

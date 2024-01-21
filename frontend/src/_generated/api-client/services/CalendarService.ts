@@ -2,14 +2,13 @@
 /* istanbul ignore file */
 /* tslint:disable */
 /* eslint-disable */
-import type { CalendarEntryRespDTO } from '../models/CalendarEntryRespDTO';
+import type { CalendarEntryRespDTO } from "../models/CalendarEntryRespDTO"
 
-import type { CancelablePromise } from '../core/CancelablePromise';
-import { OpenAPI } from '../core/OpenAPI';
-import { request as __request } from '../core/request';
+import type { CancelablePromise } from "../core/CancelablePromise"
+import { OpenAPI } from "../core/OpenAPI"
+import { request as __request } from "../core/request"
 
 export class CalendarService {
-
     /**
      * Get Calendar
      * @param month
@@ -20,15 +19,14 @@ export class CalendarService {
         month: string,
     ): CancelablePromise<Array<CalendarEntryRespDTO>> {
         return __request(OpenAPI, {
-            method: 'GET',
-            url: '/calendar/',
+            method: "GET",
+            url: "/calendar/",
             query: {
-                'month': month,
+                month: month,
             },
             errors: {
                 422: `Validation Error`,
             },
-        });
+        })
     }
-
 }
