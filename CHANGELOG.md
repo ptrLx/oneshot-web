@@ -1,5 +1,18 @@
 # Changelog
 
+## [1.4.1](https://github.com/ptrLx/oneshot-web/compare/v1.4.0...v1.4.1) (2024-01-20)
+
+
+### Bug Fixes
+
+* **frontend:** Adjust calender component colors ([0abc35a](https://github.com/ptrLx/oneshot-web/commit/0abc35aaff45f436c7789113c0f0d81e11a9175d))
+* **frontend:** Clear cache when leaving UploadImage page ([169a019](https://github.com/ptrLx/oneshot-web/commit/169a01995d3bafe30bc1c41652ec12c74ef18e71))
+* **frontend:** Fix delete alert not showing up ([755261e](https://github.com/ptrLx/oneshot-web/commit/755261e65a09ad7ef55130e11c067fa8134ccaea))
+* **frontend:** Fix flashback year displayed incorrectly ([089abf4](https://github.com/ptrLx/oneshot-web/commit/089abf44429b8994435262401830038ea82d31fe))
+* **frontend:** Fix import using wrong dates ([3fe983d](https://github.com/ptrLx/oneshot-web/commit/3fe983dfb5dacf0170e1dee48386e4e12ccc4f47))
+* **frontend:** Fix unhandled no profilepic exception ([edba092](https://github.com/ptrLx/oneshot-web/commit/edba09213fa1087f83b8633c6403338da33b6a7c))
+* **frontend:** Handle user canceling camera/pick from gallery ([9816691](https://github.com/ptrLx/oneshot-web/commit/98166915bd9e5d08d07e2ba63ff72eb406331194))
+
 ## [1.4.0](https://github.com/ptrLx/oneshot-web/compare/v1.3.0...v1.4.0) (2024-01-19)
 
 
