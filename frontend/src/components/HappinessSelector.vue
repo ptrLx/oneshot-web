@@ -43,11 +43,11 @@
         },
         setup(props, { emit }) {
             const happinessOptions = [
-                { emoji: "😄", value: HappinessDTO.VERY_HAPPY },
-                { emoji: "😃", value: HappinessDTO.HAPPY },
-                { emoji: "😐", value: HappinessDTO.NEUTRAL },
-                { emoji: "😞", value: HappinessDTO.SAD },
                 { emoji: "😢", value: HappinessDTO.VERY_SAD },
+                { emoji: "😞", value: HappinessDTO.SAD },
+                { emoji: "😐", value: HappinessDTO.NEUTRAL },
+                { emoji: "😃", value: HappinessDTO.HAPPY },
+                { emoji: "😄", value: HappinessDTO.VERY_HAPPY },
             ]
 
             const selectedHappiness = ref<HappinessDTO | null>(
