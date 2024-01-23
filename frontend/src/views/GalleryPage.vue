@@ -57,12 +57,12 @@
             const imgPageSize = 10 // initial load / batch size when loading more images
 
             const happinessMap = {
-                VERY_HAPPY: "😁",
-                HAPPY: "🙂",
-                NEUTRAL: "😐",
-                SAD: "😞",
+                NOT_SPECIFIED: "😶",
                 VERY_SAD: "😭",
-                NOT_SPECIFIED: "❓",
+                SAD: "😞",
+                NEUTRAL: "😐",
+                HAPPY: "🙂",
+                VERY_HAPPY: "😁",
             }
             const loadGalleryImages = async () => {
                 const images = await OneShotService.paginateGalleryImageGalleryGet(
@@ -93,7 +93,7 @@
                 await loadGalleryImages()
                 imgPage++
                 if (event) {
-                    (event.target as HTMLIonInfiniteScrollElement).complete()
+                    ;(event.target as HTMLIonInfiniteScrollElement).complete()
                 }
             }
 
