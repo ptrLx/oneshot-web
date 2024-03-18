@@ -11,10 +11,13 @@ export async function getApiUrlFromCookie() {
 }
 
 export async function setTokenCookie(token: string) {
+    const date = new Date()
+    const days = 180
+    date.setTime(date.getTime() + days * 24 * 60 * 60 * 1000)
     await CapacitorCookies.setCookie({
         key: "token",
         value: token,
-        // todo expires: "180DAYS",
+        expires: date.toUTCString(),
     })
 }
 
