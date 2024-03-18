@@ -111,12 +111,12 @@
     import { UserService, OpenAPI, ApiError } from "@/_generated/api-client"
     import { cameraOutline } from "ionicons/icons"
     import { defineComponent, onMounted, ref } from "vue"
-    import { useCookies } from "vue3-cookies"
     import { useCameraService } from "@/composables/cameraService"
     import { useImageService } from "@/composables/imageService"
     import { store } from "@/composables/store"
     import { useThemeService } from "@/composables/themeService"
     import { useImportExportService } from "@/composables/importExportService"
+    import { deleteTokenCookie } from "@/service/cookieService"
 
     export default defineComponent({
         components: {
@@ -133,8 +133,6 @@
         },
         setup() {
             const router = useIonRouter()
-            const { cookies } = useCookies()
-            OpenAPI.TOKEN = cookies.get("token")
             const username = ref<string>("")
             const profilePic = ref<string | null>(null)
             const blobUrl = ref<string>("https://ionicframework.com/docs/img/demos/avatar.svg")
@@ -207,8 +205,8 @@
                     })
             }
 
-            const handleLogout = () => {
-                cookies.remove("token")
+            const handleLogout = async () => {
+                await deleteTokenCookie()
                 router.push("/login")
             }
 
@@ -235,7 +233,6 @@
             return {
                 cameraOutline,
                 router,
-                cookies,
                 profilePic,
                 blobUrl,
                 handleLogout,

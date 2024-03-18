@@ -33,8 +33,7 @@
     "vite-plugin-compression": "^0.5.1",
     "vue": "^3.2.45",
     "vue-chartjs": "^5.2.0",
-    "vue-router": "^4.1.6",
-    "vue3-cookies": "^1.0.6"
+    "vue-router": "^4.1.6"
   },
   "devDependencies": {
     "@capacitor/assets": "^3.0.4",

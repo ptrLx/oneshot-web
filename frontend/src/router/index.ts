@@ -1,8 +1,7 @@
 import { createRouter, createWebHistory } from "@ionic/vue-router"
 import { RouteRecordRaw } from "vue-router"
 import HomePage from "../views/HomePage.vue"
-import { useCookies } from "vue3-cookies"
-import { UserService } from "@/_generated/api-client"
+import { OpenAPI } from "@/_generated/api-client"
 
 const routes: Array<RouteRecordRaw> = [
     {
@@ -59,15 +58,13 @@ const routes: Array<RouteRecordRaw> = [
     },
 ]
 
-const { cookies } = useCookies()
-
 const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
     routes,
 })
 
 router.beforeEach((to, from) => {
-    if (to.meta.requiresAuth && !cookies.get("token")) {
+    if (to.meta.requiresAuth && !OpenAPI.TOKEN) {
         return {
             path: "/login",
             query: { redirect: to.fullPath },

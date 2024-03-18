@@ -10,6 +10,18 @@
             <ion-row>
                 <ion-col size="12">
                     <ion-input
+                        v-if="openAPIBaseURL == undefined || openAPIBaseURL === ''"
+                        type="text"
+                        label="Link to API"
+                        label-placement="floating"
+                        fill="outline"
+                        shape="round"
+                        v-model="apiURL"
+                        placeholder="oneshot.example.com/api"
+                    />
+                </ion-col>
+                <ion-col size="12">
+                    <ion-input
                         type="text"
                         label="Username"
                         label-placement="floating"
@@ -17,8 +29,7 @@
                         shape="round"
                         v-model="username"
                         placeholder="Enter Username"
-                    >
-                    </ion-input>
+                    />
                 </ion-col>
             </ion-row>
             <ion-row>
@@ -31,8 +42,7 @@
                         shape="round"
                         v-model="password"
                         placeholder="Enter Password"
-                    >
-                    </ion-input>
+                    />
                 </ion-col>
             </ion-row>
             <ion-row>
@@ -58,8 +68,8 @@
     import { cameraOutline } from "ionicons/icons"
     import { defineComponent, ref } from "vue"
     import { UserService, OpenAPI, ApiError } from "@/_generated/api-client"
-    import { useCookies } from "vue3-cookies"
     import { useThemeService } from "@/composables/themeService"
+    import { setApiUrlCookie, setTokenCookie } from "@/service/cookieService"
 
     export default defineComponent({
         components: {
@@ -71,12 +81,18 @@
             IonInput,
         },
         setup() {
-            const { cookies } = useCookies()
-            const username = ref<string>("")
-            const password = ref<string>("")
+            const apiURL = ref<string | undefined>(OpenAPI.BASE)
+            const username = ref<string | undefined>(undefined)
+            const password = ref<string | undefined>(undefined)
             const router = useIonRouter()
 
+            const openAPIBaseURL = ref<string>(OpenAPI.BASE)
+
             useThemeService(true) // Set theme to media preference
+
+            if (OpenAPI.BASE != undefined && OpenAPI.BASE !== "" && OpenAPI.TOKEN != undefined) {
+                router.push("/home")
+            }
 
             const showToastFail = (msg: string) => {
                 toastController
@@ -90,45 +106,45 @@
                     })
             }
 
-            const handleLogin = () => {
-                // if (process.env === 'development') {
+            function handleLogin() {
+                if (apiURL.value == undefined) {
+                    showToastFail("Api URL is required")
+                } else if (username.value == undefined || password.value == undefined) {
+                    showToastFail("Username and password is required")
+                } else {
+                    OpenAPI.BASE = apiURL.value
+                    setApiUrlCookie(apiURL.value)
 
-                // }
-                // if (process.env === 'production') {
-                //     OpenAPI.BASE = '/api';
-                // }
+                    UserService.loginForAccessTokenLoginPost({
+                        username: username.value,
+                        password: password.value,
+                    }).then(
+                        (t) => {
+                            setTokenCookie(t.access_token)
+                            OpenAPI.TOKEN = t.access_token
 
-                // var token: undefined | Token = undefined;
-
-                UserService.loginForAccessTokenLoginPost({
-                    username: username.value,
-                    password: password.value,
-                }).then(
-                    (t) => {
-                        cookies.set("token", t.access_token)
-                        OpenAPI.TOKEN = t.access_token
-
-                        router.push("/home")
-                    },
-                    (e: ApiError) => {
-                        if (typeof e.body === "string") {
-                            showToastFail(e.body) // Most likely a internal server error (e.g. the database not reachable)
-                        } else if (Array.isArray(e.body.detail)) {
-                            showToastFail("Username and password is required") // Field is missing
-                        } else {
-                            showToastFail(e.body.detail) // Incorrect username or password
-                        }
-                    },
-                )
+                            router.push("/home")
+                        },
+                        (e: ApiError) => {
+                            if (typeof e.body === "string") {
+                                showToastFail(e.body) // Most likely a internal server error (e.g. the database not reachable)
+                            } else if (Array.isArray(e.body.detail)) {
+                                showToastFail("Username and password is required") // Field is missing
+                            } else {
+                                showToastFail(e.body.detail) // Incorrect username or password
+                            }
+                        },
+                    )
+                }
             }
-
             return {
                 cameraOutline,
-                cookies,
                 username,
                 password,
                 router,
                 handleLogin,
+                openAPIBaseURL,
+                apiURL,
             }
         },
     })

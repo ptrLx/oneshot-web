@@ -44,7 +44,7 @@ compile-frontend:  ## Compile the frontend
 
 .PHONY: gen-api-client
 gen-api-client:  ## Generate api client for frontend
-	cd frontend && npm run gen-api-client
+	cd frontend && npm run gen-api-client && npx prettier --write src/_generated
 
 
 .PHONY: build-docker-image-no-compile
@@ -103,4 +103,4 @@ build-frontend-android:  ## Build the frontend for android
 
 .PHONY: build-frontend-android-prod
 build-frontend-android-prod:  ## Build the frontend for android for production
-	cd frontend && VITE_DEPLOYMENT_MODE=ANDROID_REMOTE ionic capacitor build android --prod
+	cd frontend && VITE_DEPLOYMENT_MODE=ANDROID_PROD ionic capacitor build android --prod
