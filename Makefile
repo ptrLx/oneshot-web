@@ -92,11 +92,6 @@ pull-and-start-docker-image:  ## Start the docker image from Docker Hub.
 	docker run --rm -e TZ="Europe/Berlin" -e HOST_URL="localhost:8080" -e STAGE="prod" -p 8080:80 ptrlx/oneshot-web # --volume=./_local_volume/api/:/srv/oneshot 
 
 
-.PHONY: lint-local
-lint-local:  ## Lint the codebase with super-linter
-	docker run --rm -e RUN_LOCAL=true --env-file ".github/super-linter.env" -v "$PWD":/tmp/lint github/super-linter
-
-
 .PHONY: build-frontend-android
 build-frontend-android:  ## Build the frontend for android 
 	cd frontend && VITE_DEPLOYMENT_MODE=ANDROID_EMULATOR ionic capacitor build android
