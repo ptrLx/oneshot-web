@@ -94,8 +94,8 @@ pull-and-start-docker-image:  ## Start the docker image from Docker Hub.
 
 .PHONY: build-frontend-android
 build-frontend-android:  ## Build the frontend for android 
-	cd frontend && VITE_DEPLOYMENT_MODE=ANDROID_EMULATOR ionic capacitor build android
+	cd frontend && VITE_DEPLOYMENT_MODE=ANDROID_EMULATOR ionic capacitor build android --no-open
 
 .PHONY: build-frontend-android-prod
 build-frontend-android-prod:  ## Build the frontend for android for production
-	cd frontend && VITE_DEPLOYMENT_MODE=ANDROID_PROD ionic capacitor build android --prod
+	cd frontend && VITE_DEPLOYMENT_MODE=ANDROID_PROD ionic capacitor build android --prod --no-open

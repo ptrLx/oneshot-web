@@ -27,7 +27,7 @@ jobs:
     needs: [release-please]
     if: ${{ needs.release-please.outputs.release_created }}
     name: Push Docker Image to Docker Hub
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     env:
       tag_name: ${{ needs.release-please.outputs.tag_name }}
     steps:
@@ -72,3 +72,47 @@ jobs:
       #//     password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
       #//     repository: ptrlx/oneshot-web
       #//     readme-filepath: DEPLOY.md
+
+  build-apk:
+    needs: [release-please]
+    if: ${{ needs.release-please.outputs.release_created }}
+    name: Build APK
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Compile frontend
+        run: |
+          cd frontend
+          npm install -g @ionic/cli
+          npm install
+          VITE_DEPLOYMENT_MODE=ANDROID_PROD npx ionic capacitor build android --prod --no-open
+          cd ..
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v2
+        with:
+          distribution: "adopt"
+          java-version: "17"
+
+      - name: Build APK
+        run: |
+          cd frontend/android
+          ./gradlew assembleRelease
+          cd ..
+
+      - name: Move APK to artifacts
+        run: mv frontend/android/app/build/outputs/apk/release/app-release-unsigned.apk ${{ github.workspace }}/app-release-unsigned.apk
+
+      # todo: sign apk
+      # - name: Sign APK
+      #   run: |
+      #     jarsigner -verbose -sigalg SHA1withRSA -digestalg SHA1 -keystore your-key.keystore -storepass your-storepass -keypass your-keypass ${{ github.workspace }}/app-release-unsigned.apk your-alias
+      #     zipalign -v 4 ${{ github.workspace }}/app-release-unsigned.apk app-release-signed.apk
+
+      - name: Upload APK artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-release-unsigned
+          path: app-release-unsigned.apk

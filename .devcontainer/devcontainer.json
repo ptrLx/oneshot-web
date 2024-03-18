@@ -23,6 +23,14 @@
 			"plugins": "ssh-agent npm",
 			"omzPlugins": "https://github.com/zsh-users/zsh-autosuggestions",
 			"username": "root"
+		},
+		"ghcr.io/devcontainers/features/java:1": {
+			"installGradle": true,
+			"jdkDistro": "open",
+			"gradleVersion": "latest",
+			"mavenVersion": "latest",
+			"antVersion": "latest",
+			"groovyVersion": "latest"
 		}
 	},
 	//// "appPort": ["8100:8100" ], // Finn: Add this line to make pwa port available to local network for testing on mobile
