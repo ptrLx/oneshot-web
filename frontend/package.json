@@ -33,8 +33,7 @@
     "vite-plugin-compression": "^0.5.1",
     "vue": "^3.2.45",
     "vue-chartjs": "^5.2.0",
-    "vue-router": "^4.1.6",
-    "vue3-cookies": "^1.0.6"
+    "vue-router": "^4.1.6"
   },
   "devDependencies": {
     "@capacitor/assets": "^3.0.4",
@@ -43,7 +42,7 @@
     "@vitejs/plugin-vue": "^4.0.0",
     "@vue/eslint-config-typescript": "^11.0.2",
     "@vue/test-utils": "^2.3.0",
-    "cypress": "^12.7.0",
+    "cypress": "^13.7.0",
     "eslint": "^8.35.0",
     "eslint-plugin-vue": "^9.20.1",
     "jsdom": "^22.1.0",
@@ -55,5 +54,5 @@
     "vitest": "^0.32.2",
     "vue-tsc": "^1.0.24"
   },
-  "description": "An Ionic project"
+  "description": "A simple but private photo diary app"
 }

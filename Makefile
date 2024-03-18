@@ -44,7 +44,7 @@ compile-frontend:  ## Compile the frontend
 
 .PHONY: gen-api-client
 gen-api-client:  ## Generate api client for frontend
-	cd frontend && npm run gen-api-client
+	cd frontend && npm run gen-api-client && npx prettier --write src/_generated
 
 
 .PHONY: build-docker-image-no-compile
@@ -92,15 +92,10 @@ pull-and-start-docker-image:  ## Start the docker image from Docker Hub.
 	docker run --rm -e TZ="Europe/Berlin" -e HOST_URL="localhost:8080" -e STAGE="prod" -p 8080:80 ptrlx/oneshot-web # --volume=./_local_volume/api/:/srv/oneshot 
 
 
-.PHONY: lint-local
-lint-local:  ## Lint the codebase with super-linter
-	docker run --rm -e RUN_LOCAL=true --env-file ".github/super-linter.env" -v "$PWD":/tmp/lint github/super-linter
-
-
 .PHONY: build-frontend-android
 build-frontend-android:  ## Build the frontend for android 
-	cd frontend && VITE_DEPLOYMENT_MODE=ANDROID_EMULATOR ionic capacitor build android
+	cd frontend && VITE_DEPLOYMENT_MODE=ANDROID_EMULATOR ionic capacitor build android --no-open
 
 .PHONY: build-frontend-android-prod
 build-frontend-android-prod:  ## Build the frontend for android for production
-	cd frontend && VITE_DEPLOYMENT_MODE=ANDROID_REMOTE ionic capacitor build android --prod
+	cd frontend && VITE_DEPLOYMENT_MODE=ANDROID_PROD ionic capacitor build android --prod --no-open

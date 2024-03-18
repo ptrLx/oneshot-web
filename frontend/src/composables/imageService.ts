@@ -1,12 +1,8 @@
 import FormData from "form-data"
 import axios, { AxiosRequestConfig } from "axios"
 import { OneShotRespDTO, OpenAPI } from "@/_generated/api-client"
-import { useCookies } from "vue3-cookies"
 
 export const useImageService = () => {
-    const { cookies } = useCookies()
-    OpenAPI.TOKEN = cookies.get("token")
-
     const loadImg = async (src: string) => {
         const config: AxiosRequestConfig<any> = {
             url: src,

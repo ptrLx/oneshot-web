@@ -57,9 +57,9 @@
     } from "@ionic/vue"
     import { warningOutline } from "ionicons/icons"
     import { defineComponent, ref } from "vue"
-    import { UserService, ApiError } from "@/_generated/api-client"
-    import { useCookies } from "vue3-cookies"
+    import { UserService, ApiError, OpenAPI } from "@/_generated/api-client"
     import { useThemeService } from "@/composables/themeService"
+    import { deleteTokenCookie } from "@/service/cookieService"
 
     export default defineComponent({
         components: {
@@ -71,7 +71,6 @@
             IonInput,
         },
         setup() {
-            const { cookies } = useCookies()
             const oldpw = ref<string>("")
             const newpw = ref<string>("")
             const router = useIonRouter()
@@ -106,6 +105,8 @@
                 UserService.changeUserPasswordUserChpwPost(oldpw.value, newpw.value).then(
                     () => {
                         showToastSuccess()
+                        OpenAPI.TOKEN = undefined
+                        deleteTokenCookie()
                         router.back()
                     },
                     (e: ApiError) => {
@@ -116,7 +117,6 @@
 
             return {
                 warningOutline,
-                cookies,
                 router,
                 oldpw,
                 newpw,
