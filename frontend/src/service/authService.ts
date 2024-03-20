@@ -1,3 +1,4 @@
+import { OpenAPI } from "@/_generated/api-client"
 import { CapacitorCookies } from "@capacitor/core"
 
 export async function getTokenFromCookie() {
@@ -10,7 +11,15 @@ export async function getApiUrlFromCookie() {
     return cookies.apiURL
 }
 
-export async function setTokenCookie(token: string) {
+export async function setApiUrl(apiURL: string) {
+    await CapacitorCookies.setCookie({
+        key: "apiURL",
+        value: apiURL,
+    })
+    OpenAPI.BASE = apiURL
+}
+
+export async function setToken(token: string) {
     const date = new Date()
     const days = 180
     date.setTime(date.getTime() + days * 24 * 60 * 60 * 1000)
@@ -19,19 +28,14 @@ export async function setTokenCookie(token: string) {
         value: token,
         expires: date.toUTCString(),
     })
+    OpenAPI.TOKEN = token
 }
 
-export async function setApiUrlCookie(apiURL: string) {
-    await CapacitorCookies.setCookie({
-        key: "apiURL",
-        value: apiURL,
-    })
-}
-
-export async function deleteTokenCookie() {
+export async function deleteToken() {
     await CapacitorCookies.deleteCookie({
         key: "token",
     })
+    OpenAPI.TOKEN = undefined
 }
 
 //// const setCapacitorCookie = async () => {

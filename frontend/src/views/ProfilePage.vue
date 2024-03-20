@@ -116,7 +116,7 @@
     import { store } from "@/composables/store"
     import { useThemeService } from "@/composables/themeService"
     import { useImportExportService } from "@/composables/importExportService"
-    import { deleteTokenCookie } from "@/service/cookieService"
+    import { deleteToken } from "@/service/authService"
 
     export default defineComponent({
         components: {
@@ -206,7 +206,7 @@
             }
 
             const handleLogout = async () => {
-                await deleteTokenCookie()
+                await deleteToken()
                 router.push("/login")
             }
 

@@ -24,7 +24,7 @@ import "@ionic/vue/css/display.css"
 import "./theme/variables.css"
 
 /* Boot scripts */
-import setup_api_client from "./boot/api-client"
+import setup_api_client from "./boot/apiClient"
 
 /* Other imports */
 import BaseLayout from "./components/base/BaseLayout.vue"
@@ -35,7 +35,6 @@ import { defineCustomElements } from "@ionic/pwa-elements/loader"
 
 defineCustomElements(window)
 
-// Call this after router setup
 setup_api_client().then(() => {
     const app = createApp(App).use(IonicVue).use(router).use(createHead())
 

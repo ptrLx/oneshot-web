@@ -69,7 +69,7 @@
     import { defineComponent, ref } from "vue"
     import { UserService, OpenAPI, ApiError } from "@/_generated/api-client"
     import { useThemeService } from "@/composables/themeService"
-    import { setApiUrlCookie, setTokenCookie } from "@/service/cookieService"
+    import { setApiUrl, setToken } from "@/service/authService"
 
     export default defineComponent({
         components: {
@@ -112,17 +112,14 @@
                 } else if (username.value == undefined || password.value == undefined) {
                     showToastFail("Username and password is required")
                 } else {
-                    OpenAPI.BASE = apiURL.value
-                    setApiUrlCookie(apiURL.value)
+                    setApiUrl(apiURL.value)
 
                     UserService.loginForAccessTokenLoginPost({
                         username: username.value,
                         password: password.value,
                     }).then(
                         (t) => {
-                            setTokenCookie(t.access_token)
-                            OpenAPI.TOKEN = t.access_token
-
+                            setToken(t.access_token)
                             router.push("/home")
                         },
                         (e: ApiError) => {

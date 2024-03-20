@@ -10,14 +10,14 @@
 
     // --- Search Engine Optimization ---
     useHead({
-        title: "OneShot - Remember the happy days!",
+        title: "OneShot",
         meta: [
             {
                 name: "description",
                 content:
                     "OneShot is made to remind you of the special moments.\
-            Because every day has at least one. And that's what counts in life!\
-            So make it your habit and remember the happy days!",
+                    Because every day has at least one. And that's what counts in life!\
+                    So make it your habit and remember the happy days!",
             },
             {
                 name: "theme-color",

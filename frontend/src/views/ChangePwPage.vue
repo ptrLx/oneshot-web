@@ -3,7 +3,6 @@
         <div class="logo">
             <ion-icon :icon="warningOutline"></ion-icon>
         </div>
-        <!-- Login Section -->
         <ion-grid class="ion-text-center">
             <ion-row>
                 <ion-col size="12">
@@ -13,10 +12,8 @@
                         label-placement="floating"
                         fill="outline"
                         shape="round"
-                        v-model="oldpw"
-                        placeholder="Enter old password"
-                    >
-                    </ion-input>
+                        v-model="oldPw"
+                    />
                 </ion-col>
             </ion-row>
             <ion-row>
@@ -27,17 +24,20 @@
                         label-placement="floating"
                         fill="outline"
                         shape="round"
-                        v-model="newpw"
-                        placeholder="Enter new password"
-                    >
-                    </ion-input>
+                        v-model="newPw"
+                    />
                 </ion-col>
             </ion-row>
             <ion-row>
-                <ion-col size="12">
-                    <ion-button @click="handlechangePw()" shape="round" color="danger"
-                        >Change Password</ion-button
+                <ion-col>
+                    <ion-button
+                        @click="handleChangePw()"
+                        shape="round"
+                        color="danger"
+                        :disabled="oldPw == undefined || newPw == undefined"
                     >
+                        Change password
+                    </ion-button>
                 </ion-col>
             </ion-row>
         </ion-grid>
@@ -45,21 +45,14 @@
 </template>
 
 <script lang="ts">
-    import {
-        IonButton,
-        IonGrid,
-        IonRow,
-        IonCol,
-        IonIcon,
-        IonInput,
-        useIonRouter,
-        toastController,
-    } from "@ionic/vue"
+    import { IonButton, IonGrid, IonRow, IonCol, IonIcon, IonInput, useIonRouter } from "@ionic/vue"
     import { warningOutline } from "ionicons/icons"
     import { defineComponent, ref } from "vue"
-    import { UserService, ApiError, OpenAPI } from "@/_generated/api-client"
+    import { ApiError } from "@/_generated/api-client"
     import { useThemeService } from "@/composables/themeService"
-    import { deleteTokenCookie } from "@/service/cookieService"
+    import { deleteToken } from "@/service/authService"
+    import { changeUserPw } from "@/service/profileService"
+    import { showToastFail, showToastSuccess } from "@/function/notifyUser"
 
     export default defineComponent({
         components: {
@@ -71,56 +64,33 @@
             IonInput,
         },
         setup() {
-            const oldpw = ref<string>("")
-            const newpw = ref<string>("")
+            const oldPw = ref<string | undefined>(undefined)
+            const newPw = ref<string | undefined>(undefined)
             const router = useIonRouter()
 
             useThemeService(true) // Set theme to media preference
 
-            const showToastSuccess = () => {
-                toastController
-                    .create({
-                        message: "Password changed successfully",
-                        duration: 2000,
-                        color: "success",
-                    })
-                    .then((toast) => {
-                        toast.present()
-                    })
-            }
-
-            const showToastFail = (msg: string) => {
-                toastController
-                    .create({
-                        message: msg,
-                        duration: 2000,
-                        color: "danger",
-                    })
-                    .then((toast) => {
-                        toast.present()
-                    })
-            }
-
-            const handlechangePw = () => {
-                UserService.changeUserPasswordUserChpwPost(oldpw.value, newpw.value).then(
-                    () => {
-                        showToastSuccess()
-                        OpenAPI.TOKEN = undefined
-                        deleteTokenCookie()
-                        router.back()
-                    },
-                    (e: ApiError) => {
-                        showToastFail(e.body.detail)
-                    },
-                )
+            function handleChangePw() {
+                if (oldPw.value != undefined && newPw.value != undefined) {
+                    changeUserPw(oldPw.value, newPw.value).then(
+                        (msg) => {
+                            showToastSuccess("Password changed successfully")
+                            deleteToken()
+                            router.back()
+                        },
+                        (e: ApiError) => {
+                            showToastFail(e.body.detail)
+                        },
+                    )
+                }
             }
 
             return {
                 warningOutline,
                 router,
-                oldpw,
-                newpw,
-                handlechangePw,
+                oldPw,
+                newPw,
+                handleChangePw,
             }
         },
     })
