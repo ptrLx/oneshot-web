@@ -1,6 +1,7 @@
 # Deployment of oneshot-web
 
-Attention: oneshot-web comes with absolutely no warranty and is currently in beta phase! Please check out the repository on [GitHub](https://github.com/ptrLx/oneshot-web).
+> [!NOTE]
+> oneshot-web comes with absolutely no warranty and is currently in beta phase! Please check out the repository on [GitHub](https://github.com/ptrLx/oneshot-web).
 
 Use following `docker-compose.yml`-template to host oneshot-web:
 

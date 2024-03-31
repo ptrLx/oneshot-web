@@ -21,6 +21,7 @@
         "nginx",
         "oneshot",
         "oneshots",
+        "pinia",
         "pipenv",
         "postgres",
         "prisma",
