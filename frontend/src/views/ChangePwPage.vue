@@ -50,8 +50,7 @@
     import { defineComponent, ref } from "vue"
     import { ApiError } from "@/_generated/api-client"
     import { useThemeService } from "@/composables/themeService"
-    import { deleteToken } from "@/service/authService"
-    import { changeUserPw } from "@/service/profileService"
+    import { changeUserPw } from "@/service/authService"
     import { showToastFail, showToastSuccess } from "@/function/notifyUser"
 
     export default defineComponent({
@@ -75,7 +74,6 @@
                     changeUserPw(oldPw.value, newPw.value).then(
                         (msg) => {
                             showToastSuccess("Password changed successfully")
-                            deleteToken()
                             router.back()
                         },
                         (e: ApiError) => {

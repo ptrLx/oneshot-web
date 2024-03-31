@@ -1,12 +1,11 @@
 <template>
     <base-layout page-title="Login" :hide-back-button="true">
-        <div class="logo">
-            <ion-avatar>
-                <img alt="OneShot logo" src="/icons/512.png" />
-            </ion-avatar>
-        </div>
-        <!-- Login Section -->
         <ion-grid class="ion-text-center">
+            <div class="logo">
+                <ion-avatar>
+                    <img alt="OneShot logo" src="/icons/512.png" />
+                </ion-avatar>
+            </div>
             <ion-row>
                 <ion-col size="12">
                     <ion-input
@@ -28,7 +27,6 @@
                         fill="outline"
                         shape="round"
                         v-model="username"
-                        placeholder="Enter Username"
                     />
                 </ion-col>
             </ion-row>
@@ -41,7 +39,6 @@
                         fill="outline"
                         shape="round"
                         v-model="password"
-                        placeholder="Enter Password"
                     />
                 </ion-col>
             </ion-row>
@@ -53,6 +50,26 @@
         </ion-grid>
     </base-layout>
 </template>
+
+<style scoped>
+    .logo {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin: 60px;
+        scale: 2;
+    }
+
+    ion-button {
+        width: 80%;
+        height: 50px;
+        margin-top: 20px;
+    }
+
+    ion-icon {
+        scale: 2;
+    }
+</style>
 
 <script lang="ts">
     import {
@@ -67,9 +84,9 @@
     } from "@ionic/vue"
     import { cameraOutline } from "ionicons/icons"
     import { defineComponent, ref } from "vue"
-    import { UserService, OpenAPI, ApiError } from "@/_generated/api-client"
+    import { OpenAPI, ApiError } from "@/_generated/api-client"
     import { useThemeService } from "@/composables/themeService"
-    import { setApiUrl, setToken } from "@/service/authService"
+    import { loginUser, setApiUrl } from "@/service/authService"
 
     export default defineComponent({
         components: {
@@ -112,14 +129,8 @@
                 } else if (username.value == undefined || password.value == undefined) {
                     showToastFail("Username and password is required")
                 } else {
-                    setApiUrl(apiURL.value)
-
-                    UserService.loginForAccessTokenLoginPost({
-                        username: username.value,
-                        password: password.value,
-                    }).then(
-                        (t) => {
-                            setToken(t.access_token)
+                    loginUser(apiURL.value, username.value, password.value).then(
+                        () => {
                             router.push("/home")
                         },
                         (e: ApiError) => {
@@ -146,23 +157,3 @@
         },
     })
 </script>
-
-<style scoped>
-    .logo {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        margin: 60px;
-        scale: 2;
-    }
-
-    ion-button {
-        width: 80%;
-        height: 50px;
-        margin-top: 20px;
-    }
-
-    ion-icon {
-        scale: 2;
-    }
-</style>
