@@ -1,5 +1,26 @@
 # oneshot-web
 
+> [!NOTE]
+> oneshot-web comes with absolutely no warranty and is currently in beta phase! It may still have some bugs. Please have a look at the [OneShot Android App](https://github.com/ptrLx/OneShot) for a tested and working offline version of OneShot.
+
+OneShot is made to remind you of the special moments. Because every day has at least one. And that's what counts in life! So make it your habit and **remember the happy days!**
+
+## Features
+
+oneshot-web is a self-hostable version that follows the OneShot philosophy.
+
+You can capture one entry per day, write your diary and store your happiness.  
+It stores your photos in a folder on your server and your diary within a database on the server.
+
+<br>
+<div style="display:flex;">
+<img alt="preview 1" src="doc/preview/preview_1.png" width="30%">
+<img style="padding-left: 8px;" alt="preview 2" src="doc/preview/preview_2.png" width="30%">
+</div>
+<br>
+
+Thank's to [@Cynog](https://github.com/Cynog) for providing the beautiful images in the screenshots!
+
 ## Deployment of oneshot-web
 
 Please check out the [deployment instructions](DEPLOY.md) if you want to self-host oneshot-web.
@@ -20,17 +41,3 @@ Please check out the [deployment instructions](DEPLOY.md) if you want to self-ho
 ### Start the frontend
 
 1. `make start-frontend`
-
-### PWA Dev Setup
-
-1. `cd frontend`
-2. Make sure `devOptions { enabled: true }` is set in `vite.config.js`
-3. Run 'npm run build' to generate the service worker and manifest in the `dist` folder (production build) and `dist-dev` (dev build)
-4. Run `npm run dev`\ `npm run preview`, the pwa should now appear as installable in the browser
-
-#### Checking PWA requirements, usability and performance
-
-1. Install Chrome
-2. Install Google Lighthouse extension
-3. Open dev tools (F12) and go to the Lighthouse tab
-4. Run the audit

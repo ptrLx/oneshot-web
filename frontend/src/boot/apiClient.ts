@@ -1,5 +1,5 @@
 import { OpenAPI } from "@/_generated/api-client"
-import { getApiUrlFromCookie, getTokenFromCookie, setApiUrlCookie } from "@/service/cookieService"
+import { getApiUrlFromCookie, getTokenFromCookie, setApiUrl } from "@/service/authService"
 
 export default async function setup_api_client() {
     const token = await getTokenFromCookie()
@@ -36,7 +36,7 @@ export default async function setup_api_client() {
             }
         }
 
-        setApiUrlCookie(url)
+        setApiUrl(url)
     }
 
     OpenAPI.BASE = url // Base URL is either set now or null (will be set on login page)

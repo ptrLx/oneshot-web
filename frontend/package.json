@@ -29,6 +29,7 @@
     "axios": "^1.5.1",
     "form-data": "^4.0.0",
     "ionicons": "^7.0.0",
+    "pinia": "^2.1.7",
     "swiper": "^10.3.1",
     "vite-plugin-compression": "^0.5.1",
     "vue": "^3.2.45",

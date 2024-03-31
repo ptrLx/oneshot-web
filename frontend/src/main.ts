@@ -24,7 +24,7 @@ import "@ionic/vue/css/display.css"
 import "./theme/variables.css"
 
 /* Boot scripts */
-import setup_api_client from "./boot/api-client"
+import setup_api_client from "./boot/apiClient"
 
 /* Other imports */
 import BaseLayout from "./components/base/BaseLayout.vue"
@@ -32,12 +32,14 @@ import BaseLayout from "./components/base/BaseLayout.vue"
 import { isPlatform } from "@ionic/vue"
 import { createHead } from "@vueuse/head"
 import { defineCustomElements } from "@ionic/pwa-elements/loader"
+import { createPinia } from "pinia"
 
 defineCustomElements(window)
 
-// Call this after router setup
 setup_api_client().then(() => {
+    const pinia = createPinia()
     const app = createApp(App).use(IonicVue).use(router).use(createHead())
+    app.use(pinia)
 
     // make base layout component known to all components
     app.component("base-layout", BaseLayout)
