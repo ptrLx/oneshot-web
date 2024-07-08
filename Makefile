@@ -36,7 +36,7 @@ setup-frontend:  ## Setup the frontend
 
 .PHONY: start-frontend
 start-frontend:  ## Start the frontend
-	cd frontend && ionic serve
+	cd frontend && npx vite --host=127.0.0.1
 
 .PHONY: compile-frontend
 compile-frontend:  ## Compile the frontend
