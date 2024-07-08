@@ -1,5 +1,21 @@
 # Changelog
 
+## [1.5.0](https://github.com/ptrLx/oneshot-web/compare/v1.4.2...v1.5.0) (2024-03-18)
+
+
+### Features
+
+* **deploy:** :rocket: gh actions build apk release ([c40f25e](https://github.com/ptrLx/oneshot-web/commit/c40f25e4c1c5276ed72b2f1bd52e1fdaf272dabc))
+* **frontend:** update login and cookie logic ([d323ac1](https://github.com/ptrLx/oneshot-web/commit/d323ac1edbc2558e28f3418797144ed9f4459731))
+
+## [1.4.2](https://github.com/ptrLx/oneshot-web/compare/v1.4.1...v1.4.2) (2024-01-23)
+
+
+### Bug Fixes
+
+* **api:** updated dependencies ([c0a6eea](https://github.com/ptrLx/oneshot-web/commit/c0a6eea00218b0599b2b18c119b736a20e5083ce))
+* **api:** updated dependencies ([#21](https://github.com/ptrLx/oneshot-web/issues/21)) ([de2f220](https://github.com/ptrLx/oneshot-web/commit/de2f22049c81fe8e961642559d6fa1e9c5967e47))
+
 ## [1.4.1](https://github.com/ptrLx/oneshot-web/compare/v1.4.0...v1.4.1) (2024-01-20)
 
 
