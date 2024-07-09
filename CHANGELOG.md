@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.6.0](https://github.com/ptrLx/oneshot-web/compare/v1.5.0...v1.6.0) (2024-07-09)
+
+
+### Features
+
+* **appflow:** setup appflow ([e91c3e6](https://github.com/ptrLx/oneshot-web/commit/e91c3e6590110a406dba3553822b2516cc1a7e42))
+
+
+### Bug Fixes
+
+* **frontend:** use ip instead of localhost when starting frontend ([43a7be9](https://github.com/ptrLx/oneshot-web/commit/43a7be91d45ecf44ba73b0fc04a38a0a8bc36693))
+
 ## [1.5.0](https://github.com/ptrLx/oneshot-web/compare/v1.4.2...v1.5.0) (2024-03-18)
 
 
