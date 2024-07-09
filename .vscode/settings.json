@@ -6,7 +6,8 @@
         "deploy",
         "db",
         "admtools",
-        "android"
+        "android",
+        "appflow"
     ],
     "cSpell.words": [
         "admcore",
